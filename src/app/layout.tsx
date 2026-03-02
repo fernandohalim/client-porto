@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://your-domain.com"), // add this line right at the top
   title: "Fernando Halim | Fullstack Developer",
   description:
-    "Fullstack developer based in Indonesia, specializing in scalable payment gateways, fraud detection systems, and modern web applications.",
+    "Fullstack developer based in Indonesia, specializing in fraud detection systems and modern web applications.",
   keywords: [
     "Fernando Halim",
     "Fullstack Developer",
