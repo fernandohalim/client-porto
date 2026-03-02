@@ -40,6 +40,12 @@ export default function Navbar() {
           >
             ./projects
           </Link>
+          <Link
+            href="#contact"
+            className="hover:text-green-400 transition-colors"
+          >
+            ./contact
+          </Link>
         </div>
       </div>
     </nav>

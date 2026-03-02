@@ -1,12 +1,32 @@
+import Hero from "@/components/Hero";
+import Skills from "@/components/Skills";
+import Experience from "@/components/Experience";
+import Projects from "@/components/Projects";
+import Footer from "@/components/Footer";
+import FadeUp from "@/utilities/FadeUp";
+
 export default function Home() {
   return (
-    <main className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-8">
-      <h1 className="text-5xl font-bold tracking-tight font-mono">
-        <span className="text-green-500">&gt;</span> fernando_halim
-      </h1>
-      <p className="text-zinc-400 mt-4 font-mono text-lg">
-        fullstack developer.
-      </p>
+    <main className="bg-black text-white selection:bg-green-500/30 overflow-hidden">
+      <FadeUp delay={0.1}>
+        <Hero />
+      </FadeUp>
+
+      <FadeUp delay={0.1}>
+        <Skills />
+      </FadeUp>
+
+      <FadeUp delay={0.1}>
+        <Experience />
+      </FadeUp>
+
+      <FadeUp delay={0.1}>
+        <Projects />
+      </FadeUp>
+
+      <FadeUp delay={0.1}>
+        <Footer />
+      </FadeUp>
     </main>
   );
 }
