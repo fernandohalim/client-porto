@@ -17,14 +17,14 @@ export default function Hero() {
         </div>
 
         {/* massive mono headline with blinking cursor */}
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-mono font-bold tracking-tighter text-transparent bg-clip-text bg-linear-to-b from-white to-zinc-500 mb-8">
+        <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-mono font-bold tracking-tighter text-transparent bg-clip-text bg-linear-to-b from-white to-zinc-500 mb-8">
           building_robust_systems. <br className="hidden md:block" />
           <DecryptText text="crafting_clean_uis." />
-          <span className="inline-block w-4 md:w-8 h-10 md:h-16 bg-green-500 ml-2 animate-blink align-middle -translate-y-1 md:-translate-y-2"></span>{" "}
+          <span className="inline-block w-2 md:w-8 h-6 md:h-16 bg-green-500 ml-2 animate-blink align-middle -translate-y-1 md:-translate-y-2"></span>{" "}
         </h1>
 
         {/* clean mono subheadline */}
-        <p className="text-zinc-400 text-base md:text-lg max-w-2xl mx-auto font-mono leading-relaxed mb-12 lowercase">
+        <p className="text-zinc-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto font-mono leading-relaxed mb-12 lowercase">
           hi, i&apos;m{" "}
           <span className="text-green-400 font-medium">fernando halim</span>. a
           fullstack developer specializing in fraud detection systems and modern

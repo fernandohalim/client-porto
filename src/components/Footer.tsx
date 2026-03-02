@@ -63,7 +63,7 @@ export default function Footer() {
                     [@]
                   </span>
                   <span className="text-zinc-300 group-hover/btn:text-white transition-colors">
-                    {contactInfo.email}
+                    email
                   </span>
                 </div>
                 <span className="text-zinc-600 group-hover/btn:text-white transition-colors">
@@ -82,7 +82,7 @@ export default function Footer() {
                     [in]
                   </span>
                   <span className="text-zinc-300 group-hover/btn:text-white transition-colors">
-                    {contactInfo.linkedin}
+                    linkedin
                   </span>
                 </div>
                 <span className="text-zinc-600 group-hover/btn:text-blue-400 transition-colors">
@@ -101,7 +101,7 @@ export default function Footer() {
                     [wa]
                   </span>
                   <span className="text-zinc-300 group-hover/btn:text-white transition-colors">
-                    {contactInfo.phone}
+                    phone
                   </span>
                 </div>
                 <span className="text-zinc-600 group-hover/btn:text-green-400 transition-colors">
@@ -120,7 +120,7 @@ export default function Footer() {
                     [cv]
                   </span>
                   <span className="text-green-400/90 group-hover/btn:text-green-400 transition-colors">
-                    download_resume.pdf
+                    download_resume
                   </span>
                 </div>
                 <span className="text-green-500/50 group-hover/btn:text-green-400 transition-colors">
