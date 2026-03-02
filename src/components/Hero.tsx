@@ -27,8 +27,8 @@ export default function Hero() {
         <p className="text-zinc-400 text-base md:text-lg max-w-2xl mx-auto font-mono leading-relaxed mb-12 lowercase">
           hi, i&apos;m{" "}
           <span className="text-green-400 font-medium">fernando halim</span>. a
-          fullstack developer specializing in scalable payment gateways, fraud
-          detection systems, and modern web applications.
+          fullstack developer specializing in fraud detection systems and modern
+          web applications.
         </p>
 
         {/* console-style cta buttons */}

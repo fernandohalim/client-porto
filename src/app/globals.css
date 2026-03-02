@@ -28,3 +28,25 @@ body {
   background-color: var(--color-background);
   color: var(--color-foreground);
 }
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #27272a #000000;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #22c55e;
+}
