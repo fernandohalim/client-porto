@@ -8,7 +8,7 @@ export default function Footer() {
     location: "west jakarta, indonesia",
     linkedin: "linkedin.com/in/fernando-halimm",
     linkedinUrl: "https://www.linkedin.com/in/fernando-halimm",
-    cvLink: "",
+    cvLink: "/fernando_halim_cv.pdf",
   };
 
   return (

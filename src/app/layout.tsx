@@ -3,7 +3,7 @@ import Navbar from "../components/NavBar";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://your-domain.com"), // add this line right at the top
+  metadataBase: new URL("https://fernando-halim.vercel.app/"),
   title: "Fernando Halim | Fullstack Developer",
   description:
     "Fullstack developer based in Indonesia, specializing in fraud detection systems and modern web applications.",
@@ -23,10 +23,10 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://your-domain.com",
+    url: "https://fernando-halim.vercel.app/",
     title: "Fernando Halim | Fullstack Developer",
     description:
-      "Fullstack developer specializing in scalable payment gateways, fraud detection systems, and modern web applications.",
+      "Fullstack developer specializing in fraud detection systems and modern web applications.",
     siteName: "Fernando Halim Portfolio",
     images: [
       {
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Fernando Halim | Fullstack Developer",
     description:
-      "Fullstack developer specializing in scalable payment gateways, fraud detection systems, and modern web applications.",
+      "Fullstack developer specializing in fraud detection systems and modern web applications.",
     images: ["/opengraph-image.png"],
   },
 };
