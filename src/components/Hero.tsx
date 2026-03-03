@@ -6,12 +6,20 @@ export default function Hero() {
       id="about"
       className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden bg-black pt-14"
     >
-      {/* subtle hacker-green background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 bg-green-900/10 rounded-full blur-[120px] pointer-events-none"></div>
+      {/* --- background combined effects --- */}
+      <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center overflow-hidden">
+        {/* grid pattern radial fade-out mask */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-size-[24px_24px] mask-[radial-gradient(ellipse_50%_50%_at_50%_50%,#000_0%,transparent_80%)]"></div>
+        {/* primary hacker green glow shifted slightly left */}
+        <div className="absolute top-1/2 left-1/3 -translate-y-1/2 w-75 md:w-125 h-75 md:h-125 bg-green-600/20 rounded-full blur-[100px] md:blur-[120px]"></div>
 
+        {/* secondary deep emerald/cyan glow shifted right for contrast */}
+        <div className="absolute top-1/3 left-2/3 -translate-x-1/2 w-62.5 md:w-100 h-62.5 md:h-100 bg-emerald-800/20 rounded-full blur-[100px] md:blur-[120px]"></div>
+      </div>
+      {/* ----------------------------------- */}
       <div className="z-10 text-center max-w-5xl mx-auto mt-8">
         {/* status boolean */}
-        <div className="inline-flex items-center gap-2 mb-8 px-4 py-2 rounded-full border border-zinc-800 bg-zinc-900/50 text-zinc-400 text-xs font-mono tracking-wide">
+        <div className="inline-flex items-center gap-2 mb-8 px-4 py-2 rounded-full border border-zinc-800 bg-zinc-900/50 text-zinc-400 text-xs font-mono tracking-wide backdrop-blur-xs">
           <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
           system.status === &quot;online&quot;
         </div>
@@ -35,7 +43,7 @@ export default function Hero() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-6 font-mono text-sm">
           <a
             href="#projects"
-            className="group flex items-center gap-2 px-6 py-3 rounded-md bg-green-500/10 text-green-400 border border-green-500/30 hover:bg-green-500/20 transition-all"
+            className="group flex items-center gap-2 px-6 py-3 rounded-md bg-green-500/10 text-green-400 border border-green-500/30 hover:bg-green-500/20 transition-all backdrop-blur-xs"
           >
             <span>./execute_portfolio</span>
             <span className="group-hover:translate-x-1 transition-transform">

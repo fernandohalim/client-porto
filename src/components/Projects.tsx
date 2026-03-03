@@ -54,9 +54,20 @@ export default function Projects() {
       id="projects"
       className="py-24 border-t border-zinc-900 bg-black relative overflow-hidden"
     >
-      {/* subtle background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-200 h-100 bg-green-900/10 rounded-full blur-[120px] pointer-events-none"></div>
+      {/* --- subtle background CRT pattern --- */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        {/* primary subtle zinc glow shifted slightly left */}
+        <div className="absolute top-1/2 left-1/3 -translate-y-1/2 w-75 md:w-125 h-75 md:h-125 bg-zinc-800/20 rounded-full blur-[100px] md:blur-[120px]"></div>
 
+        {/* secondary deeper zinc glow shifted right for depth */}
+        <div className="absolute top-1/3 left-2/3 -translate-x-1/2 w-62.5 md:w-100 h-62.5 md:h-100 bg-zinc-900/40 rounded-full blur-[100px] md:blur-[120px]"></div>
+
+        {/* crt scanlines overlay */}
+        <div className="absolute inset-0 opacity-40 bg-[linear-gradient(to_bottom,transparent_50%,rgba(0,0,0,1)_50%)] bg-size-[100%_4px]"></div>
+
+        {/* fisheye vignette shadow (darkens edges) */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_60%,rgba(0,0,0,0.8)_100%)]"></div>
+      </div>
       <div className="max-w-5xl mx-auto px-6 relative z-10">
         <div className="mb-12">
           <Typewriter command="ls -la " args="./projects" />
@@ -71,51 +82,59 @@ export default function Projects() {
             return (
               <div
                 key={index}
-                className={`p-8 rounded-2xl border border-zinc-800 bg-zinc-900/20 hover:bg-zinc-900/40 hover:border-green-500/30 transition-all group relative overflow-hidden backdrop-blur-sm flex flex-col h-full ${
+                className={`p-8 rounded-2xl border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900/40 hover:border-green-500/30 transition-all group relative overflow-hidden backdrop-blur-xs flex flex-col h-full ${
                   isLastOddItem ? "md:col-span-2" : ""
                 }`}
               >
-                {/* layout fix applied here with gap-4, break-all, and shrink-0 */}
-                <div className="flex justify-between items-start mb-4 gap-4">
-                  <h3 className="text-lg font-mono text-zinc-100 font-bold group-hover:text-green-400 transition-colors break-all">
-                    <DecryptText text={project.title} />
-                  </h3>
-                  <span className="text-xs font-mono text-zinc-500 bg-zinc-950 px-2 py-1 rounded border border-zinc-800 shrink-0 whitespace-nowrap">
-                    {project.date}
-                  </span>
-                </div>
+                {/* the inner card green glow to match the experience section */}
+                <div className="absolute -top-20 -right-20 w-64 h-64 bg-green-900/5 rounded-full blur-[80px] pointer-events-none group-hover:bg-green-900/10 transition-colors"></div>
 
-                <p className="font-mono text-sm text-green-500/70 mb-4">
-                  @ {project.client}
-                </p>
-
-                <p className="text-zinc-400 font-mono text-sm mb-8 grow">
-                  {project.description}
-                </p>
-
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {project.tech.map((t) => (
-                    <span
-                      key={t}
-                      className="text-xs font-mono text-zinc-400 bg-zinc-800/30 px-2 py-1 rounded border border-zinc-700/30"
-                    >
-                      [{t}]
+                {/* wrapper to keep content above the glow while maintaining flex layout */}
+                <div className="relative z-10 flex flex-col grow">
+                  {/* layout fix applied here with gap-4, break-all, and shrink-0 */}
+                  <div className="flex justify-between items-start mb-4 gap-4">
+                    <h3 className="text-lg font-mono text-zinc-100 font-bold group-hover:text-green-400 transition-colors break-all">
+                      <DecryptText text={project.title} />
+                    </h3>
+                    <span className="text-xs font-mono text-zinc-500 bg-zinc-950 px-2 py-1 rounded border border-zinc-800 shrink-0 whitespace-nowrap">
+                      {project.date}
                     </span>
-                  ))}
-                </div>
+                  </div>
 
-                {/* mock button showing status */}
-                <div className="mt-auto pt-4 border-t border-zinc-800/50 flex items-center justify-between">
-                  <span className="text-xs font-mono text-zinc-500">
-                    status:{" "}
-                    <span className="text-yellow-500/70">{project.status}</span>
-                  </span>
-                  <span
-                    className="text-xs font-mono text-zinc-600 group-hover:text-green-500/50 transition-colors cursor-not-allowed"
-                    title="Detailed case study coming in Phase 2"
-                  >
-                    [view_details]
-                  </span>
+                  <p className="font-mono text-sm text-green-500/70 mb-4">
+                    @ {project.client}
+                  </p>
+
+                  <p className="text-zinc-400 font-mono text-sm mb-8 grow">
+                    {project.description}
+                  </p>
+
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {project.tech.map((t) => (
+                      <span
+                        key={t}
+                        className="text-xs font-mono text-zinc-400 bg-zinc-800/30 px-2 py-1 rounded border border-zinc-700/30"
+                      >
+                        [{t}]
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* mock button showing status */}
+                  <div className="mt-auto pt-4 border-t border-zinc-800/50 flex items-center justify-between">
+                    <span className="text-xs font-mono text-zinc-500">
+                      status:{" "}
+                      <span className="text-yellow-500/70">
+                        {project.status}
+                      </span>
+                    </span>
+                    <span
+                      className="text-xs font-mono text-zinc-600 group-hover:text-green-500/50 transition-colors cursor-not-allowed"
+                      title="Detailed case study coming in Phase 2"
+                    >
+                      [view_details]
+                    </span>
+                  </div>
                 </div>
               </div>
             );

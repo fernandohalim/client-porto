@@ -52,9 +52,15 @@ export default function Experience() {
   return (
     <section
       id="experience"
-      className="py-24 border-t border-zinc-900 bg-black relative"
+      className="py-24 border-t border-zinc-900 bg-black relative overflow-hidden"
     >
-      <div className="max-w-5xl mx-auto px-6">
+      {/* --- subtle background grid --- */}
+      <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center overflow-hidden">
+        {/* grid pattern with a very aggressive radial fade-out mask */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-size-[24px_24px] mask-[radial-gradient(ellipse_60%_60%_at_50%_50%,#000_0%,transparent_70%)]"></div>
+      </div>
+
+      <div className="max-w-5xl mx-auto px-6 relative z-10">
         <div className="mb-12">
           <Typewriter command="tail -f " args="journey.log" />
         </div>
@@ -68,7 +74,7 @@ export default function Experience() {
                 onClick={() => setActiveIndex(index)}
                 className={`text-left px-6 py-4 font-mono text-sm whitespace-nowrap transition-all border-b-2 md:border-b-0 md:border-l-2 -mb-0.5 md:-ml-0.5 ${
                   activeIndex === index
-                    ? "border-green-500 bg-green-500/10 text-green-400"
+                    ? "border-green-500 bg-green-500/10 text-green-400 backdrop-blur-xs"
                     : "border-transparent hover:bg-zinc-900/50 text-zinc-500 hover:text-zinc-300"
                 }`}
               >
@@ -82,10 +88,10 @@ export default function Experience() {
           <div className="w-full md:w-2/3 min-h-80">
             <div
               key={activeIndex}
-              className="p-8 rounded-2xl border border-zinc-800 bg-zinc-900/30 backdrop-blur-sm relative overflow-hidden group animate-in fade-in slide-in-from-bottom-4 duration-500"
+              className="p-8 rounded-2xl border border-zinc-800 bg-zinc-900/30 backdrop-blur-xs relative overflow-hidden group animate-in fade-in slide-in-from-bottom-4 duration-500"
             >
               {/* subtle background glow that changes slightly based on the index to feel dynamic */}
-              <div className="absolute -top-20 -right-20 w-64 h-64 bg-green-900/10 rounded-full blur-[80px] pointer-events-none group-hover:bg-green-900/20 transition-colors"></div>
+              <div className="absolute -top-20 -right-20 w-64 h-64 bg-green-900/5 rounded-full blur-[80px] pointer-events-none group-hover:bg-green-900/10 transition-colors"></div>
 
               <div className="relative z-10">
                 <h3 className="text-2xl font-bold text-zinc-100 font-mono tracking-tight mb-2">
