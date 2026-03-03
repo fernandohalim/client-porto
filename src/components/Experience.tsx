@@ -50,10 +50,7 @@ export default function Experience() {
   ];
 
   return (
-    <section
-      id="experience"
-      className="py-24 border-t border-zinc-900 bg-black relative overflow-hidden"
-    >
+    <section className="py-24 border-t border-zinc-900 bg-black relative overflow-hidden">
       {/* --- subtle background grid --- */}
       <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center overflow-hidden">
         {/* grid pattern with a very aggressive radial fade-out mask */}

@@ -12,10 +12,7 @@ export default function Footer() {
   };
 
   return (
-    <footer
-      id="contact"
-      className="py-24 border-t border-zinc-900 bg-black relative overflow-hidden"
-    >
+    <footer className="py-24 border-t border-zinc-900 bg-black relative overflow-hidden">
       {/* --- background combined effects --- */}
       <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center overflow-hidden">
         {/* grid pattern radial fade-out mask */}

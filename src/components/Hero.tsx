@@ -2,10 +2,7 @@ import DecryptText from "../utilities/DecryptText";
 
 export default function Hero() {
   return (
-    <section
-      id="about"
-      className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden bg-black pt-14"
-    >
+    <section className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden bg-black pt-14">
       {/* --- background combined effects --- */}
       <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center overflow-hidden">
         {/* grid pattern radial fade-out mask */}

@@ -28,10 +28,7 @@ export default function Skills() {
   ];
 
   return (
-    <section
-      id="skills"
-      className="py-24 border-t border-zinc-900 bg-black relative overflow-hidden"
-    >
+    <section className="py-24 border-t border-zinc-900 bg-black relative overflow-hidden">
       {/* background glow for the whole section */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-200 h-100 bg-zinc-800/20 rounded-full blur-[120px] pointer-events-none"></div>
       {/* crt scanlines overlay */}

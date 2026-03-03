@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Navbar from "../components/NavBar";
 import "./globals.css";
+import CommandPalette from "@/components/CommandPalette";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://fernando-halim.vercel.app/"),
@@ -55,6 +56,7 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth">
       <body className="antialiased font-sans bg-black text-white selection:bg-green-500/30">
         <Navbar />
+        <CommandPalette />
         {children}
       </body>
     </html>

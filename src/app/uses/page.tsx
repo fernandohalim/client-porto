@@ -1,7 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import Typewriter from "@/utilities/Typewriter";
 import DecryptText from "@/utilities/DecryptText";
-import FadeUp from "@/utilities/FadeUp"; // update this path if your FadeUp is located elsewhere
+import FadeUp from "@/utilities/FadeUp";
 
 export default function Uses() {
   return (
@@ -9,8 +11,8 @@ export default function Uses() {
       {/* crt & grid background pattern */}
 
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        {/* aggressive inward-fading grid */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-size-[24px_24px] mask-[radial-gradient(ellipse_50%_50%_at_50%_50%,#000_0%,transparent_80%)]"></div>
+        {/* aggressive inward-fading diagonal grid */}
+        <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,#4f4f4f2e_0,#4f4f4f2e_1px,transparent_1px,transparent_32px),repeating-linear-gradient(-45deg,#4f4f4f2e_0,#4f4f4f2e_1px,transparent_1px,transparent_32px)] mask-[radial-gradient(ellipse_50%_50%_at_50%_50%,#000_0%,transparent_80%)]"></div>
 
         {/* subtle zinc glows for depth */}
         <div className="absolute top-1/4 left-1/4 -translate-y-1/2 -translate-x-1/2 w-75 md:w-125 h-75 md:h-125 bg-zinc-800/10 rounded-full blur-[100px] md:blur-[120px]"></div>
@@ -26,7 +28,7 @@ export default function Uses() {
       {/* main content */}
       <div className="max-w-5xl mx-auto px-6 pt-32 pb-24 relative z-10 w-full grow">
         {/* navigation back to home */}
-        <div className="mb-12">
+        <div className="mb-4">
           <FadeUp delay={0.1}>
             <Link
               href="/"
@@ -36,9 +38,6 @@ export default function Uses() {
                 cd
               </span>
               ../home
-              <span className="opacity-0 group-hover:opacity-100 animate-pulse text-green-500">
-                _
-              </span>
             </Link>
           </FadeUp>
         </div>
@@ -47,8 +46,8 @@ export default function Uses() {
         <div className="mb-16">
           <FadeUp delay={0.2}>
             <Typewriter command="cat " args="inventory.sys" speed={40} />
-            <h1 className="mt-8 text-4xl md:text-5xl font-mono font-bold tracking-tight text-white mb-4">
-              <DecryptText text="hardware_&" /> <br className="md:hidden" />
+            <h1 className="mt-6 text-4xl md:text-5xl font-mono font-bold tracking-tight mb-4 text-transparent bg-clip-text bg-linear-to-b from-white to-zinc-500">
+              hardware & <br className="md:hidden" />
               <DecryptText text="software_stack." />
             </h1>
             <p className="text-zinc-400 font-mono text-sm md:text-base leading-relaxed max-w-2xl lowercase">

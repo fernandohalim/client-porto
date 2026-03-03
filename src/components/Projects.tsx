@@ -50,10 +50,7 @@ export default function Projects() {
   ];
 
   return (
-    <section
-      id="projects"
-      className="py-24 border-t border-zinc-900 bg-black relative overflow-hidden"
-    >
+    <section className="py-24 border-t border-zinc-900 bg-black relative overflow-hidden">
       {/* --- subtle background CRT pattern --- */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         {/* primary subtle zinc glow shifted slightly left */}
