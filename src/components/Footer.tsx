@@ -21,14 +21,14 @@ export default function Footer() {
         {/* grid pattern radial fade-out mask */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-size-[24px_24px] mask-[radial-gradient(ellipse_50%_50%_at_50%_50%,#000_0%,transparent_80%)]"></div>
         {/* primary hacker green glow shifted slightly left */}
-        <div className="absolute top-1/2 left-1/3 -translate-y-1/2 w-75 md:w-125 h-75 md:h-125 bg-green-600/10 rounded-full blur-[100px] md:blur-[120px]"></div>
+        <div className="absolute top-1/2 left-1/3 -translate-y-1/2 w-75 md:w-125 h-75 md:h-125 bg-green-600/15 rounded-full blur-[100px] md:blur-[120px]"></div>
 
         {/* secondary deep emerald/cyan glow shifted right for contrast */}
-        <div className="absolute top-1/3 left-2/3 -translate-x-1/2 w-62.5 md:w-100 h-62.5 md:h-100 bg-emerald-800/10 rounded-full blur-[100px] md:blur-[120px]"></div>
+        <div className="absolute top-1/3 left-2/3 -translate-x-1/2 w-62.5 md:w-100 h-62.5 md:h-100 bg-emerald-800/15 rounded-full blur-[100px] md:blur-[120px]"></div>
       </div>
       <div className="max-w-5xl mx-auto px-6 relative z-10">
         {/* massive contact bento box */}
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-900/20 backdrop-blur-sm overflow-hidden mb-12 group">
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-900/20 overflow-hidden mb-12 group">
           {/* mock window header */}
           <div className="flex items-center px-4 py-3 border-b border-zinc-800 bg-zinc-900/50">
             <div className="flex gap-2">

@@ -82,7 +82,7 @@ export default function Projects() {
             return (
               <div
                 key={index}
-                className={`p-8 rounded-2xl border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900/40 hover:border-green-500/30 transition-all group relative overflow-hidden backdrop-blur-xs flex flex-col h-full ${
+                className={`p-8 rounded-2xl border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900/40 hover:border-green-500/30 transition-all group relative overflow-hidden flex flex-col h-full ${
                   isLastOddItem ? "md:col-span-2" : ""
                 }`}
               >

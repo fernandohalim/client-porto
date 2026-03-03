@@ -17,7 +17,7 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-zinc-900 bg-black/70 backdrop-blur-md">
+    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-zinc-900 bg-black/70">
       <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between relative">
         {/* logo / root dir */}
         <Link
@@ -58,7 +58,7 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2, ease: "easeInOut" }}
-            className="md:hidden absolute top-16 left-0 right-0 border-b border-zinc-900 bg-zinc-950/95 backdrop-blur-xl shadow-2xl"
+            className="md:hidden absolute top-16 left-0 right-0 border-b border-zinc-900 bg-zinc-950/95 shadow-2xl"
           >
             <div className="flex flex-col px-6 py-6 font-mono text-sm text-zinc-400 gap-6">
               {navLinks.map((link) => (

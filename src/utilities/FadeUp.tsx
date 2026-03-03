@@ -6,11 +6,17 @@ import { ReactNode } from "react";
 interface FadeUpProps {
   children: ReactNode;
   delay?: number;
+  className?: string;
 }
 
-export default function FadeUp({ children, delay = 0 }: FadeUpProps) {
+export default function FadeUp({
+  children,
+  delay = 0,
+  className = "",
+}: FadeUpProps) {
   return (
     <motion.div
+      className={className}
       initial={{ opacity: 0, y: 40, filter: "blur(10px)" }}
       whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
       viewport={{ once: false, margin: "-100px" }}

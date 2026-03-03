@@ -19,7 +19,7 @@ export default function Hero() {
       {/* ----------------------------------- */}
       <div className="z-10 text-center max-w-5xl mx-auto mt-8">
         {/* status boolean */}
-        <div className="inline-flex items-center gap-2 mb-8 px-4 py-2 rounded-full border border-zinc-800 bg-zinc-900/50 text-zinc-400 text-xs font-mono tracking-wide backdrop-blur-xs">
+        <div className="inline-flex items-center gap-2 mb-8 px-4 py-2 rounded-full border border-zinc-800 bg-zinc-900/50 text-zinc-400 text-xs font-mono tracking-wide">
           <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
           system.status === &quot;online&quot;
         </div>
@@ -43,7 +43,7 @@ export default function Hero() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-6 font-mono text-sm">
           <a
             href="#projects"
-            className="group flex items-center gap-2 px-6 py-3 rounded-md bg-green-500/10 text-green-400 border border-green-500/30 hover:bg-green-500/20 transition-all backdrop-blur-xs"
+            className="group flex items-center gap-2 px-6 py-3 rounded-md bg-green-500/10 text-green-400 border border-green-500/30 hover:bg-green-500/20 transition-all"
           >
             <span>./execute_portfolio</span>
             <span className="group-hover:translate-x-1 transition-transform">
