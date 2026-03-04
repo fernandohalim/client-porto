@@ -2,7 +2,7 @@ import Hero from "@/components/Hero";
 import Skills from "@/components/Skills";
 import Experience from "@/components/Experience";
 import Projects from "@/components/Projects";
-import Footer from "@/components/Footer";
+import Contact from "@/components/Contact";
 import FadeUp from "@/utilities/FadeUp";
 
 export default function Home() {
@@ -30,7 +30,7 @@ export default function Home() {
 
       <div id="footer" />
       <FadeUp delay={0.1}>
-        <Footer />
+        <Contact />
       </FadeUp>
     </main>
   );

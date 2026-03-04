@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Navbar from "../components/NavBar";
 import "./globals.css";
 import CommandPalette from "@/components/CommandPalette";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://fernando-halim.vercel.app/"),
@@ -58,6 +59,7 @@ export default function RootLayout({
         <Navbar />
         <CommandPalette />
         {children}
+        <Footer />
       </body>
     </html>
   );
