@@ -54,10 +54,10 @@ export default function Projects() {
       {/* --- subtle background CRT pattern --- */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         {/* primary subtle zinc glow shifted slightly left */}
-        <div className="absolute top-1/2 left-1/3 -translate-y-1/2 w-75 md:w-125 h-75 md:h-125 bg-zinc-800/20 rounded-full blur-[100px] md:blur-[120px]"></div>
+        <div className="absolute top-1/2 left-1/3 -translate-y-1/2 w-75 md:w-125 h-75 md:h-125 bg-zinc-800/30 rounded-full blur-[100px] md:blur-[120px]"></div>
 
         {/* secondary deeper zinc glow shifted right for depth */}
-        <div className="absolute top-1/3 left-2/3 -translate-x-1/2 w-62.5 md:w-100 h-62.5 md:h-100 bg-zinc-900/40 rounded-full blur-[100px] md:blur-[120px]"></div>
+        <div className="absolute top-1/3 left-2/3 -translate-x-1/2 w-62.5 md:w-100 h-62.5 md:h-100 bg-zinc-900/50 rounded-full blur-[100px] md:blur-[120px]"></div>
 
         {/* crt scanlines overlay */}
         <div className="absolute inset-0 opacity-40 bg-[linear-gradient(to_bottom,transparent_50%,rgba(0,0,0,1)_50%)] bg-size-[100%_4px]"></div>

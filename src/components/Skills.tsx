@@ -30,7 +30,7 @@ export default function Skills() {
   return (
     <section className="py-24 border-t border-zinc-900 bg-black relative overflow-hidden">
       {/* background glow for the whole section */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-200 h-100 bg-zinc-800/20 rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-200 h-100 bg-zinc-800/30 rounded-full blur-[120px] pointer-events-none"></div>
       {/* crt scanlines overlay */}
       <div className="absolute inset-0 opacity-40 bg-[linear-gradient(to_bottom,transparent_50%,rgba(0,0,0,1)_50%)] bg-size-[100%_4px]"></div>
 

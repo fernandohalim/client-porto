@@ -20,8 +20,8 @@ export default function Contact() {
       {/* --- background combined effects --- */}
       <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-size-[24px_24px] mask-[radial-gradient(ellipse_50%_50%_at_50%_50%,#000_0%,transparent_80%)]"></div>
-        <div className="absolute top-1/2 left-1/3 -translate-y-1/2 w-75 md:w-125 h-75 md:h-125 bg-green-600/15 rounded-full blur-[100px] md:blur-[120px]"></div>
-        <div className="absolute top-1/3 left-2/3 -translate-x-1/2 w-62.5 md:w-100 h-62.5 md:h-100 bg-emerald-800/15 rounded-full blur-[100px] md:blur-[120px]"></div>
+        <div className="absolute top-1/2 left-1/3 -translate-y-1/2 w-75 md:w-125 h-75 md:h-125 bg-green-600/20 rounded-full blur-[100px] md:blur-[120px]"></div>
+        <div className="absolute top-1/3 left-2/3 -translate-x-1/2 w-62.5 md:w-100 h-62.5 md:h-100 bg-emerald-800/20 rounded-full blur-[100px] md:blur-[120px]"></div>
       </div>
 
       <div className="max-w-5xl mx-auto px-6 relative z-10">
