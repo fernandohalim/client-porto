@@ -129,7 +129,7 @@ export default function Contact() {
                     [cv]
                   </span>
                   <span className="text-green-400/90 group-hover/btn:text-green-400 transition-colors duration-500">
-                    view_resume
+                    resume
                   </span>
                 </div>
                 <span className="text-green-500/50 group-hover/btn:text-green-400 transition-colors duration-500">

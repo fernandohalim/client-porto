@@ -1,8 +1,52 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import Typewriter from "@/utilities/Typewriter";
 import DecryptText from "../utilities/DecryptText";
 
 export default function Projects() {
-  const projects = [
+  const router = useRouter();
+
+  // portal animation state
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [clickPos, setClickPos] = useState({ x: 0, y: 0 });
+
+  const handleCaseStudyClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    // capture exact click coordinates
+    setClickPos({ x: e.clientX, y: e.clientY });
+    setIsAnimating(true);
+
+    // wait for the circle to cover the screen, then route
+    setTimeout(() => {
+      router.push("/projects/nest");
+    }, 700);
+  };
+
+  // ... (keep your featuredProjects and clientProjects arrays exactly as they were) ...
+  const featuredProjects = [
+    {
+      id: "nest",
+      title: "nest. 🐣",
+      subtitle: "split expenses, keep the peace 🌱",
+      date: "v1.2.3",
+      description:
+        "a beautifully bouncy, modern web app designed to eliminate spreadsheet math. built with a highly interactive ui and an advanced ai engine that optically reads your receipts so you don't have to type a thing.",
+      tech: [
+        "next.js 16",
+        "react 19",
+        "tailwind v4",
+        "supabase",
+        "zustand",
+        "gemini 2.5 flash",
+      ],
+      liveLink: "https://nest-app.vercel.app",
+    },
+  ];
+
+  const clientProjects = [
     {
       title: "company_profile_website",
       client: "PT Maju Jaya Arkananta",
@@ -54,46 +98,115 @@ export default function Projects() {
       id="projects"
       className="py-24 border-t border-zinc-900 bg-black relative overflow-hidden"
     >
-      {/* --- subtle background CRT pattern --- */}
+      {/* THE EXPANDING PORTAL OVERLAY */}
+      <AnimatePresence>
+        {isAnimating && (
+          <motion.div
+            initial={{ x: clickPos.x, y: clickPos.y, scale: 0, opacity: 1 }}
+            animate={{ scale: 350 }} // expands massive enough to cover any 4k display
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed top-0 left-0 w-10 h-10 bg-[#fdfbf7] rounded-full z-[9999] pointer-events-none -ml-5 -mt-5"
+          />
+        )}
+      </AnimatePresence>
+
+      {/* --- portfolio blended background --- */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        {/* primary brighter zinc glow shifted slightly left */}
-        <div className="absolute top-1/2 left-1/3 -translate-y-1/2 w-75 md:w-125 h-75 md:h-125 bg-zinc-700/40 rounded-full blur-[100px] md:blur-[120px]"></div>
-
-        {/* secondary deeper zinc glow shifted right for depth */}
-        <div className="absolute top-1/3 left-2/3 -translate-x-1/2 w-62.5 md:w-100 h-62.5 md:h-100 bg-zinc-800/40 rounded-full blur-[100px] md:blur-[120px]"></div>
-
-        {/* crt scanlines overlay */}
-        <div className="absolute inset-0 opacity-40 bg-[linear-gradient(to_bottom,transparent_50%,rgba(0,0,0,1)_50%)] bg-size-[100%_4px]"></div>
-
-        {/* fisheye vignette shadow (darkens edges) */}
+        <div className="absolute top-0 left-1/3 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-900/10 rounded-full blur-[120px]"></div>
+        <div className="absolute top-1/2 left-2/3 -translate-x-1/2 w-[500px] h-[500px] bg-zinc-800/40 rounded-full blur-[120px]"></div>
+        <div className="absolute inset-0 opacity-40 bg-[linear-gradient(to_bottom,transparent_50%,rgba(0,0,0,1)_50%)] bg-[length:100%_4px]"></div>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_60%,rgba(0,0,0,0.8)_100%)]"></div>
       </div>
 
       <div className="max-w-5xl mx-auto px-6 relative z-10">
         <div className="mb-12">
-          {/* updated the command to reflect client deployments */}
-          <Typewriter command="ls -la " args="/var/www/clients" />
+          <Typewriter command="ls -la " args="/var/www/projects" />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {projects.map((project, index) => {
-            // checks if the array length is odd AND if it's the very last item
-            const isLastOddItem =
-              projects.length % 2 !== 0 && index === projects.length - 1;
+          {/* 1. RENDER FEATURED PROJECTS */}
+          {featuredProjects.map((project) => (
+            <div
+              key={project.id}
+              className="p-8 rounded-2xl border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900/40 hover:border-emerald-500/50 hover:shadow-[0_0_30px_rgba(16,185,129,0.15)] duration-500 transition-all group relative overflow-hidden flex flex-col h-full md:col-span-2"
+            >
+              <div className="absolute -top-20 -right-20 w-64 h-64 bg-emerald-500/10 rounded-full blur-[80px] pointer-events-none group-hover:bg-emerald-500/20 transition-colors duration-500"></div>
 
+              <div className="relative z-10 flex flex-col grow">
+                <div className="flex justify-between items-start mb-4 gap-4">
+                  <h3
+                    className="text-2xl md:text-3xl font-black text-zinc-100 group-hover:text-emerald-400 transition-colors break-all tracking-tight"
+                    style={{ fontFamily: "'Geist', sans-serif" }}
+                  >
+                    {project.title}
+                  </h3>
+                  <span className="text-xs font-mono text-zinc-500 bg-zinc-950 px-2 py-1 rounded border border-zinc-800 shrink-0 whitespace-nowrap">
+                    {project.date}
+                  </span>
+                </div>
+
+                <p className="font-mono text-sm text-emerald-500/70 mb-4">
+                  @ personal_flagship
+                </p>
+
+                <p className="text-zinc-400 font-mono text-sm mb-8 grow">
+                  {project.description}
+                </p>
+
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {project.tech.map((t) => (
+                    <span
+                      key={t}
+                      className="text-xs font-mono text-emerald-400/80 bg-emerald-500/5 px-2 py-1 rounded border border-emerald-500/20"
+                    >
+                      [{t}]
+                    </span>
+                  ))}
+                </div>
+
+                <div className="mt-auto pt-4 border-t border-zinc-800/50 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
+                    <span className="text-xs font-mono text-zinc-500">
+                      sys.state:{" "}
+                      <span className="text-emerald-400/90">running</span>
+                    </span>
+                  </div>
+                  <div className="flex gap-4">
+                    {/* TRIGGER ANIMATION ON THIS BUTTON */}
+                    <button
+                      onClick={handleCaseStudyClick}
+                      className="text-[10px] font-mono text-emerald-500 hover:text-emerald-300 uppercase tracking-wider transition-colors z-50 cursor-pointer"
+                    >
+                      [view_case_study]
+                    </button>
+                    <a
+                      href={project.liveLink}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-[10px] font-mono text-zinc-500 hover:text-zinc-300 uppercase tracking-wider transition-colors"
+                    >
+                      [open_app]
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {/* 2. RENDER CLIENT PROJECTS */}
+          {clientProjects.map((project, index) => {
+            const isLastOddItem =
+              clientProjects.length % 2 !== 0 &&
+              index === clientProjects.length - 1;
             const isLive = project.status === "live";
 
             return (
               <div
                 key={index}
-                className={`p-8 rounded-2xl border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900/40 hover:border-zinc-600 hover:shadow-[0_0_30px_rgba(255,255,255,0.07)] duration-500 transition-all group relative overflow-hidden flex flex-col h-full ${
-                  isLastOddItem ? "md:col-span-2" : ""
-                }`}
+                className={`p-8 rounded-2xl border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900/40 hover:border-zinc-600 hover:shadow-[0_0_30px_rgba(255,255,255,0.07)] duration-500 transition-all group relative overflow-hidden flex flex-col h-full ${isLastOddItem ? "md:col-span-2" : ""}`}
               >
-                {/* intensified inner glow */}
                 <div className="absolute -top-20 -right-20 w-64 h-64 bg-zinc-600/10 rounded-full blur-[80px] pointer-events-none group-hover:bg-zinc-500/20 transition-colors"></div>
-
-                {/* wrapper to keep content above the glow */}
                 <div className="relative z-10 flex flex-col grow">
                   <div className="flex justify-between items-start mb-4 gap-4">
                     <h3 className="text-lg font-mono text-zinc-100 font-bold group-hover:text-zinc-300 transition-colors break-all">
@@ -103,15 +216,12 @@ export default function Projects() {
                       {project.date}
                     </span>
                   </div>
-
                   <p className="font-mono text-sm text-zinc-500 mb-4">
                     @ {project.client}
                   </p>
-
                   <p className="text-zinc-400 font-mono text-sm mb-8 grow">
                     {project.description}
                   </p>
-
                   <div className="flex flex-wrap gap-2 mb-6">
                     {project.tech.map((t) => (
                       <span
@@ -122,16 +232,10 @@ export default function Projects() {
                       </span>
                     ))}
                   </div>
-
-                  {/* updated status footer */}
                   <div className="mt-auto pt-4 border-t border-zinc-800/50 flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <span
-                        className={`w-2 h-2 rounded-full ${
-                          isLive
-                            ? "bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.5)]"
-                            : "bg-zinc-600"
-                        }`}
+                        className={`w-2 h-2 rounded-full ${isLive ? "bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.5)]" : "bg-zinc-600"}`}
                       ></span>
                       <span className="text-xs font-mono text-zinc-500">
                         sys.state:{" "}

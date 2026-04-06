@@ -3,6 +3,7 @@ import Navbar from "../components/NavBar";
 import "./globals.css";
 import CommandPalette from "@/components/CommandPalette";
 import Footer from "@/components/Footer";
+import ClientLayout from "@/components/ClientLayout";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://fernando-halim.vercel.app/"),
@@ -55,11 +56,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className="antialiased font-sans bg-black text-white selection:bg-green-500/30">
-        <Navbar />
-        <CommandPalette />
-        {children}
-        <Footer />
+      <body className="antialiased font-sans">
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );

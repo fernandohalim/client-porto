@@ -22,7 +22,7 @@ export default function Hero() {
         </div>
 
         {/* massive mono headline with blinking cursor */}
-        <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-mono font-bold tracking-tighter text-transparent bg-clip-text bg-linear-to-b from-white to-zinc-500 mb-8">
+        <h1 className="text-[clamp(1.5rem,7vw,4.5rem)] leading-tight font-mono font-bold tracking-tighter text-transparent bg-clip-text bg-linear-to-b from-white to-zinc-500 mb-8">
           building_robust_systems. <br className="hidden md:block" />
           <DecryptText text="crafting_clean_uis." />
           <span className="inline-block w-2 md:w-8 h-6 md:h-16 bg-green-500 ml-2 animate-blink align-middle -translate-y-1 md:-translate-y-2"></span>{" "}

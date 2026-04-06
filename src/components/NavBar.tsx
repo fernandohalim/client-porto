@@ -48,14 +48,15 @@ export default function Navbar() {
           className="font-mono text-zinc-100 font-bold hover:text-green-400 transition-colors flex items-center gap-2 z-50"
           onClick={(e) => {
             setIsOpen(false);
-            // if already on the home page, smooth scroll to top instead of hard routing
             if (isHome) {
               e.preventDefault();
               window.scrollTo({ top: 0, behavior: "smooth" });
             }
           }}
         >
-          <span className="text-green-500">root@fernando_halim</span>
+          <span className="text-green-500">
+            root<span className="hidden sm:inline">@fernando_halim</span>
+          </span>
           <span className="text-zinc-600">~#</span>
         </Link>
 
