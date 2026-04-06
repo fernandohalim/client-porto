@@ -51,7 +51,7 @@ export default function Uses() {
               <DecryptText text="software_stack." />
             </h1>
             <p className="text-zinc-400 font-mono text-sm md:text-base leading-relaxed max-w-2xl lowercase">
-              a detailed breakdown of my daily drivers. from custom pc builds to
+              a detailed breakdown of my daily drivers. from apple silicon to
               the architecture powering high-volume database operations.
             </p>
           </FadeUp>
@@ -62,30 +62,36 @@ export default function Uses() {
           {/* workstation rig (spans 2 columns on desktop) */}
           <div className="md:col-span-2">
             <FadeUp delay={0.3} className="h-full">
-              <div className="p-8 rounded-2xl border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900/40 hover:border-zinc-700 transition-all group relative overflow-hidden backdrop-blur-xs flex flex-col h-full">
-                <div className="absolute -top-20 -right-20 w-64 h-64 bg-green-900/5 rounded-full blur-[80px] pointer-events-none group-hover:bg-green-900/10 transition-colors"></div>
-                <h3 className="text-xl font-mono text-zinc-100 font-bold mb-2">
-                  workstation.hw
-                </h3>
-                <p className="font-mono text-xs text-green-500/70 mb-6">
-                  /dev/system/core
-                </p>
-                <p className="text-zinc-400 font-mono text-sm leading-relaxed mb-6 grow">
-                  i run a custom-built pc to handle heavy compilation and local
-                  database environments. it is powered by an{" "}
-                  <span className="text-zinc-200">amd ryzen 5 5600</span> paired
-                  with an <span className="text-zinc-200">rx 6600 xt</span>,
-                  which gives me all the raw processing power i need for java
-                  spring boot microservices and running dockerized testing
-                  setups.
-                </p>
-                <div className="flex flex-wrap gap-2 mt-auto">
-                  <span className="text-xs font-mono text-zinc-400 bg-zinc-800/30 px-3 py-1.5 rounded border border-zinc-700/30">
-                    [ryzen_5_5600]
-                  </span>
-                  <span className="text-xs font-mono text-zinc-400 bg-zinc-800/30 px-3 py-1.5 rounded border border-zinc-700/30">
-                    [rx_6600_xt]
-                  </span>
+              <div className="p-8 rounded-2xl border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900/40 hover:border-green-500/50 hover:shadow-[0_0_30px_rgba(34,197,94,0.1)] transition-all duration-500 group relative overflow-hidden backdrop-blur-xs flex flex-col h-full">
+                <div className="absolute -top-20 -right-20 w-64 h-64 bg-green-600/10 rounded-full blur-[80px] pointer-events-none group-hover:bg-green-500/20 transition-colors duration-500"></div>
+
+                <div className="relative z-10 flex flex-col grow">
+                  <h3 className="text-xl font-mono text-zinc-100 font-bold mb-2">
+                    workstation.hw
+                  </h3>
+                  <p className="font-mono text-xs text-green-500/70 mb-6">
+                    /dev/system/core
+                  </p>
+                  <p className="text-zinc-400 font-mono text-sm leading-relaxed mb-6 grow">
+                    my primary daily driver is a{" "}
+                    <span className="text-zinc-200">macbook air m2</span>. it
+                    provides incredible battery life and a unix-based
+                    environment right out of the box. apple silicon handles all
+                    my java spring boot microservices, node environments, and
+                    dockerized testing setups flawlessly while staying
+                    completely silent.
+                  </p>
+                  <div className="flex flex-wrap gap-2 mt-auto">
+                    <span className="text-xs font-mono text-zinc-400 bg-zinc-800/30 px-3 py-1.5 rounded border border-zinc-700/30">
+                      [macbook_air_m2]
+                    </span>
+                    <span className="text-xs font-mono text-zinc-400 bg-zinc-800/30 px-3 py-1.5 rounded border border-zinc-700/30">
+                      [apple_silicon]
+                    </span>
+                    <span className="text-xs font-mono text-zinc-400 bg-zinc-800/30 px-3 py-1.5 rounded border border-zinc-700/30">
+                      [unix_core]
+                    </span>
+                  </div>
                 </div>
               </div>
             </FadeUp>
@@ -94,43 +100,46 @@ export default function Uses() {
           {/* peripherals */}
           <div className="md:col-span-1">
             <FadeUp delay={0.4} className="h-full">
-              <div className="p-8 rounded-2xl border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900/40 hover:border-zinc-700 transition-all group relative overflow-hidden backdrop-blur-xs flex flex-col h-full">
-                <h3 className="text-xl font-mono text-zinc-100 font-bold mb-2">
-                  peripherals.io
-                </h3>
-                <p className="font-mono text-xs text-green-500/70 mb-6">
-                  /dev/input
-                </p>
-                <ul className="text-zinc-400 font-mono text-sm space-y-4 grow">
-                  <li className="flex items-start gap-3">
-                    <span className="text-green-500 mt-0.5">{">"}</span>
-                    <span>
-                      <strong className="text-zinc-200 font-normal">
-                        lofree flow2 84-keys
-                      </strong>
-                      : my main low-profile board.
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-green-500 mt-0.5">{">"}</span>
-                    <span>
-                      <strong className="text-zinc-200 font-normal">
-                        royal kludge rk65
-                      </strong>
-                      : compact secondary mechanical.
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-green-500 mt-0.5">{">"}</span>
-                    <span>
-                      <strong className="text-zinc-200 font-normal">
-                        razer basilisk
-                      </strong>{" "}
-                      & dual 27&quot; 2k monitors for massive screen real
-                      estate.
-                    </span>
-                  </li>
-                </ul>
+              <div className="p-8 rounded-2xl border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900/40 hover:border-green-500/50 hover:shadow-[0_0_30px_rgba(34,197,94,0.1)] transition-all duration-500 group relative overflow-hidden backdrop-blur-xs flex flex-col h-full">
+                <div className="absolute -top-20 -right-20 w-64 h-64 bg-green-600/10 rounded-full blur-[80px] pointer-events-none group-hover:bg-green-500/20 transition-colors duration-500"></div>
+
+                <div className="relative z-10 flex flex-col grow">
+                  <h3 className="text-xl font-mono text-zinc-100 font-bold mb-2">
+                    peripherals.io
+                  </h3>
+                  <p className="font-mono text-xs text-green-500/70 mb-6">
+                    /dev/input
+                  </p>
+                  <ul className="text-zinc-400 font-mono text-sm space-y-4 grow">
+                    <li className="flex items-start gap-3">
+                      <span className="text-green-500 mt-0.5">{">"}</span>
+                      <span>
+                        <strong className="text-zinc-200 font-normal">
+                          lofree flow2 84-keys
+                        </strong>
+                        : my main low-profile board.
+                      </span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-green-500 mt-0.5">{">"}</span>
+                      <span>
+                        <strong className="text-zinc-200 font-normal">
+                          royal kludge rk65
+                        </strong>
+                        : compact secondary mechanical.
+                      </span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-green-500 mt-0.5">{">"}</span>
+                      <span>
+                        <strong className="text-zinc-200 font-normal">
+                          razer basilisk
+                        </strong>{" "}
+                        & 27&quot; 2k monitors for massive screen real estate.
+                      </span>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </FadeUp>
           </div>
@@ -138,31 +147,35 @@ export default function Uses() {
           {/* code & terminal */}
           <div className="md:col-span-1">
             <FadeUp delay={0.5} className="h-full">
-              <div className="p-8 rounded-2xl border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900/40 hover:border-zinc-700 transition-all group relative overflow-hidden backdrop-blur-xs flex flex-col h-full">
-                <h3 className="text-xl font-mono text-zinc-100 font-bold mb-2">
-                  editor.sh
-                </h3>
-                <p className="font-mono text-xs text-green-500/70 mb-6">
-                  /usr/bin/env
-                </p>
-                <p className="text-zinc-400 font-mono text-sm leading-relaxed mb-6 grow">
-                  i split my workflow strictly by domain.{" "}
-                  <span className="text-zinc-200">intellij idea</span> handles
-                  all the heavy lifting for java, while{" "}
-                  <span className="text-zinc-200">vscode</span> is my go-to for
-                  react and next.js. for system ops, i live in cmd and native
-                  linux terminals.
-                </p>
-                <div className="flex flex-wrap gap-2 mt-auto">
-                  <span className="text-xs font-mono text-zinc-400 bg-zinc-800/30 px-3 py-1.5 rounded border border-zinc-700/30">
-                    [intellij_idea]
-                  </span>
-                  <span className="text-xs font-mono text-zinc-400 bg-zinc-800/30 px-3 py-1.5 rounded border border-zinc-700/30">
-                    [vscode]
-                  </span>
-                  <span className="text-xs font-mono text-zinc-400 bg-zinc-800/30 px-3 py-1.5 rounded border border-zinc-700/30">
-                    [linux_tty]
-                  </span>
+              <div className="p-8 rounded-2xl border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900/40 hover:border-green-500/50 hover:shadow-[0_0_30px_rgba(34,197,94,0.1)] transition-all duration-500 group relative overflow-hidden backdrop-blur-xs flex flex-col h-full">
+                <div className="absolute -top-20 -right-20 w-64 h-64 bg-green-600/10 rounded-full blur-[80px] pointer-events-none group-hover:bg-green-500/20 transition-colors duration-500"></div>
+
+                <div className="relative z-10 flex flex-col grow">
+                  <h3 className="text-xl font-mono text-zinc-100 font-bold mb-2">
+                    editor.sh
+                  </h3>
+                  <p className="font-mono text-xs text-green-500/70 mb-6">
+                    /usr/bin/env
+                  </p>
+                  <p className="text-zinc-400 font-mono text-sm leading-relaxed mb-6 grow">
+                    i split my workflow strictly by domain.{" "}
+                    <span className="text-zinc-200">intellij idea</span> handles
+                    all the heavy lifting for java, while{" "}
+                    <span className="text-zinc-200">vscode</span> is my go-to
+                    for react and next.js. for system ops, i live in macos
+                    terminal and iterm2.
+                  </p>
+                  <div className="flex flex-wrap gap-2 mt-auto">
+                    <span className="text-xs font-mono text-zinc-400 bg-zinc-800/30 px-3 py-1.5 rounded border border-zinc-700/30">
+                      [intellij_idea]
+                    </span>
+                    <span className="text-xs font-mono text-zinc-400 bg-zinc-800/30 px-3 py-1.5 rounded border border-zinc-700/30">
+                      [vscode]
+                    </span>
+                    <span className="text-xs font-mono text-zinc-400 bg-zinc-800/30 px-3 py-1.5 rounded border border-zinc-700/30">
+                      [iterm2]
+                    </span>
+                  </div>
                 </div>
               </div>
             </FadeUp>
@@ -171,33 +184,37 @@ export default function Uses() {
           {/* database tools (spans 2 columns) */}
           <div className="md:col-span-2">
             <FadeUp delay={0.6} className="h-full">
-              <div className="p-8 rounded-2xl border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900/40 hover:border-zinc-700 transition-all group relative overflow-hidden backdrop-blur-xs flex flex-col h-full">
-                <h3 className="text-xl font-mono text-zinc-100 font-bold mb-2">
-                  database.sql
-                </h3>
-                <p className="font-mono text-xs text-green-500/70 mb-6">
-                  /var/lib/data
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 text-zinc-400 font-mono text-sm grow">
-                  <div>
-                    <p className="text-zinc-200 mb-3 border-b border-zinc-800 pb-2">
-                      datagrip
-                    </p>
-                    <p className="leading-relaxed">
-                      my primary database gui. excellent for managing general
-                      schemas, running complex queries, and inspecting large
-                      data sets efficiently.
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-zinc-200 mb-3 border-b border-zinc-800 pb-2">
-                      pl/sql developer
-                    </p>
-                    <p className="leading-relaxed">
-                      the specialized tool. i use this strictly for developing
-                      oracle triggers, packages, and managing massive
-                      transaction batches.
-                    </p>
+              <div className="p-8 rounded-2xl border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900/40 hover:border-green-500/50 hover:shadow-[0_0_30px_rgba(34,197,94,0.1)] transition-all duration-500 group relative overflow-hidden backdrop-blur-xs flex flex-col h-full">
+                <div className="absolute -top-20 -right-20 w-64 h-64 bg-green-600/10 rounded-full blur-[80px] pointer-events-none group-hover:bg-green-500/20 transition-colors duration-500"></div>
+
+                <div className="relative z-10 flex flex-col grow">
+                  <h3 className="text-xl font-mono text-zinc-100 font-bold mb-2">
+                    database.sql
+                  </h3>
+                  <p className="font-mono text-xs text-green-500/70 mb-6">
+                    /var/lib/data
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 text-zinc-400 font-mono text-sm grow">
+                    <div>
+                      <p className="text-zinc-200 mb-3 border-b border-zinc-800 pb-2">
+                        datagrip
+                      </p>
+                      <p className="leading-relaxed">
+                        my primary database gui. excellent for managing general
+                        schemas, running complex queries, and inspecting large
+                        data sets efficiently.
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-zinc-200 mb-3 border-b border-zinc-800 pb-2">
+                        pl/sql developer
+                      </p>
+                      <p className="leading-relaxed">
+                        the specialized tool. i use this strictly for developing
+                        oracle triggers, packages, and managing massive
+                        transaction batches.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>

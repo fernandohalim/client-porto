@@ -59,76 +59,80 @@ export default function Contact() {
 
             {/* right side - interactive links */}
             <div className="w-full md:w-1/2 flex flex-col gap-4 font-mono text-sm">
+              {/* email - white/silver glow */}
               <a
                 href={`mailto:${contactInfo.email}`}
-                className="group/btn flex items-center justify-between p-4 rounded-xl border border-zinc-800 bg-zinc-950/50 hover:bg-zinc-900 hover:border-zinc-500 transition-all"
+                className="group/btn flex items-center justify-between p-4 rounded-xl border border-zinc-800 bg-zinc-950/50 hover:bg-zinc-900 hover:border-zinc-400 hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-all duration-500"
               >
                 <div className="flex items-center gap-4">
-                  <span className="text-zinc-500 group-hover/btn:text-white transition-colors">
+                  <span className="text-zinc-500 group-hover/btn:text-white transition-colors duration-500">
                     [@]
                   </span>
-                  <span className="text-zinc-300 group-hover/btn:text-white transition-colors">
+                  <span className="text-zinc-300 group-hover/btn:text-white transition-colors duration-500">
                     email
                   </span>
                 </div>
-                <span className="text-zinc-600 group-hover/btn:text-white transition-colors">
+                <span className="text-zinc-600 group-hover/btn:text-white transition-colors duration-500">
                   -&gt;
                 </span>
               </a>
 
+              {/* linkedin - blue glow */}
               <a
                 href={contactInfo.linkedinUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="group/btn flex items-center justify-between p-4 rounded-xl border border-zinc-800 bg-zinc-950/50 hover:bg-zinc-900 hover:border-blue-500/50 transition-all"
+                className="group/btn flex items-center justify-between p-4 rounded-xl border border-zinc-800 bg-zinc-950/50 hover:bg-zinc-900 hover:border-blue-500/60 hover:shadow-[0_0_30px_rgba(59,130,246,0.2)] transition-all duration-500"
               >
                 <div className="flex items-center gap-4">
-                  <span className="text-zinc-500 group-hover/btn:text-blue-400 transition-colors">
+                  <span className="text-zinc-500 group-hover/btn:text-blue-400 transition-colors duration-500">
                     [in]
                   </span>
-                  <span className="text-zinc-300 group-hover/btn:text-white transition-colors">
+                  <span className="text-zinc-300 group-hover/btn:text-white transition-colors duration-500">
                     linkedin
                   </span>
                 </div>
-                <span className="text-zinc-600 group-hover/btn:text-blue-400 transition-colors">
+                <span className="text-zinc-600 group-hover/btn:text-blue-400 transition-colors duration-500">
                   -&gt;
                 </span>
               </a>
 
+              {/* whatsapp/phone - green glow */}
               <a
                 href={contactInfo.waLink}
                 target="_blank"
                 rel="noreferrer"
-                className="group/btn flex items-center justify-between p-4 rounded-xl border border-zinc-800 bg-zinc-950/50 hover:bg-zinc-900 hover:border-green-500/50 transition-all"
+                className="group/btn flex items-center justify-between p-4 rounded-xl border border-zinc-800 bg-zinc-950/50 hover:bg-zinc-900 hover:border-green-500/60 hover:shadow-[0_0_30px_rgba(34,197,94,0.2)] transition-all duration-500"
               >
                 <div className="flex items-center gap-4">
-                  <span className="text-zinc-500 group-hover/btn:text-green-400 transition-colors">
+                  <span className="text-zinc-500 group-hover/btn:text-green-400 transition-colors duration-500">
                     [wa]
                   </span>
-                  <span className="text-zinc-300 group-hover/btn:text-white transition-colors">
+                  <span className="text-zinc-300 group-hover/btn:text-white transition-colors duration-500">
                     phone
                   </span>
                 </div>
-                <span className="text-zinc-600 group-hover/btn:text-green-400 transition-colors">
+                <span className="text-zinc-600 group-hover/btn:text-green-400 transition-colors duration-500">
                   -&gt;
                 </span>
               </a>
 
+              {/* cv - brighter green glow */}
               <a
                 href={contactInfo.cvLink}
                 target="_blank"
                 rel="noreferrer"
-                className="group/btn flex items-center justify-between p-4 rounded-xl border border-green-500/30 bg-green-500/5 hover:bg-green-500/10 hover:border-green-500/60 transition-all"
+                className="group/btn flex items-center justify-between p-4 rounded-xl border border-green-500/30 bg-green-500/5 hover:bg-green-500/10 hover:border-green-500/80 hover:shadow-[0_0_30px_rgba(34,197,94,0.3)] transition-all duration-500"
               >
                 <div className="flex items-center gap-4">
-                  <span className="text-green-500/70 group-hover/btn:text-green-400 transition-colors">
+                  <span className="text-green-500/70 group-hover/btn:text-green-400 transition-colors duration-500">
                     [cv]
                   </span>
-                  <span className="text-green-400/90 group-hover/btn:text-green-400 transition-colors">
+                  <span className="text-green-400/90 group-hover/btn:text-green-400 transition-colors duration-500">
                     view_resume
                   </span>
                 </div>
-                <span className="text-green-500/50 group-hover/btn:text-green-400 transition-colors">
+                <span className="text-green-500/50 group-hover/btn:text-green-400 transition-colors duration-500">
                   -&gt;
                 </span>
               </a>

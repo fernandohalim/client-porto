@@ -22,7 +22,7 @@ export default function Hero() {
         </div>
 
         {/* massive mono headline with blinking cursor */}
-        <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-mono font-bold tracking-tighter text-transparent bg-clip-text bg-linear-to-b from-white to-zinc-500 mb-8">
+        <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-mono font-bold tracking-tighter text-transparent bg-clip-text bg-linear-to-b from-white to-zinc-500 mb-8">
           building_robust_systems. <br className="hidden md:block" />
           <DecryptText text="crafting_clean_uis." />
           <span className="inline-block w-2 md:w-8 h-6 md:h-16 bg-green-500 ml-2 animate-blink align-middle -translate-y-1 md:-translate-y-2"></span>{" "}
@@ -40,7 +40,7 @@ export default function Hero() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-6 font-mono text-sm">
           <a
             href="#projects"
-            className="group flex items-center gap-2 px-6 py-3 rounded-md bg-green-500/10 text-green-400 border border-green-500/30 hover:bg-green-500/20 transition-all"
+            className="group flex items-center gap-2 px-6 py-3 rounded-md bg-green-500/10 text-green-400 border border-green-500/30 hover:bg-green-500/20 hover:shadow-[0_0_30px_rgba(34,197,94,0.1)] duration-500 transition-all"
           >
             <span>./execute_portfolio</span>
             <span className="group-hover:translate-x-1 transition-transform">

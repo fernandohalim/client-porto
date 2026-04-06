@@ -51,10 +51,19 @@ export default function Experience() {
 
   return (
     <section className="py-24 border-t border-zinc-900 bg-black relative overflow-hidden">
-      {/* --- subtle background grid --- */}
+      {/* --- enhanced background grid & glows --- */}
       <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center overflow-hidden">
+        {/* massive ambient green glow to light up the left side */}
+        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-125 h-125 bg-green-800/15 rounded-full blur-[120px]"></div>
+
+        {/* secondary deep zinc glow on the right for depth */}
+        <div className="absolute bottom-0 right-1/4 w-100 h-100 bg-zinc-800/30 rounded-full blur-[100px]"></div>
+
         {/* grid pattern with a very aggressive radial fade-out mask */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-size-[24px_24px] mask-[radial-gradient(ellipse_60%_60%_at_50%_50%,#000_0%,transparent_70%)]"></div>
+
+        {/* crt scanlines overlay to tie it all together */}
+        <div className="absolute inset-0 opacity-40 bg-[linear-gradient(to_bottom,transparent_50%,rgba(0,0,0,1)_50%)] bg-size-[100%_4px]"></div>
       </div>
 
       <div className="max-w-5xl mx-auto px-6 relative z-10">
@@ -71,7 +80,7 @@ export default function Experience() {
                 onClick={() => setActiveIndex(index)}
                 className={`text-left px-6 py-4 font-mono text-sm whitespace-nowrap transition-all border-b-2 md:border-b-0 md:border-l-2 -mb-0.5 md:-ml-0.5 ${
                   activeIndex === index
-                    ? "border-green-500 bg-green-500/10 text-green-40"
+                    ? "border-green-500 bg-green-500/10 text-green-400"
                     : "border-transparent hover:bg-zinc-900/50 text-zinc-500 hover:text-zinc-300"
                 }`}
               >
@@ -85,7 +94,7 @@ export default function Experience() {
           <div className="w-full md:w-2/3 min-h-80">
             <div
               key={activeIndex}
-              className="p-8 rounded-2xl border border-zinc-800 bg-zinc-900/30 relative overflow-hidden group animate-in fade-in slide-in-from-bottom-4 duration-500"
+              className="p-8 rounded-2xl border border-zinc-800 bg-zinc-900/50 hover:border-green-500/30 hover:shadow-[0_0_30px_rgba(34,197,94,0.1)] relative overflow-hidden group animate-in fade-in slide-in-from-bottom-4 duration-500 transition-all"
             >
               {/* subtle background glow that changes slightly based on the index to feel dynamic */}
               <div className="absolute -top-20 -right-20 w-64 h-64 bg-green-900/5 rounded-full blur-[80px] pointer-events-none group-hover:bg-green-900/10 transition-colors"></div>

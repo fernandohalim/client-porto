@@ -29,7 +29,7 @@ export default function Navbar() {
   const homeLinks = [
     { name: "./skills", href: "#skills" },
     { name: "./experience", href: "#experience" },
-    { name: "./projects", href: "#projects" },
+    { name: "./clients", href: "#projects" },
     { name: "./connect", href: "#footer" },
   ];
 
@@ -91,7 +91,7 @@ export default function Navbar() {
           {/* visual ctrl+k hint / command trigger button */}
           <button
             onClick={openCommandPalette}
-            className="group flex items-center gap-2 px-2 sm:px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900/50 hover:bg-zinc-800 hover:border-zinc-700 transition-all cursor-pointer z-50"
+            className="group flex items-center gap-2 px-2 sm:px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900/50 hover:bg-zinc-800 hover:border-zinc-500 hover:shadow-[0_0_20px_rgba(255,255,255,0.15)] duration-500 transition-all cursor-pointer z-50"
             title="open command palette"
           >
             <span className="hidden sm:block text-zinc-500 font-mono text-xs group-hover:text-zinc-300 transition-colors">
