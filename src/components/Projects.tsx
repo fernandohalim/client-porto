@@ -15,21 +15,33 @@ export default function Projects() {
 
   const handleCaseStudyClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    // trigger the fade
     setIsAnimating(true);
 
-    // route exactly when the fade reaches 100% opacity
     setTimeout(() => {
-      router.push("/projects/nest");
-    }, 600);
+      document.documentElement.classList.remove("scroll-smooth");
+
+      // THE FIX: Force the global layout to white instantly to cover the 1ms render gap
+      const layout = document.getElementById("global-layout");
+      if (layout) {
+        layout.style.transition = "none"; // temporarily disable the smooth crossfade
+        layout.style.backgroundColor = "#fdfbf7"; // force it to nest's background color
+      }
+
+      window.scrollTo(0, 0);
+      router.push("/projects/nest", { scroll: false });
+
+      setTimeout(() => {
+        document.documentElement.classList.add("scroll-smooth");
+      }, 500);
+    }, 500); // 500ms matches the framer-motion fade duration exactly
   };
 
   // ... (featuredprojects and clientprojects arrays stay exactly the same here) ...
   const featuredProjects = [
     {
       id: "nest",
-      title: "nest. 🐣",
-      subtitle: "split expenses, keep the peace 🌱",
+      title: "nest_group_splitbill_app",
+      subtitle: "split expenses, keep the peace",
       date: "v1.2.3",
       description:
         "a beautifully bouncy, modern web app designed to eliminate spreadsheet math. built with a highly interactive ui and an advanced ai engine that optically reads your receipts so you don't have to type a thing.",
@@ -135,21 +147,17 @@ export default function Projects() {
 
               <div className="relative z-10 flex flex-col grow">
                 <div className="flex justify-between items-start mb-4 gap-4">
-                  <h3
-                    className="text-2xl md:text-3xl font-black text-zinc-100 group-hover:text-emerald-400 transition-colors break-all tracking-tight"
-                    style={{ fontFamily: "'Geist', sans-serif" }}
-                  >
-                    {project.title}
+                  {/* normalized title using DecryptText to match client projects */}
+                  <h3 className="text-lg font-mono text-zinc-100 font-bold group-hover:text-emerald-400 transition-colors break-all">
+                    <DecryptText text={project.title} />
                   </h3>
                   <span className="text-xs font-mono text-zinc-500 bg-zinc-950 px-2 py-1 rounded border border-zinc-800 shrink-0 whitespace-nowrap">
                     {project.date}
                   </span>
                 </div>
 
-                <p
-                  className="font-black text-sm text-emerald-500/70 mb-4"
-                  style={{ fontFamily: "'Geist', sans-serif" }}
-                >
+                {/* normalized subtitle formatted exactly like the '@ client' styling */}
+                <p className="font-mono text-sm text-zinc-500 mb-4">
                   {project.subtitle}
                 </p>
 
@@ -184,22 +192,6 @@ export default function Projects() {
                     >
                       [view_case_study]
                     </button>
-                    <a
-                      href={project.repoLink}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-[10px] font-mono text-zinc-500 hover:text-zinc-300 uppercase tracking-wider transition-colors"
-                    >
-                      [changelog]
-                    </a>
-                    <a
-                      href={project.liveLink}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-[10px] font-mono text-emerald-500/70 hover:text-emerald-400 uppercase tracking-wider transition-colors"
-                    >
-                      [open_app]
-                    </a>
                   </div>
                 </div>
               </div>

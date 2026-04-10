@@ -20,6 +20,7 @@ export default function ClientLayout({
 
   return (
     <div
+      id="global-layout"
       className={`min-h-screen flex flex-col transition-colors duration-700 ${globalStyles}`}
     >
       <AnimatePresence>

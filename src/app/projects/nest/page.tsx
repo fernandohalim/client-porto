@@ -2,15 +2,44 @@
 
 import { motion, Variants } from "framer-motion";
 import Link from "next/link";
+import { useEffect } from "react";
 
 export default function NestCaseStudy() {
-  // variants for staggered animations
+  // force scroll to top instantly on mount to prevent router scroll jank
+  useEffect(() => {
+    document.documentElement.classList.remove("scroll-smooth");
+    window.scrollTo(0, 0);
+
+    const timer = setTimeout(() => {
+      document.documentElement.classList.add("scroll-smooth");
+    }, 100);
+
+    // THE CLEANUP: when leaving this page, remove the forced white background
+    // so the layout can smoothly crossfade back to black!
+    return () => {
+      clearTimeout(timer);
+      const layout = document.getElementById("global-layout");
+      if (layout) {
+        layout.style.transition = ""; // restore tailwind's transition
+        layout.style.backgroundColor = ""; // clear the forced color
+      }
+    };
+  }, []);
+
+  // upgraded wild 3d spring variants
   const fadeUp: Variants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 50, scale: 0.9, rotateX: 20 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { type: "spring", stiffness: 300, damping: 24 },
+      scale: 1,
+      rotateX: 0,
+      transition: {
+        type: "spring",
+        stiffness: 250,
+        damping: 18,
+        mass: 0.8,
+      },
     },
   };
 
@@ -19,16 +48,21 @@ export default function NestCaseStudy() {
       className="min-h-screen bg-[#fdfbf7] text-stone-800 font-sans selection:bg-emerald-200 selection:text-emerald-900 pb-32 relative overflow-hidden"
       style={{ fontFamily: "'Geist', sans-serif" }}
     >
-      {/* --- organic background textures --- */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-start justify-center">
+      {/* --- organic background textures (now these fade in, but the solid background is instant!) --- */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-start justify-center"
+      >
         {/* subtle dot grid */}
-        <div className="absolute inset-0 bg-[radial-gradient(#e5e5e5_1px,transparent_1px)] bg-size-[24px_24px] opacity-60"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(#e5e5e5_1px,transparent_1px)] bg-[size:24px_24px] opacity-60"></div>
 
         {/* massive breathing gradient orbs */}
         <motion.div
           animate={{ scale: [1, 1.05, 1], opacity: [0.3, 0.5, 0.3] }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -top-[20%] -left-[10%] w-200 h-200 bg-emerald-200/40 rounded-full blur-[120px]"
+          className="absolute -top-[20%] -left-[10%] w-[800px] h-[800px] bg-emerald-200/40 rounded-full blur-[120px]"
         />
         <motion.div
           animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.4, 0.2] }}
@@ -38,16 +72,16 @@ export default function NestCaseStudy() {
             ease: "easeInOut",
             delay: 1,
           }}
-          className="absolute top-[20%] -right-[10%] w-150 h-150 bg-yellow-100/50 rounded-full blur-[100px]"
+          className="absolute top-[20%] -right-[10%] w-[600px] h-[600px] bg-yellow-100/50 rounded-full blur-[100px]"
         />
-      </div>
+      </motion.div>
 
-      <div className="max-w-5xl mx-auto px-6 pt-12 md:pt-24 relative z-10">
+      <div className="max-w-5xl mx-auto px-6 pt-12 md:pt-24 relative z-10 perspective-1000">
         {/* terminal escape hatch */}
         <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.2 }}
+          initial={{ opacity: 0, x: -40, rotateY: 10 }}
+          animate={{ opacity: 1, x: 0, rotateY: 0 }}
+          transition={{ type: "spring", delay: 0.2, stiffness: 200 }}
         >
           <Link
             href="/"
@@ -65,9 +99,10 @@ export default function NestCaseStudy() {
           <motion.div
             className="w-full md:w-3/5"
             initial="hidden"
-            animate="visible"
+            whileInView="visible"
+            viewport={{ once: false, amount: 0.3 }}
             variants={{
-              visible: { transition: { staggerChildren: 0.1 } },
+              visible: { transition: { staggerChildren: 0.15 } },
             }}
           >
             <motion.div
@@ -85,7 +120,7 @@ export default function NestCaseStudy() {
               className="text-5xl md:text-7xl font-black tracking-tighter text-stone-800 mb-6 leading-[1.1]"
             >
               how i built <br />
-              <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-teal-500">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500">
                 nest.
               </span>{" "}
               🐣
@@ -102,14 +137,22 @@ export default function NestCaseStudy() {
               to automatically read your receipts and do the math for you.
             </motion.p>
 
-            <motion.div variants={fadeUp} className="flex gap-4">
+            <motion.div variants={fadeUp} className="flex flex-wrap gap-4">
               <a
                 href="https://nest-splitbill-app.vercel.app"
                 target="_blank"
                 rel="noreferrer"
-                className="px-6 py-3 bg-stone-900 text-white rounded-full font-black tracking-widest uppercase text-sm shadow-[0_10px_20px_rgba(0,0,0,0.1)] hover:bg-emerald-600 hover:shadow-[0_10px_20px_rgba(16,185,129,0.2)] hover:-translate-y-1 transition-all"
+                className="px-6 py-3 bg-stone-900 text-white rounded-full font-black tracking-widest uppercase text-sm shadow-[0_10px_20px_rgba(0,0,0,0.1)] hover:bg-emerald-600 hover:shadow-[0_10px_20px_rgba(16,185,129,0.2)] hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all"
               >
                 launch live app ↗
+              </a>
+              <a
+                href="https://nest-splitbill-app.vercel.app/changelog"
+                target="_blank"
+                rel="noreferrer"
+                className="px-6 py-3 bg-white text-stone-600 border-2 border-stone-200 rounded-full font-black tracking-widest uppercase text-sm shadow-sm hover:border-emerald-200 hover:text-emerald-700 hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all"
+              >
+                view changelog 📝
               </a>
             </motion.div>
           </motion.div>
@@ -117,9 +160,13 @@ export default function NestCaseStudy() {
           {/* Hero Floating UI Cluster */}
           <div className="w-full md:w-2/5 h-80 relative hidden md:block perspective-1000">
             <motion.div
-              animate={{ y: [0, -15, 0], rotateZ: [6, 4, 6] }}
+              animate={{
+                y: [0, -20, 0],
+                rotateZ: [6, 2, 6],
+                rotateX: [0, 10, 0],
+              }}
               transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute top-10 right-10 bg-white border border-stone-100 shadow-xl rounded-2xl p-4 flex items-center gap-3 z-10"
+              className="absolute top-10 right-10 bg-white border border-stone-100 shadow-2xl rounded-2xl p-4 flex items-center gap-3 z-10"
             >
               <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-black">
                 FH
@@ -133,7 +180,11 @@ export default function NestCaseStudy() {
             </motion.div>
 
             <motion.div
-              animate={{ y: [0, 20, 0], rotateZ: [-3, -1, -3] }}
+              animate={{
+                y: [0, 25, 0],
+                rotateZ: [-3, -6, -3],
+                rotateY: [0, -10, 0],
+              }}
               transition={{
                 duration: 6,
                 repeat: Infinity,
@@ -158,9 +209,9 @@ export default function NestCaseStudy() {
           <motion.section
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: false, amount: 0.4 }}
             variants={{ visible: { transition: { staggerChildren: 0.2 } } }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center"
+            className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center perspective-1000"
           >
             <motion.div variants={fadeUp}>
               <div className="text-red-400 font-black text-sm tracking-widest uppercase mb-3">
@@ -179,11 +230,12 @@ export default function NestCaseStudy() {
             {/* The physical receipt mock */}
             <motion.div
               variants={fadeUp}
-              className="relative flex justify-center perspective-1000"
+              className="relative flex justify-center"
             >
               <motion.div
-                whileHover={{ rotateZ: 0, scale: 1.05 }}
-                className="bg-white p-8 w-72 rounded-t-lg shadow-xl border border-stone-200 transform rotate-3"
+                whileHover={{ rotateZ: 0, scale: 1.1, y: -10 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                className="bg-white p-8 w-72 rounded-t-lg shadow-2xl border border-stone-200 transform rotate-3"
               >
                 {/* zig-zag tear effect at bottom */}
                 <div className="absolute bottom-0 left-0 w-full border-b-[6px] border-dashed border-stone-200 translate-y-0.75"></div>
@@ -233,9 +285,9 @@ export default function NestCaseStudy() {
           <motion.section
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: false, amount: 0.4 }}
             variants={{ visible: { transition: { staggerChildren: 0.2 } } }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center"
+            className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center perspective-1000"
           >
             {/* The laser scanner mock */}
             <motion.div
@@ -243,7 +295,7 @@ export default function NestCaseStudy() {
               className="order-2 md:order-1 relative h-96 bg-stone-900 rounded-4xl overflow-hidden border-4 border-stone-800 shadow-2xl flex items-center justify-center group"
             >
               {/* placeholder image for the receipt photo */}
-              <div className="w-48 h-64 bg-stone-800 rounded-lg border border-stone-700 flex flex-col items-center justify-center opacity-50">
+              <div className="w-48 h-64 bg-stone-800 rounded-lg border border-stone-700 flex flex-col items-center justify-center opacity-50 transform group-hover:scale-105 transition-transform duration-700">
                 <span className="text-4xl mb-2">🧾</span>
                 <span className="text-stone-500 font-mono text-xs">
                   processing_image...
@@ -253,18 +305,18 @@ export default function NestCaseStudy() {
               {/* The sweeping laser */}
               <motion.div
                 animate={{ top: ["0%", "100%", "0%"] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                className="absolute left-0 w-full h-1 bg-emerald-400 shadow-[0_0_20px_rgba(52,211,153,1)] z-10"
+                transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
+                className="absolute left-0 w-full h-1 bg-emerald-400 shadow-[0_0_30px_rgba(52,211,153,1)] z-10"
               />
 
               {/* scanning overlay grid */}
-              <div className="absolute inset-0 bg-[linear-gradient(rgba(16,185,129,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(16,185,129,0.1)_1px,transparent_1px)] bg-size-[20px_20px] pointer-events-none"></div>
+              <div className="absolute inset-0 bg-[linear-gradient(rgba(16,185,129,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(16,185,129,0.1)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none"></div>
 
               {/* success popups */}
               <motion.div
-                animate={{ opacity: [0, 1, 0] }}
-                transition={{ duration: 3, repeat: Infinity, delay: 1.5 }}
-                className="absolute bottom-10 bg-emerald-500 text-white font-black text-[10px] uppercase tracking-widest px-4 py-2 rounded-full shadow-lg"
+                animate={{ opacity: [0, 1, 0], scale: [0.8, 1.1, 0.8] }}
+                transition={{ duration: 2.5, repeat: Infinity, delay: 1.2 }}
+                className="absolute bottom-10 bg-emerald-500 text-white font-black text-[10px] uppercase tracking-widest px-4 py-2 rounded-full shadow-[0_0_20px_rgba(16,185,129,0.5)]"
               >
                 data extracted successfully
               </motion.div>
@@ -294,8 +346,9 @@ export default function NestCaseStudy() {
           <motion.section
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
+            viewport={{ once: false, amount: 0.3 }}
+            variants={{ visible: { transition: { staggerChildren: 0.15 } } }}
+            className="perspective-1000"
           >
             <motion.div variants={fadeUp} className="text-center mb-16">
               <div className="text-stone-400 font-black text-sm tracking-widest uppercase mb-3">
@@ -310,14 +363,14 @@ export default function NestCaseStudy() {
               {/* Card 1: Zustand */}
               <motion.div
                 variants={fadeUp}
-                whileHover={{ y: -10, scale: 1.02 }}
-                className="bg-white p-8 rounded-4xl shadow-lg border border-stone-100 hover:border-blue-200 transition-colors group"
+                whileHover={{ y: -15, scale: 1.05, rotateX: 5 }}
+                className="bg-white p-8 rounded-4xl shadow-xl border border-stone-100 hover:border-blue-200 transition-all duration-300 group"
               >
-                <div className="w-16 h-16 rounded-2xl bg-blue-50 text-blue-500 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
+                <div className="w-16 h-16 rounded-2xl bg-blue-50 text-blue-500 flex items-center justify-center text-3xl mb-6 group-hover:scale-125 group-hover:rotate-12 transition-transform duration-300">
                   ⚛️
                 </div>
                 <h3 className="font-black text-xl text-stone-800 mb-3">
-                  Zustand State
+                  zustand state
                 </h3>
                 <p className="text-sm font-bold text-stone-500 leading-relaxed">
                   implemented optimistic UI updates. when users tap to settle a
@@ -329,14 +382,14 @@ export default function NestCaseStudy() {
               {/* Card 2: Supabase */}
               <motion.div
                 variants={fadeUp}
-                whileHover={{ y: -10, scale: 1.02 }}
-                className="bg-white p-8 rounded-4xl shadow-lg border border-stone-100 hover:border-green-200 transition-colors group"
+                whileHover={{ y: -15, scale: 1.05, rotateX: 5 }}
+                className="bg-white p-8 rounded-4xl shadow-xl border border-stone-100 hover:border-green-200 transition-all duration-300 group"
               >
-                <div className="w-16 h-16 rounded-2xl bg-green-50 text-green-500 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
+                <div className="w-16 h-16 rounded-2xl bg-green-50 text-green-500 flex items-center justify-center text-3xl mb-6 group-hover:scale-125 group-hover:-rotate-12 transition-transform duration-300">
                   ⚡
                 </div>
                 <h3 className="font-black text-xl text-stone-800 mb-3">
-                  Supabase Sync
+                  supabase sync
                 </h3>
                 <p className="text-sm font-bold text-stone-500 leading-relaxed">
                   utilizing postgres webhooks and realtime channels to broadcast
@@ -348,14 +401,14 @@ export default function NestCaseStudy() {
               {/* Card 3: Tailwind */}
               <motion.div
                 variants={fadeUp}
-                whileHover={{ y: -10, scale: 1.02 }}
-                className="bg-white p-8 rounded-4xl shadow-lg border border-stone-100 hover:border-purple-200 transition-colors group"
+                whileHover={{ y: -15, scale: 1.05, rotateX: 5 }}
+                className="bg-white p-8 rounded-4xl shadow-xl border border-stone-100 hover:border-purple-200 transition-all duration-300 group"
               >
-                <div className="w-16 h-16 rounded-2xl bg-purple-50 text-purple-500 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
+                <div className="w-16 h-16 rounded-2xl bg-purple-50 text-purple-500 flex items-center justify-center text-3xl mb-6 group-hover:scale-125 group-hover:rotate-12 transition-transform duration-300">
                   🎨
                 </div>
                 <h3 className="font-black text-xl text-stone-800 mb-3">
-                  Tailwind v4
+                  tailwind v4
                 </h3>
                 <p className="text-sm font-bold text-stone-500 leading-relaxed">
                   custom physics and micro-interactions built entirely with
