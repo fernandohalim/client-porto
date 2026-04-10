@@ -1,181 +1,372 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import Link from "next/link";
 
 export default function NestCaseStudy() {
+  // variants for staggered animations
+  const fadeUp: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { type: "spring", stiffness: 300, damping: 24 },
+    },
+  };
+
   return (
-    <motion.main
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="min-h-screen bg-[#fdfbf7] text-stone-800 font-sans selection:bg-emerald-200 selection:text-emerald-900 pb-32"
+    <main
+      className="min-h-screen bg-[#fdfbf7] text-stone-800 font-sans selection:bg-emerald-200 selection:text-emerald-900 pb-32 relative overflow-hidden"
       style={{ fontFamily: "'Geist', sans-serif" }}
     >
-      <div className="max-w-4xl mx-auto px-6 pt-12 md:pt-24 relative">
+      {/* --- organic background textures --- */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-start justify-center">
+        {/* subtle dot grid */}
+        <div className="absolute inset-0 bg-[radial-gradient(#e5e5e5_1px,transparent_1px)] bg-size-[24px_24px] opacity-60"></div>
+
+        {/* massive breathing gradient orbs */}
+        <motion.div
+          animate={{ scale: [1, 1.05, 1], opacity: [0.3, 0.5, 0.3] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -top-[20%] -left-[10%] w-200 h-200 bg-emerald-200/40 rounded-full blur-[120px]"
+        />
+        <motion.div
+          animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.4, 0.2] }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1,
+          }}
+          className="absolute top-[20%] -right-[10%] w-150 h-150 bg-yellow-100/50 rounded-full blur-[100px]"
+        />
+      </div>
+
+      <div className="max-w-5xl mx-auto px-6 pt-12 md:pt-24 relative z-10">
         {/* terminal escape hatch */}
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 font-mono text-xs font-bold text-stone-400 hover:text-emerald-600 mb-16 transition-colors group px-4 py-2 bg-white rounded-xl border border-stone-200 shadow-sm hover:shadow-md"
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2 }}
         >
-          <span className="text-stone-300 group-hover:-translate-x-1 transition-transform">
-            &lt;-
-          </span>
-          [return_to_terminal]
-        </Link>
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 font-mono text-xs font-bold text-stone-400 hover:text-emerald-600 mb-16 md:mb-24 transition-all group px-4 py-2 bg-white/80 backdrop-blur-sm rounded-xl border border-stone-200 shadow-sm hover:shadow-md hover:-translate-y-0.5"
+          >
+            <span className="text-stone-300 group-hover:-translate-x-1 transition-transform">
+              &lt;-
+            </span>
+            [return_to_terminal]
+          </Link>
+        </motion.div>
 
         {/* MASSIVE HERO */}
-        <div className="mb-24 relative">
-          {/* decorative blurred glow */}
-          <div className="absolute -top-12 -left-12 w-64 h-64 bg-emerald-200/50 rounded-full blur-3xl pointer-events-none"></div>
-
-          <div className="flex items-center gap-3 mb-6 relative z-10">
-            <span className="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.6)]"></span>
-            <span className="font-bold text-sm tracking-widest text-emerald-600 uppercase">
-              Case Study
-            </span>
-          </div>
-
-          <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-stone-800 mb-6 relative z-10 leading-tight">
-            how i built <span className="text-emerald-700">nest.</span> 🐣
-          </h1>
-          <p className="text-xl font-bold text-stone-500 max-w-2xl leading-relaxed relative z-10">
-            a bouncy, highly interactive expense splitter that uses Google
-            Gemini 2.5 Flash to automatically read your receipts and do the math
-            for you.
-          </p>
-
-          {/* Floating UI Artboard inside the page */}
-          <div className="absolute right-0 top-12 hidden md:block w-72 h-72 pointer-events-none z-0">
-            <div
-              className="absolute top-0 right-0 bg-white border-2 border-stone-100 shadow-xl rounded-2xl p-3 flex items-center gap-3 transform rotate-6 animate-bounce"
-              style={{ animationDuration: "4s" }}
+        <div className="mb-32 md:mb-48 relative flex flex-col md:flex-row items-center gap-12">
+          <motion.div
+            className="w-full md:w-3/5"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              visible: { transition: { staggerChildren: 0.1 } },
+            }}
+          >
+            <motion.div
+              variants={fadeUp}
+              className="flex items-center gap-3 mb-6"
             >
-              <span className="text-stone-300">🔍</span>
-              <span className="text-stone-300 text-xs font-bold">
-                search trips...
+              <span className="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.6)] animate-pulse"></span>
+              <span className="font-bold text-xs tracking-widest text-emerald-600 uppercase bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100">
+                Case Study
               </span>
-            </div>
-            <div
-              className="absolute bottom-12 right-12 bg-stone-900 text-white pl-6 pr-2 py-2 rounded-full shadow-2xl flex items-center gap-3 transform -rotate-3 animate-bounce"
-              style={{ animationDuration: "5s", animationDelay: "1s" }}
+            </motion.div>
+
+            <motion.h1
+              variants={fadeUp}
+              className="text-5xl md:text-7xl font-black tracking-tighter text-stone-800 mb-6 leading-[1.1]"
             >
-              <span className="text-[10px] font-black tracking-widest uppercase">
-                scan
-              </span>
-              <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center relative overflow-hidden">
-                <span className="relative z-10 text-lg">✨</span>
+              how i built <br />
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-teal-500">
+                nest.
+              </span>{" "}
+              🐣
+            </motion.h1>
+
+            <motion.p
+              variants={fadeUp}
+              className="text-lg md:text-xl font-bold text-stone-500 max-w-xl leading-relaxed mb-8"
+            >
+              a bouncy, highly interactive expense splitter that uses{" "}
+              <strong className="text-stone-700">
+                Google Gemini 2.5 Flash
+              </strong>{" "}
+              to automatically read your receipts and do the math for you.
+            </motion.p>
+
+            <motion.div variants={fadeUp} className="flex gap-4">
+              <a
+                href="https://nest-splitbill-app.vercel.app"
+                target="_blank"
+                rel="noreferrer"
+                className="px-6 py-3 bg-stone-900 text-white rounded-full font-black tracking-widest uppercase text-sm shadow-[0_10px_20px_rgba(0,0,0,0.1)] hover:bg-emerald-600 hover:shadow-[0_10px_20px_rgba(16,185,129,0.2)] hover:-translate-y-1 transition-all"
+              >
+                launch live app ↗
+              </a>
+            </motion.div>
+          </motion.div>
+
+          {/* Hero Floating UI Cluster */}
+          <div className="w-full md:w-2/5 h-80 relative hidden md:block perspective-1000">
+            <motion.div
+              animate={{ y: [0, -15, 0], rotateZ: [6, 4, 6] }}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute top-10 right-10 bg-white border border-stone-100 shadow-xl rounded-2xl p-4 flex items-center gap-3 z-10"
+            >
+              <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-black">
+                FH
               </div>
-            </div>
+              <div>
+                <p className="text-sm font-black text-stone-800">
+                  You owe Michael
+                </p>
+                <p className="text-xs font-bold text-emerald-600">$45.00</p>
+              </div>
+            </motion.div>
+
+            <motion.div
+              animate={{ y: [0, 20, 0], rotateZ: [-3, -1, -3] }}
+              transition={{
+                duration: 6,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 1,
+              }}
+              className="absolute bottom-10 left-0 bg-stone-900 text-white pl-6 pr-3 py-3 rounded-full shadow-2xl flex items-center gap-4 z-20"
+            >
+              <span className="text-xs font-black tracking-widest uppercase">
+                scan receipt
+              </span>
+              <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center relative overflow-hidden">
+                <span className="relative z-10 text-sm">✨</span>
+              </div>
+            </motion.div>
           </div>
         </div>
 
         {/* CONTENT SECTIONS */}
-        <div className="space-y-32">
+        <div className="space-y-40">
           {/* Section 1: The Problem */}
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-3xl font-black tracking-tight mb-4 text-stone-800">
-                the problem with splitting tabs.
+          <motion.section
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={{ visible: { transition: { staggerChildren: 0.2 } } }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center"
+          >
+            <motion.div variants={fadeUp}>
+              <div className="text-red-400 font-black text-sm tracking-widest uppercase mb-3">
+                01. The Problem
+              </div>
+              <h2 className="text-3xl md:text-4xl font-black tracking-tight mb-6 text-stone-800">
+                splitting tabs is a nightmare.
               </h2>
-              <p className="text-stone-600 leading-relaxed font-medium">
+              <p className="text-stone-500 leading-relaxed font-bold text-lg">
                 nobody wants to be the accountant on vacation. typing 30 line
                 items from a crumpled dinner receipt into a spreadsheet is a
                 miserable user experience that causes friction between friends.
               </p>
-            </div>
-            <div className="bg-white p-8 rounded-3xl border-2 border-red-100 shadow-sm relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-2 bg-red-400"></div>
-              <div className="font-mono text-xs text-stone-400 space-y-2 blur-[1px]">
-                <p>1x Burger ....... $14.50</p>
-                <p>2x Fries ........ $8.00</p>
-                <p>1x Coke ......... $3.00</p>
-                <p>Tax ............. $2.15</p>
-                <p className="text-red-400 mt-4 font-bold">
-                  ERROR: DOES NOT SUM TO $32.40
-                </p>
-              </div>
-            </div>
-          </section>
+            </motion.div>
+
+            {/* The physical receipt mock */}
+            <motion.div
+              variants={fadeUp}
+              className="relative flex justify-center perspective-1000"
+            >
+              <motion.div
+                whileHover={{ rotateZ: 0, scale: 1.05 }}
+                className="bg-white p-8 w-72 rounded-t-lg shadow-xl border border-stone-200 transform rotate-3"
+              >
+                {/* zig-zag tear effect at bottom */}
+                <div className="absolute bottom-0 left-0 w-full border-b-[6px] border-dashed border-stone-200 translate-y-0.75"></div>
+
+                <div className="text-center mb-6 border-b-2 border-dashed border-stone-200 pb-4">
+                  <h3 className="font-black text-xl text-stone-800 font-serif">
+                    THE DINER
+                  </h3>
+                  <p className="text-[10px] text-stone-400 font-mono uppercase tracking-widest">
+                    Table 42 • Guests: 4
+                  </p>
+                </div>
+
+                <div className="font-mono text-xs text-stone-500 space-y-3">
+                  <div className="flex justify-between">
+                    <span>1x Burger</span>
+                    <span>$14.50</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>2x Fries</span>
+                    <span>$8.00</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>1x Coke</span>
+                    <span>$3.00</span>
+                  </div>
+                  <div className="flex justify-between border-t border-stone-100 pt-2 text-stone-400">
+                    <span>Tax</span>
+                    <span>$2.15</span>
+                  </div>
+                  <div className="flex justify-between font-black text-stone-800 pt-2 text-sm">
+                    <span>TOTAL</span>
+                    <span>$32.40</span>
+                  </div>
+                </div>
+
+                <div className="mt-8 pt-4 border-t-2 border-red-100 bg-red-50 -mx-8 px-8 pb-4 text-center">
+                  <p className="text-red-500 font-black text-xs uppercase tracking-widest">
+                    Wait, who had the coke?
+                  </p>
+                </div>
+              </motion.div>
+            </motion.div>
+          </motion.section>
 
           {/* Section 2: The AI Solution */}
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div className="order-2 md:order-1 bg-emerald-50 p-8 rounded-3xl border-2 border-emerald-100 shadow-sm relative overflow-hidden group">
-              <div className="absolute inset-0 bg-linear-to-b from-transparent to-emerald-100/50"></div>
-              <div className="relative z-10 flex flex-col items-center justify-center h-full gap-4">
-                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center text-3xl shadow-md animate-pulse">
-                  📸
-                </div>
-                <div className="w-full bg-white rounded-xl p-4 shadow-sm border border-emerald-100 transform group-hover:-translate-y-2 transition-transform duration-500">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="font-bold text-sm text-stone-800">
-                      Gemini 2.5 Flash
-                    </span>
-                    <span className="text-[10px] bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full font-bold">
-                      SUCCESS
-                    </span>
-                  </div>
-                  <div className="h-2 bg-stone-100 rounded-full w-3/4 mb-2"></div>
-                  <div className="h-2 bg-stone-100 rounded-full w-1/2"></div>
-                </div>
+          <motion.section
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={{ visible: { transition: { staggerChildren: 0.2 } } }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center"
+          >
+            {/* The laser scanner mock */}
+            <motion.div
+              variants={fadeUp}
+              className="order-2 md:order-1 relative h-96 bg-stone-900 rounded-4xl overflow-hidden border-4 border-stone-800 shadow-2xl flex items-center justify-center group"
+            >
+              {/* placeholder image for the receipt photo */}
+              <div className="w-48 h-64 bg-stone-800 rounded-lg border border-stone-700 flex flex-col items-center justify-center opacity-50">
+                <span className="text-4xl mb-2">🧾</span>
+                <span className="text-stone-500 font-mono text-xs">
+                  processing_image...
+                </span>
               </div>
-            </div>
-            <div className="order-1 md:order-2">
-              <h2 className="text-3xl font-black tracking-tight mb-4 text-stone-800">
+
+              {/* The sweeping laser */}
+              <motion.div
+                animate={{ top: ["0%", "100%", "0%"] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                className="absolute left-0 w-full h-1 bg-emerald-400 shadow-[0_0_20px_rgba(52,211,153,1)] z-10"
+              />
+
+              {/* scanning overlay grid */}
+              <div className="absolute inset-0 bg-[linear-gradient(rgba(16,185,129,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(16,185,129,0.1)_1px,transparent_1px)] bg-size-[20px_20px] pointer-events-none"></div>
+
+              {/* success popups */}
+              <motion.div
+                animate={{ opacity: [0, 1, 0] }}
+                transition={{ duration: 3, repeat: Infinity, delay: 1.5 }}
+                className="absolute bottom-10 bg-emerald-500 text-white font-black text-[10px] uppercase tracking-widest px-4 py-2 rounded-full shadow-lg"
+              >
+                data extracted successfully
+              </motion.div>
+            </motion.div>
+
+            <motion.div variants={fadeUp} className="order-1 md:order-2">
+              <div className="text-emerald-500 font-black text-sm tracking-widest uppercase mb-3">
+                02. The Solution
+              </div>
+              <h2 className="text-3xl md:text-4xl font-black tracking-tight mb-6 text-stone-800">
                 zero manual entry.
               </h2>
-              <p className="text-stone-600 leading-relaxed font-medium">
-                by wiring up the Google Gemini 2.5 Flash vision model, users
-                simply snap a photo of their receipt. nest instantly parses the
-                merchant, date, exact line items, prices, and taxes, converting
-                a physical piece of paper into a digital, splittable tab in less
-                than 3 seconds.
+              <p className="text-stone-500 leading-relaxed font-bold text-lg">
+                by wiring up the{" "}
+                <strong className="text-stone-700">
+                  Google Gemini 2.5 Flash
+                </strong>{" "}
+                vision model, users simply snap a photo of their receipt. nest
+                instantly parses the merchant, date, exact line items, prices,
+                and taxes, converting a physical piece of paper into a digital,
+                splittable tab in less than 3 seconds.
               </p>
-            </div>
-          </section>
+            </motion.div>
+          </motion.section>
 
           {/* Section 3: Engineering the Engine */}
-          <section>
-            <h2 className="text-3xl font-black tracking-tight mb-8 text-stone-800">
-              engineering the engine.
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white p-8 rounded-3xl shadow-sm border-2 border-stone-100 hover:border-emerald-200 transition-colors">
-                <div className="text-3xl mb-4">⚛️</div>
-                <h3 className="font-extrabold text-stone-800 mb-2">
+          <motion.section
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
+          >
+            <motion.div variants={fadeUp} className="text-center mb-16">
+              <div className="text-stone-400 font-black text-sm tracking-widest uppercase mb-3">
+                03. The Architecture
+              </div>
+              <h2 className="text-3xl md:text-5xl font-black tracking-tight text-stone-800">
+                engineering the engine.
+              </h2>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {/* Card 1: Zustand */}
+              <motion.div
+                variants={fadeUp}
+                whileHover={{ y: -10, scale: 1.02 }}
+                className="bg-white p-8 rounded-4xl shadow-lg border border-stone-100 hover:border-blue-200 transition-colors group"
+              >
+                <div className="w-16 h-16 rounded-2xl bg-blue-50 text-blue-500 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
+                  ⚛️
+                </div>
+                <h3 className="font-black text-xl text-stone-800 mb-3">
                   Zustand State
                 </h3>
-                <p className="text-sm font-medium text-stone-500 leading-relaxed">
+                <p className="text-sm font-bold text-stone-500 leading-relaxed">
                   implemented optimistic UI updates. when users tap to settle a
                   debt, the UI updates instantly while syncing to the database
                   silently in the background.
                 </p>
-              </div>
-              <div className="bg-white p-8 rounded-3xl shadow-sm border-2 border-stone-100 hover:border-emerald-200 transition-colors">
-                <div className="text-3xl mb-4">⚡</div>
-                <h3 className="font-extrabold text-stone-800 mb-2">
+              </motion.div>
+
+              {/* Card 2: Supabase */}
+              <motion.div
+                variants={fadeUp}
+                whileHover={{ y: -10, scale: 1.02 }}
+                className="bg-white p-8 rounded-4xl shadow-lg border border-stone-100 hover:border-green-200 transition-colors group"
+              >
+                <div className="w-16 h-16 rounded-2xl bg-green-50 text-green-500 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
+                  ⚡
+                </div>
+                <h3 className="font-black text-xl text-stone-800 mb-3">
                   Supabase Sync
                 </h3>
-                <p className="text-sm font-medium text-stone-500 leading-relaxed">
+                <p className="text-sm font-bold text-stone-500 leading-relaxed">
                   utilizing postgres webhooks and realtime channels to broadcast
-                  settlement events instantly to all group members.
+                  settlement events instantly to all group members, keeping tabs
+                  aligned globally.
                 </p>
-              </div>
-              <div className="bg-white p-8 rounded-3xl shadow-sm border-2 border-stone-100 hover:border-emerald-200 transition-colors">
-                <div className="text-3xl mb-4">🎨</div>
-                <h3 className="font-extrabold text-stone-800 mb-2">
+              </motion.div>
+
+              {/* Card 3: Tailwind */}
+              <motion.div
+                variants={fadeUp}
+                whileHover={{ y: -10, scale: 1.02 }}
+                className="bg-white p-8 rounded-4xl shadow-lg border border-stone-100 hover:border-purple-200 transition-colors group"
+              >
+                <div className="w-16 h-16 rounded-2xl bg-purple-50 text-purple-500 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
+                  🎨
+                </div>
+                <h3 className="font-black text-xl text-stone-800 mb-3">
                   Tailwind v4
                 </h3>
-                <p className="text-sm font-medium text-stone-500 leading-relaxed">
-                  custom physics and micro-interactions built without heavy
-                  animation libraries, keeping the client bundle incredibly
-                  light.
+                <p className="text-sm font-bold text-stone-500 leading-relaxed">
+                  custom physics and micro-interactions built entirely with
+                  modern tailwind features, keeping the client bundle incredibly
+                  light and performant.
                 </p>
-              </div>
+              </motion.div>
             </div>
-          </section>
+          </motion.section>
         </div>
       </div>
-    </motion.main>
+    </main>
   );
 }

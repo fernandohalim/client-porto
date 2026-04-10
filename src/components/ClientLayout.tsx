@@ -1,9 +1,10 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import Navbar from "./NavBar"; // adjust path if needed
-import CommandPalette from "./CommandPalette"; // adjust path if needed
-import Footer from "./Footer"; // adjust path if needed
+import Navbar from "./NavBar";
+import CommandPalette from "./CommandPalette";
+import Footer from "./Footer";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function ClientLayout({
   children,
@@ -11,24 +12,54 @@ export default function ClientLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-
-  // check if we are on the nest case study page
   const isNestPage = pathname?.startsWith("/projects/nest");
 
-  // dynamically swap the global body styles!
   const globalStyles = isNestPage
     ? "bg-[#fdfbf7] text-stone-800 selection:bg-emerald-200 selection:text-emerald-900"
     : "bg-black text-white selection:bg-green-500/30";
 
   return (
-    <div className={`min-h-screen flex flex-col ${globalStyles}`}>
-      {!isNestPage && <Navbar />}
-      {!isNestPage && <CommandPalette />}
-
+    <div
+      className={`min-h-screen flex flex-col transition-colors duration-700 ${globalStyles}`}
+    >
+      <AnimatePresence>
+        {!isNestPage && (
+          <motion.div
+            key="navbar"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.4 } }}
+          >
+            <Navbar />
+          </motion.div>
+        )}{" "}
+      </AnimatePresence>
+      <AnimatePresence>
+        {!isNestPage && (
+          <motion.div
+            key="cmd"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.4 } }}
+          >
+            <CommandPalette />
+          </motion.div>
+        )}
+      </AnimatePresence>
       {/* this will be your page content (either portfolio or nest) */}
-      <div className="flex-grow">{children}</div>
-
-      {!isNestPage && <Footer />}
+      <div className="grow relative z-10">{children}</div>
+      <AnimatePresence>
+        {!isNestPage && (
+          <motion.div
+            key="footer"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.4 } }}
+          >
+            <Footer />
+          </motion.div>
+        )}
+      </AnimatePresence>{" "}
     </div>
   );
 }
