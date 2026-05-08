@@ -11,7 +11,6 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  // adds a subtle border/blur when scrolling down
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
@@ -20,17 +19,17 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // dispatches custom event to open the command palette
   const openCommandPalette = () => {
     window.dispatchEvent(new CustomEvent("open-command-palette"));
-    setIsOpen(false); // close mobile menu if it was open
+    setIsOpen(false);
   };
 
+  // order matches the new page flow: hero → projects → experience → skills → contact
   const homeLinks = [
+    { name: "./projects", href: "#projects" },
+    { name: "./journey", href: "#experience" },
     { name: "./skills", href: "#skills" },
-    { name: "./experience", href: "#experience" },
-    { name: "./clients", href: "#projects" },
-    { name: "./connect", href: "#footer" },
+    { name: "./connect", href: "#contact" },
   ];
 
   return (
@@ -42,7 +41,7 @@ export default function Navbar() {
       }`}
     >
       <div className="max-w-5xl mx-auto px-6 flex items-center justify-between">
-        {/* left: brand / logo */}
+        {/* left: brand */}
         <Link
           href="/"
           className="font-mono text-zinc-100 font-bold hover:text-green-400 transition-colors flex items-center gap-2 z-50"
@@ -60,9 +59,7 @@ export default function Navbar() {
           <span className="text-zinc-600">~#</span>
         </Link>
 
-        {/* right: desktop links & command hint */}
         <div className="flex items-center gap-4 sm:gap-6">
-          {/* desktop standard navigation - only visible on home */}
           {isHome && (
             <div className="hidden md:flex items-center gap-6 font-mono text-sm text-zinc-400">
               {homeLinks.map((link) => (
@@ -77,7 +74,6 @@ export default function Navbar() {
             </div>
           )}
 
-          {/* the /uses route (hidden on mobile, moved to dropdown) */}
           <Link
             href="/uses"
             className={`hidden md:block font-mono text-sm transition-colors ${
@@ -89,7 +85,6 @@ export default function Navbar() {
             /uses
           </Link>
 
-          {/* visual ctrl+k hint / command trigger button */}
           <button
             onClick={openCommandPalette}
             className="group flex items-center gap-2 px-2 sm:px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900/50 hover:bg-zinc-800 hover:border-zinc-500 hover:shadow-[0_0_20px_rgba(255,255,255,0.15)] duration-500 transition-all cursor-pointer z-50"
@@ -109,7 +104,6 @@ export default function Navbar() {
             </div>
           </button>
 
-          {/* mobile menu toggle */}
           <button
             className="md:hidden font-mono text-sm text-zinc-400 hover:text-green-400 transition-colors z-50"
             onClick={() => setIsOpen(!isOpen)}
@@ -119,7 +113,6 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* mobile navigation dropdown */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -130,7 +123,6 @@ export default function Navbar() {
             className="md:hidden absolute top-full left-0 right-0 border-b border-zinc-900 bg-black/95 backdrop-blur-xl shadow-2xl"
           >
             <div className="flex flex-col px-6 py-6 font-mono text-sm text-zinc-400 gap-6">
-              {/* standard links - only render if on home page */}
               {isHome &&
                 homeLinks.map((link) => (
                   <a
@@ -143,7 +135,6 @@ export default function Navbar() {
                   </a>
                 ))}
 
-              {/* always show /uses in mobile menu */}
               <Link
                 href="/uses"
                 onClick={() => setIsOpen(false)}

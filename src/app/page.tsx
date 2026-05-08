@@ -13,9 +13,9 @@ export default function Home() {
         <Hero />
       </FadeUp>
 
-      <div id="skills" />
+      <div id="projects" />
       <FadeUp delay={0.1}>
-        <Skills />
+        <Projects />
       </FadeUp>
 
       <div id="experience" />
@@ -23,12 +23,11 @@ export default function Home() {
         <Experience />
       </FadeUp>
 
-      <div id="projects" />
+      <div id="skills" />
       <FadeUp delay={0.1}>
-        <Projects />
+        <Skills />
       </FadeUp>
 
-      <div id="footer" />
       <FadeUp delay={0.1}>
         <Contact />
       </FadeUp>

@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Navbar from "./NavBar";
 import CommandPalette from "./CommandPalette";
 import Footer from "./Footer";
+import PageTransition from "@/utilities/PageTransition";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function ClientLayout({
@@ -33,7 +34,7 @@ export default function ClientLayout({
           >
             <Navbar />
           </motion.div>
-        )}{" "}
+        )}
       </AnimatePresence>
       <AnimatePresence>
         {!isNestPage && (
@@ -47,8 +48,11 @@ export default function ClientLayout({
           </motion.div>
         )}
       </AnimatePresence>
-      {/* this will be your page content (either portfolio or nest) */}
-      <div className="grow relative z-10">{children}</div>
+
+      <div className="grow relative z-10">
+        <PageTransition>{children}</PageTransition>
+      </div>
+
       <AnimatePresence>
         {!isNestPage && (
           <motion.div
@@ -60,7 +64,7 @@ export default function ClientLayout({
             <Footer />
           </motion.div>
         )}
-      </AnimatePresence>{" "}
+      </AnimatePresence>
     </div>
   );
 }
