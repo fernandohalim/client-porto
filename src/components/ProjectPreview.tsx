@@ -165,6 +165,41 @@ export default function ProjectPreview({
       style={{ background: tintBg }}
     >
       <div className="absolute inset-0 opacity-50 [background-image:radial-gradient(rgba(34,32,28,0.10)_1px,transparent_1px)] [background-size:16px_16px]" />
+
+      {/* depth + life behind the phone mockups (nest featured card) */}
+      {frame === "phone" && shots.length > 0 && (
+        <>
+          <div
+            className="absolute -top-10 -left-12 w-56 h-56 rounded-full bg-[#5f8a5a]/30 blur-3xl animate-pulse"
+            style={{ animationDuration: "6s" }}
+            aria-hidden
+          />
+          <div
+            className="absolute -bottom-16 -right-10 w-60 h-60 rounded-full bg-[#7fb89a]/25 blur-3xl animate-pulse"
+            style={{ animationDuration: "8s", animationDelay: "1s" }}
+            aria-hidden
+          />
+          <div
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full border border-[#5f8a5a]/15"
+            aria-hidden
+          />
+          <div
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-44 h-44 rounded-full border border-[#5f8a5a]/20"
+            aria-hidden
+          />
+          <span
+            className="absolute top-8 right-10 w-1.5 h-1.5 rounded-full bg-[#bd6a4a]/60 animate-pulse"
+            style={{ animationDuration: "3s" }}
+            aria-hidden
+          />
+          <span
+            className="absolute bottom-12 left-12 w-1 h-1 rounded-full bg-[#5f8a5a]/70 animate-pulse"
+            style={{ animationDuration: "4s", animationDelay: "0.6s" }}
+            aria-hidden
+          />
+        </>
+      )}
+
       {renderFrames()}
     </div>
   );

@@ -192,21 +192,49 @@ export default function Projects() {
             className="group cursor-pointer grid grid-cols-1 md:grid-cols-2 overflow-hidden rounded-2xl border border-line bg-surface transition-all duration-500 hover:-translate-y-1.5 hover:border-line-2 hover:shadow-[0_30px_60px_-38px_rgba(34,32,28,0.4)]"
           >
             {/* dark editor preview — signals noted's terminal identity */}
-            {/* mobile: top (order-1), desktop: right (md:order-2) */}
             <div
-              className="relative min-h-75 bg-[#0a0a0a] overflow-hidden flex flex-col order-1 md:order-2"
+              className="relative min-h-[300px] bg-[#0a0a0a] overflow-hidden flex flex-col"
               style={{
                 fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
               }}
             >
-              <div className="flex items-center gap-2 h-9 px-4 border-b border-[#262626] shrink-0">
-                <span className="w-2 h-2 rounded-full bg-[#d97757]" />
+              {/* accent glow that warms up on hover */}
+              <div
+                className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 w-64 h-64 rounded-full bg-[#d97757]/10 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                aria-hidden
+              />
+              {/* faint dot grid for depth */}
+              <div
+                className="pointer-events-none absolute inset-0 opacity-60 [background-image:radial-gradient(#1a1a1a_1px,transparent_1px)] [background-size:18px_18px]"
+                aria-hidden
+              />
+
+              <div className="relative flex items-center gap-2 h-9 px-4 border-b border-[#262626] shrink-0">
+                <motion.span
+                  className="w-2 h-2 rounded-full bg-[#d97757]"
+                  animate={{ opacity: [1, 0.35, 1] }}
+                  transition={{
+                    duration: 2.4,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                />
                 <span className="text-[#888] text-xs">noted</span>
                 <span className="ml-auto text-[#888] text-[11px]">saved</span>
               </div>
-              <div className="flex-1 p-5 text-[13px] leading-relaxed">
+
+              <div className="relative flex-1 p-5 text-[13px] leading-relaxed">
                 <p className="text-[#d97757] font-bold">
                   {"# local-first notes"}
+                  <motion.span
+                    className="inline-block w-[7px] h-[15px] align-middle ml-1 bg-[#d97757]"
+                    animate={{ opacity: [1, 1, 0, 0] }}
+                    transition={{
+                      duration: 1.1,
+                      repeat: Infinity,
+                      times: [0, 0.5, 0.5, 1],
+                    }}
+                  />
                 </p>
                 <p className="text-[#e5e5e5] mt-2">
                   markdown that saves offline,
@@ -219,8 +247,13 @@ export default function Projects() {
                 <p className="text-[#d97757]">
                   - [x] <span className="text-[#e5e5e5]">3-way merge</span>
                 </p>
+                {/* this task "completes" itself on hover */}
                 <p className="text-[#d97757]">
-                  - [ ] <span className="text-[#e5e5e5]">ship v2.1</span>
+                  <span className="group-hover:hidden">- [ ]</span>
+                  <span className="hidden group-hover:inline">- [x]</span>{" "}
+                  <span className="text-[#e5e5e5] transition-colors duration-300 group-hover:text-[#888] group-hover:line-through">
+                    ship v2.1
+                  </span>
                 </p>
               </div>
             </div>
