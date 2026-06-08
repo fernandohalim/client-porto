@@ -6,6 +6,7 @@ import CommandPalette from "./CommandPalette";
 import Footer from "./Footer";
 import PageTransition from "@/utilities/PageTransition";
 import { motion, AnimatePresence } from "framer-motion";
+import ScrollProgress from "@/utilities/ScrollProgress";
 
 export default function ClientLayout({
   children,
@@ -24,6 +25,7 @@ export default function ClientLayout({
       id="global-layout"
       className={`min-h-screen flex flex-col transition-colors duration-700 ${globalStyles}`}
     >
+      {!isNestPage && <ScrollProgress />}
       <AnimatePresence>
         {!isNestPage && (
           <motion.div

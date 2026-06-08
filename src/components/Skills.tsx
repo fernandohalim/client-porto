@@ -102,7 +102,7 @@ export default function Skills() {
         </Reveal>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
           {ACTIVE_STACK.map((item, i) => (
-            <Reveal key={item.key} delay={(i % 3) * 0.06}>
+            <Reveal key={item.key} delay={(i % 3) * 0.04}>
               <SkillCard item={item} />
             </Reveal>
           ))}
@@ -116,7 +116,7 @@ export default function Skills() {
         </Reveal>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 opacity-90">
           {ARCHIVE_STACK.map((item, i) => (
-            <Reveal key={item.key} delay={(i % 3) * 0.06}>
+            <Reveal key={item.key} delay={(i % 3) * 0.04}>
               <SkillCard item={item} />
             </Reveal>
           ))}

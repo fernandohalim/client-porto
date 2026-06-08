@@ -1,8 +1,18 @@
 "use client";
 
+import { motion, Variants } from "framer-motion";
 import Reveal from "@/utilities/Reveal";
 
 export default function Hero() {
+  const lineVariant: Variants = {
+    hidden: { opacity: 0, y: 24, filter: "blur(6px)" },
+    visible: {
+      opacity: 1,
+      y: 0,
+      filter: "blur(0px)",
+      transition: { duration: 0.8, ease: [0.2, 0.7, 0.2, 1] },
+    },
+  };
   return (
     <section
       id="hero"
@@ -15,14 +25,40 @@ export default function Hero() {
         </div>
       </Reveal>
 
-      <Reveal delay={0.12}>
-        <h1 className="font-serif font-light tracking-tight leading-[1.02] text-[clamp(2.6rem,7vw,5.6rem)] mt-7">
+      <motion.h1
+        className="font-serif font-light tracking-tight leading-[1.06] text-[clamp(2.6rem,7vw,5.6rem)] mt-7"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={{
+          visible: {
+            transition: { staggerChildren: 0.14, delayChildren: 0.1 },
+          },
+        }}
+      >
+        <motion.span className="block" variants={lineVariant}>
           I build software that{" "}
-          <em className="italic text-accent font-normal">respects</em> its users
-          — in <em className="italic font-normal">speed</em> and in{" "}
+          <span className="relative inline-block">
+            <em className="italic text-accent font-normal">respects</em>
+            <motion.span
+              className="absolute left-0 -bottom-1 h-0.5 w-full origin-left bg-accent/60"
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true }}
+              transition={{
+                delay: 0.75,
+                duration: 0.6,
+                ease: [0.2, 0.7, 0.2, 1],
+              }}
+            />
+          </span>{" "}
+          its
+        </motion.span>
+        <motion.span className="block" variants={lineVariant}>
+          users — in <em className="italic font-normal">speed</em> and in{" "}
           <em className="italic font-normal">detail.</em>
-        </h1>
-      </Reveal>
+        </motion.span>
+      </motion.h1>
 
       <Reveal delay={0.24}>
         <p className="mt-8 max-w-[52ch] text-ink-2 text-[clamp(1.05rem,1.7vw,1.3rem)] leading-relaxed">

@@ -1,7 +1,8 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { motion, Variants, useScroll, useSpring } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -56,6 +57,7 @@ export default function NestCaseStudy() {
       className="min-h-screen bg-[#fdfbf7] text-stone-800 font-sans selection:bg-emerald-200 selection:text-emerald-900 pb-32 relative overflow-hidden"
       style={{ fontFamily: "'Geist', sans-serif" }}
     >
+      <ScrollProgress />
       {/* ─── ambient background ─────────────────────────────────────────── */}
       <motion.div
         initial={{ opacity: 0 }}
@@ -101,12 +103,12 @@ export default function NestCaseStudy() {
         >
           <Link
             href="/"
-            className="inline-flex items-center gap-2 font-mono text-xs font-bold text-stone-400 hover:text-emerald-600 mb-12 md:mb-16 transition-all group px-4 py-2 bg-white/80 backdrop-blur-sm rounded-xl border border-stone-200 shadow-sm hover:shadow-md hover:-translate-y-0.5"
+            className="inline-flex items-center gap-2 text-xs font-bold text-stone-400 hover:text-emerald-600 mb-12 md:mb-16 transition-all group px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-stone-200 shadow-sm hover:shadow-md hover:-translate-y-0.5"
           >
             <span className="text-stone-300 group-hover:-translate-x-1 transition-transform">
-              &lt;-
+              ←
             </span>
-            [return_to_terminal]
+            back to portfolio
           </Link>
         </motion.div>
 
@@ -144,6 +146,123 @@ export default function NestCaseStudy() {
   );
 }
 
+function ScrollProgress() {
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 120,
+    damping: 30,
+    mass: 0.4,
+  });
+  return (
+    <motion.div
+      style={{ scaleX }}
+      className="fixed top-0 left-0 right-0 h-1 origin-left z-50 bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-500"
+    />
+  );
+}
+
+function MemberAvatars() {
+  const members = [
+    { i: "ro", bg: "bg-amber-100 text-amber-700" },
+    { i: "me", bg: "bg-purple-100 text-purple-700" },
+    { i: "na", bg: "bg-sky-100 text-sky-700" },
+    { i: "ki", bg: "bg-rose-100 text-rose-700" },
+  ];
+  return (
+    <div className="flex -space-x-2">
+      {members.map((m, idx) => (
+        <motion.div
+          key={m.i}
+          initial={{ opacity: 0, scale: 0.4 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: false }}
+          transition={{
+            delay: idx * 0.08,
+            type: "spring",
+            stiffness: 320,
+            damping: 16,
+          }}
+          className={`w-8 h-8 rounded-full ${m.bg} border-2 border-white flex items-center justify-center text-[10px] font-black`}
+        >
+          {m.i}
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
+function SocialSquares() {
+  const socials = [
+    {
+      label: "Live app",
+      href: "https://nest-splitbill-app.vercel.app",
+      svg: (
+        <svg
+          className="w-5 h-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.7"
+        >
+          <circle cx="12" cy="12" r="9" />
+          <path d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18" />
+        </svg>
+      ),
+    },
+    {
+      label: "LinkedIn",
+      href: "https://www.linkedin.com/in/fernando-halimm",
+      svg: (
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M4.98 3.5a2 2 0 11-.02 4 2 2 0 01.02-4zM3 8.5h4V21H3V8.5zM9 8.5h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.4c0-1.29-.02-2.95-1.8-2.95-1.8 0-2.08 1.4-2.08 2.85V21H9V8.5z" />
+        </svg>
+      ),
+    },
+    {
+      label: "GitHub",
+      href: "https://github.com/fernandohalim/nest-app",
+      svg: (
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.37-3.37-1.37-.46-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.55-1.14-4.55-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05A9.36 9.36 0 0112 6.84c.85 0 1.71.12 2.51.34 1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .27.18.6.69.49A10.02 10.02 0 0022 12.25C22 6.58 17.52 2 12 2z" />
+        </svg>
+      ),
+    },
+    {
+      label: "Email",
+      href: "mailto:fernandohalim26@gmail.com",
+      svg: (
+        <svg
+          className="w-5 h-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.7"
+        >
+          <rect x="3" y="5" width="18" height="14" rx="2" />
+          <path d="M3 7l9 6 9-6" />
+        </svg>
+      ),
+    },
+  ];
+  return (
+    <div className="mt-10 flex gap-3">
+      {socials.map((s) => (
+        <motion.a
+          key={s.label}
+          href={s.href}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={s.label}
+          whileHover={{ y: -4 }}
+          className="w-12 h-12 rounded-2xl bg-white text-stone-700 shadow-lg shadow-emerald-900/10 flex items-center justify-center hover:text-emerald-600 transition-colors"
+        >
+          {s.svg}
+        </motion.a>
+      ))}
+    </div>
+  );
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // HERO
 // ─────────────────────────────────────────────────────────────────────────────
@@ -158,6 +277,27 @@ function Hero({ fadeUp }: { fadeUp: Variants }) {
         viewport={{ once: false, amount: 0.3 }}
         variants={{ visible: { transition: { staggerChildren: 0.12 } } }}
       >
+        <motion.div variants={fadeUp} className="mb-6">
+          <div className="relative inline-flex">
+            <motion.div
+              animate={{ y: [0, -6, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              whileHover={{ rotate: -6, scale: 1.05 }}
+              className="w-16 h-16 rounded-[1.25rem] overflow-hidden shadow-xl shadow-emerald-900/10 ring-1 ring-black/5"
+            >
+              <Image
+                src="/nest-icon.png"
+                alt="nest app icon"
+                width={64}
+                height={64}
+                className="w-full h-full object-cover"
+              />
+            </motion.div>
+            <span className="absolute -bottom-1.5 -right-1.5 w-6 h-6 rounded-full bg-emerald-500 border-4 border-[#fdfbf7] flex items-center justify-center text-[10px] shadow-lg shadow-emerald-500/30">
+              ✨
+            </span>
+          </div>
+        </motion.div>
         <motion.div variants={fadeUp} className="flex items-center gap-3 mb-6">
           <span className="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.6)] animate-pulse" />
           <span className="font-bold text-xs tracking-widest text-emerald-600 uppercase bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100">
@@ -175,9 +315,6 @@ function Hero({ fadeUp }: { fadeUp: Variants }) {
           how i built <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-500">
             nest.
-          </span>{" "}
-          <span className="inline-block hover:rotate-12 transition-transform duration-300">
-            🐣
           </span>
         </motion.h1>
 
@@ -470,6 +607,12 @@ function TwoProducts({
               owner, real-time multi-device sync, optional collaborative-edit
               mode. lives forever once marked settled.
             </p>
+            <div className="flex items-center gap-3 mb-6">
+              <MemberAvatars />
+              <span className="text-[11px] font-black text-stone-400 uppercase tracking-widest">
+                4 members
+              </span>
+            </div>
             <div className="space-y-2">
               {[
                 "real-time supabase channels",
@@ -506,6 +649,9 @@ function TwoProducts({
                 <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
                 ephemeral · 7 days
               </span>
+            </div>
+            <div className="inline-flex items-center gap-1.5 mb-4 text-[10px] font-black uppercase tracking-wide text-amber-300 bg-amber-400/10 border border-amber-400/30 px-2.5 py-1 rounded-md">
+              ⏳ expires in 5 days
             </div>
             <h3 className="text-2xl font-black text-white mb-3">receipts</h3>
             <p className="text-sm font-bold text-stone-400 leading-relaxed mb-6">
@@ -1627,6 +1773,22 @@ function FinalCTA({ fadeUp }: { fadeUp: Variants }) {
           aria-hidden
         />
 
+        <motion.div
+          animate={{ y: [0, -10, 0], rotate: [0, -4, 0] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          className="hidden md:block absolute top-10 right-12 z-10"
+        >
+          <div className="w-20 h-20 rounded-3xl bg-white/95 p-2 shadow-2xl shadow-emerald-900/30 ring-1 ring-white/40">
+            <Image
+              src="/nest-icon.png"
+              alt="nest"
+              width={64}
+              height={64}
+              className="w-full h-full rounded-2xl object-cover"
+            />
+          </div>
+        </motion.div>
+
         <div className="relative z-10 max-w-3xl">
           <span className="text-[10px] font-black text-emerald-200 uppercase tracking-[0.3em] mb-4 block">
             08. ship it
@@ -1669,6 +1831,8 @@ function FinalCTA({ fadeUp }: { fadeUp: Variants }) {
               source on github ⌥
             </a>
           </div>
+
+          <SocialSquares />
 
           <div className="mt-12 pt-8 border-t border-emerald-400/20 flex flex-wrap items-center gap-x-8 gap-y-3 text-[11px] font-black text-emerald-200 uppercase tracking-widest">
             <span className="flex items-center gap-2">

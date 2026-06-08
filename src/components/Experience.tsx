@@ -1,11 +1,11 @@
 "use client";
 
 import Reveal from "@/utilities/Reveal";
-import BrandIcon, { BrandKey } from "./BrandIcon";
+import Image from "next/image";
 
 type ExperienceEntry = {
   id: string;
-  brand: BrandKey;
+  logo: string;
   company: string;
   role: string;
   date: string;
@@ -18,7 +18,7 @@ type ExperienceEntry = {
 const experiences: ExperienceEntry[] = [
   {
     id: "rintis",
-    brand: "rintis",
+    logo: "/logos/rintis.jfif",
     company: "PT Rintis Sejahtera",
     role: "Java Application Developer",
     date: "Oct 2024 — Present",
@@ -33,7 +33,7 @@ const experiences: ExperienceEntry[] = [
   },
   {
     id: "webin",
-    brand: "webin",
+    logo: "/logos/webin.jfif",
     company: "WEBin",
     role: "Fullstack Web Developer",
     date: "Feb 2023 — Present",
@@ -48,7 +48,7 @@ const experiences: ExperienceEntry[] = [
   },
   {
     id: "overo",
-    brand: "overo",
+    logo: "/logos/overo.jfif",
     company: "PT Overo Digital Global",
     role: "Frontend Developer",
     date: "Aug 2022 — Jan 2023",
@@ -83,11 +83,14 @@ export default function Experience() {
             <Reveal key={exp.id} delay={i * 0.08}>
               <div className="relative pl-20">
                 {/* node */}
-                <div className="absolute left-0 top-0 w-12 h-12 rounded-xl border border-line bg-surface flex items-center justify-center p-2.5">
-                  <BrandIcon variant={exp.brand} />
-                  {exp.active && (
-                    <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-[#6f9a6a] border-2 border-paper" />
-                  )}
+                <div className="absolute left-0 top-0 w-12 h-12 rounded-xl border border-line bg-surface flex items-center justify-center p-2 overflow-hidden">
+                  <Image
+                    src={exp.logo}
+                    alt={exp.company}
+                    width={32}
+                    height={32}
+                    className="w-full h-full object-contain"
+                  />
                 </div>
 
                 {/* card */}

@@ -1,226 +1,137 @@
-"use client";
-
 import Link from "next/link";
-import Typewriter from "@/utilities/Typewriter";
-import DecryptText from "@/utilities/DecryptText";
-import FadeUp from "@/utilities/FadeUp";
+import Reveal from "@/utilities/Reveal";
+
+const cardClass =
+  "h-full rounded-2xl border border-line bg-surface p-8 transition-all duration-500 hover:border-line-2 hover:shadow-[0_30px_60px_-40px_rgba(34,32,28,0.35)]";
+const labelClass = "text-faint text-xs uppercase tracking-[0.14em]";
+const chipClass =
+  "text-[12.5px] text-ink-2 border border-line rounded-full px-3 py-1";
 
 export default function Uses() {
   return (
-    <main className="min-h-screen bg-black relative flex flex-col selection:bg-green-500/30">
-      {/* crt & grid background pattern */}
+    <main className="min-h-screen bg-paper max-w-5xl mx-auto px-6 pt-32 pb-28">
+      <Reveal>
+        <Link
+          href="/"
+          className="group inline-flex items-center gap-2 text-sm text-ink-2 hover:text-ink transition-colors mb-12"
+        >
+          <span className="transition-transform group-hover:-translate-x-1">
+            ←
+          </span>
+          Back home
+        </Link>
+      </Reveal>
 
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        {/* aggressive inward-fading diagonal grid */}
-        <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,#4f4f4f2e_0,#4f4f4f2e_1px,transparent_1px,transparent_32px),repeating-linear-gradient(-45deg,#4f4f4f2e_0,#4f4f4f2e_1px,transparent_1px,transparent_32px)] mask-[radial-gradient(ellipse_50%_50%_at_50%_50%,#000_0%,transparent_80%)]"></div>
+      <Reveal delay={0.05}>
+        <span className={labelClass}>Colophon</span>
+        <h1 className="font-serif font-light tracking-tight text-[clamp(2.4rem,6vw,4rem)] mt-4 mb-5">
+          Hardware &amp; <em className="italic">software.</em>
+        </h1>
+        <p className="text-ink-2 max-w-[52ch] leading-relaxed mb-16 text-lg">
+          A breakdown of my daily drivers — from Apple silicon to the tooling
+          behind high-volume database work.
+        </p>
+      </Reveal>
 
-        {/* subtle zinc glows for depth */}
-        <div className="absolute top-1/4 left-1/4 -translate-y-1/2 -translate-x-1/2 w-75 md:w-125 h-75 md:h-125 bg-zinc-800/10 rounded-full blur-[100px] md:blur-[120px]"></div>
-        <div className="absolute bottom-1/4 right-1/4 translate-y-1/2 translate-x-1/2 w-62.5 md:w-100 h-62.5 md:h-100 bg-zinc-900/30 rounded-full blur-[100px] md:blur-[120px]"></div>
-
-        {/* crt scanlines overlay */}
-        <div className="absolute inset-0 opacity-30 bg-[linear-gradient(to_bottom,transparent_50%,rgba(0,0,0,1)_50%)] bg-size-[100%_4px]"></div>
-
-        {/* fisheye vignette shadow */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_60%,rgba(0,0,0,0.9)_100%)]"></div>
-      </div>
-
-      {/* main content */}
-      <div className="max-w-5xl mx-auto px-6 pt-32 pb-24 relative z-10 w-full grow">
-        {/* navigation back to home */}
-        <div className="mb-4">
-          <FadeUp delay={0.1}>
-            <Link
-              href="/"
-              className="group inline-flex items-center gap-2 font-mono text-sm text-zinc-500 hover:text-green-400 transition-colors"
-            >
-              <span className="text-zinc-700 group-hover:text-green-500/50 transition-colors">
-                cd
-              </span>
-              ../home
-            </Link>
-          </FadeUp>
-        </div>
-
-        {/* page header */}
-        <div className="mb-16">
-          <FadeUp delay={0.2}>
-            <Typewriter command="cat " args="inventory.sys" speed={40} />
-            <h1 className="mt-6 text-4xl md:text-5xl font-mono font-bold tracking-tight mb-4 text-transparent bg-clip-text bg-linear-to-b from-white to-zinc-500">
-              hardware & <br className="md:hidden" />
-              <DecryptText text="software_stack." />
-            </h1>
-            <p className="text-zinc-400 font-mono text-sm md:text-base leading-relaxed max-w-2xl lowercase">
-              a detailed breakdown of my daily drivers. from apple silicon to
-              the architecture powering high-volume database operations.
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <Reveal className="md:col-span-2" delay={0.05}>
+          <div className={cardClass}>
+            <span className={labelClass}>Workstation</span>
+            <h3 className="font-serif text-2xl mt-2 mb-4">The daily driver</h3>
+            <p className="text-ink-2 leading-relaxed mb-6">
+              A <span className="text-ink">MacBook Air M2</span> — incredible
+              battery life and a Unix environment out of the box. Apple silicon
+              runs my Spring Boot microservices, Node environments, and
+              dockerized tests in total silence.
             </p>
-          </FadeUp>
-        </div>
-
-        {/* bento box grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* workstation rig (spans 2 columns on desktop) */}
-          <div className="md:col-span-2">
-            <FadeUp delay={0.3} className="h-full">
-              <div className="p-8 rounded-2xl border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900/40 hover:border-green-500/50 hover:shadow-[0_0_30px_rgba(34,197,94,0.1)] transition-all duration-500 group relative overflow-hidden backdrop-blur-xs flex flex-col h-full">
-                <div className="absolute -top-20 -right-20 w-64 h-64 bg-green-600/10 rounded-full blur-[80px] pointer-events-none group-hover:bg-green-500/20 transition-colors duration-500"></div>
-
-                <div className="relative z-10 flex flex-col grow">
-                  <h3 className="text-xl font-mono text-zinc-100 font-bold mb-2">
-                    workstation.hw
-                  </h3>
-                  <p className="font-mono text-xs text-green-500/70 mb-6">
-                    /dev/system/core
-                  </p>
-                  <p className="text-zinc-400 font-mono text-sm leading-relaxed mb-6 grow">
-                    my primary daily driver is a{" "}
-                    <span className="text-zinc-200">macbook air m2</span>. it
-                    provides incredible battery life and a unix-based
-                    environment right out of the box. apple silicon handles all
-                    my java spring boot microservices, node environments, and
-                    dockerized testing setups flawlessly while staying
-                    completely silent.
-                  </p>
-                  <div className="flex flex-wrap gap-2 mt-auto">
-                    <span className="text-xs font-mono text-zinc-400 bg-zinc-800/30 px-3 py-1.5 rounded border border-zinc-700/30">
-                      [macbook_air_m2]
-                    </span>
-                    <span className="text-xs font-mono text-zinc-400 bg-zinc-800/30 px-3 py-1.5 rounded border border-zinc-700/30">
-                      [apple_silicon]
-                    </span>
-                    <span className="text-xs font-mono text-zinc-400 bg-zinc-800/30 px-3 py-1.5 rounded border border-zinc-700/30">
-                      [unix_core]
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </FadeUp>
+            <div className="flex flex-wrap gap-2">
+              {["MacBook Air M2", "Apple Silicon", "Unix"].map((t) => (
+                <span key={t} className={chipClass}>
+                  {t}
+                </span>
+              ))}
+            </div>
           </div>
+        </Reveal>
 
-          {/* peripherals */}
-          <div className="md:col-span-1">
-            <FadeUp delay={0.4} className="h-full">
-              <div className="p-8 rounded-2xl border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900/40 hover:border-green-500/50 hover:shadow-[0_0_30px_rgba(34,197,94,0.1)] transition-all duration-500 group relative overflow-hidden backdrop-blur-xs flex flex-col h-full">
-                <div className="absolute -top-20 -right-20 w-64 h-64 bg-green-600/10 rounded-full blur-[80px] pointer-events-none group-hover:bg-green-500/20 transition-colors duration-500"></div>
-
-                <div className="relative z-10 flex flex-col grow">
-                  <h3 className="text-xl font-mono text-zinc-100 font-bold mb-2">
-                    peripherals.io
-                  </h3>
-                  <p className="font-mono text-xs text-green-500/70 mb-6">
-                    /dev/input
-                  </p>
-                  <ul className="text-zinc-400 font-mono text-sm space-y-4 grow">
-                    <li className="flex items-start gap-3">
-                      <span className="text-green-500 mt-0.5">{">"}</span>
-                      <span>
-                        <strong className="text-zinc-200 font-normal">
-                          lofree flow2 84-keys
-                        </strong>
-                        : my main low-profile board.
-                      </span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-green-500 mt-0.5">{">"}</span>
-                      <span>
-                        <strong className="text-zinc-200 font-normal">
-                          royal kludge rk65
-                        </strong>
-                        : compact secondary mechanical.
-                      </span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-green-500 mt-0.5">{">"}</span>
-                      <span>
-                        <strong className="text-zinc-200 font-normal">
-                          razer basilisk
-                        </strong>{" "}
-                        & 27&quot; 2k monitors for massive screen real estate.
-                      </span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </FadeUp>
+        <Reveal delay={0.12}>
+          <div className={cardClass}>
+            <span className={labelClass}>Peripherals</span>
+            <h3 className="font-serif text-2xl mt-2 mb-4">Desk</h3>
+            <ul className="space-y-3 text-sm text-ink-2">
+              <li className="flex gap-2.5">
+                <span className="text-accent mt-0.5 shrink-0">↳</span>
+                <span>
+                  <span className="text-ink">Lofree Flow2 (84-key)</span> — main
+                  low-profile board.
+                </span>
+              </li>
+              <li className="flex gap-2.5">
+                <span className="text-accent mt-0.5 shrink-0">↳</span>
+                <span>
+                  <span className="text-ink">Royal Kludge RK65</span> — compact
+                  secondary mechanical.
+                </span>
+              </li>
+              <li className="flex gap-2.5">
+                <span className="text-accent mt-0.5 shrink-0">↳</span>
+                <span>
+                  <span className="text-ink">Razer Basilisk</span> &amp; dual
+                  27&quot; 2K monitors.
+                </span>
+              </li>
+            </ul>
           </div>
+        </Reveal>
 
-          {/* code & terminal */}
-          <div className="md:col-span-1">
-            <FadeUp delay={0.5} className="h-full">
-              <div className="p-8 rounded-2xl border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900/40 hover:border-green-500/50 hover:shadow-[0_0_30px_rgba(34,197,94,0.1)] transition-all duration-500 group relative overflow-hidden backdrop-blur-xs flex flex-col h-full">
-                <div className="absolute -top-20 -right-20 w-64 h-64 bg-green-600/10 rounded-full blur-[80px] pointer-events-none group-hover:bg-green-500/20 transition-colors duration-500"></div>
-
-                <div className="relative z-10 flex flex-col grow">
-                  <h3 className="text-xl font-mono text-zinc-100 font-bold mb-2">
-                    editor.sh
-                  </h3>
-                  <p className="font-mono text-xs text-green-500/70 mb-6">
-                    /usr/bin/env
-                  </p>
-                  <p className="text-zinc-400 font-mono text-sm leading-relaxed mb-6 grow">
-                    i split my workflow strictly by domain.{" "}
-                    <span className="text-zinc-200">intellij idea</span> handles
-                    all the heavy lifting for java, while{" "}
-                    <span className="text-zinc-200">vscode</span> is my go-to
-                    for react and next.js. for system ops, i live in macos
-                    terminal and iterm2.
-                  </p>
-                  <div className="flex flex-wrap gap-2 mt-auto">
-                    <span className="text-xs font-mono text-zinc-400 bg-zinc-800/30 px-3 py-1.5 rounded border border-zinc-700/30">
-                      [intellij_idea]
-                    </span>
-                    <span className="text-xs font-mono text-zinc-400 bg-zinc-800/30 px-3 py-1.5 rounded border border-zinc-700/30">
-                      [vscode]
-                    </span>
-                    <span className="text-xs font-mono text-zinc-400 bg-zinc-800/30 px-3 py-1.5 rounded border border-zinc-700/30">
-                      [iterm2]
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </FadeUp>
+        <Reveal delay={0.05}>
+          <div className={cardClass}>
+            <span className={labelClass}>Editors</span>
+            <h3 className="font-serif text-2xl mt-2 mb-4">Split by domain</h3>
+            <p className="text-ink-2 leading-relaxed mb-6">
+              <span className="text-ink">IntelliJ IDEA</span> does the heavy
+              lifting for Java; <span className="text-ink">VS Code</span> for
+              React and Next.js. For system ops I live in the macOS terminal and
+              iTerm2.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {["IntelliJ IDEA", "VS Code", "iTerm2"].map((t) => (
+                <span key={t} className={chipClass}>
+                  {t}
+                </span>
+              ))}
+            </div>
           </div>
+        </Reveal>
 
-          {/* database tools (spans 2 columns) */}
-          <div className="md:col-span-2">
-            <FadeUp delay={0.6} className="h-full">
-              <div className="p-8 rounded-2xl border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900/40 hover:border-green-500/50 hover:shadow-[0_0_30px_rgba(34,197,94,0.1)] transition-all duration-500 group relative overflow-hidden backdrop-blur-xs flex flex-col h-full">
-                <div className="absolute -top-20 -right-20 w-64 h-64 bg-green-600/10 rounded-full blur-[80px] pointer-events-none group-hover:bg-green-500/20 transition-colors duration-500"></div>
-
-                <div className="relative z-10 flex flex-col grow">
-                  <h3 className="text-xl font-mono text-zinc-100 font-bold mb-2">
-                    database.sql
-                  </h3>
-                  <p className="font-mono text-xs text-green-500/70 mb-6">
-                    /var/lib/data
-                  </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 text-zinc-400 font-mono text-sm grow">
-                    <div>
-                      <p className="text-zinc-200 mb-3 border-b border-zinc-800 pb-2">
-                        datagrip
-                      </p>
-                      <p className="leading-relaxed">
-                        my primary database gui. excellent for managing general
-                        schemas, running complex queries, and inspecting large
-                        data sets efficiently.
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-zinc-200 mb-3 border-b border-zinc-800 pb-2">
-                        pl/sql developer
-                      </p>
-                      <p className="leading-relaxed">
-                        the specialized tool. i use this strictly for developing
-                        oracle triggers, packages, and managing massive
-                        transaction batches.
-                      </p>
-                    </div>
-                  </div>
-                </div>
+        <Reveal className="md:col-span-2" delay={0.12}>
+          <div className={cardClass}>
+            <span className={labelClass}>Database</span>
+            <h3 className="font-serif text-2xl mt-2 mb-5">
+              Where the data lives
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <p className="text-ink border-b border-line pb-2 mb-2">
+                  DataGrip
+                </p>
+                <p className="text-ink-2 text-sm leading-relaxed">
+                  Primary database GUI — managing schemas, running complex
+                  queries, and inspecting large datasets efficiently.
+                </p>
               </div>
-            </FadeUp>
+              <div>
+                <p className="text-ink border-b border-line pb-2 mb-2">
+                  PL/SQL Developer
+                </p>
+                <p className="text-ink-2 text-sm leading-relaxed">
+                  The specialist — Oracle triggers, packages, and massive
+                  transaction batches.
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
+        </Reveal>
       </div>
     </main>
   );

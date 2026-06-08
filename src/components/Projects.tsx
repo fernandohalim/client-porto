@@ -205,7 +205,7 @@ export default function Projects() {
         {clientProjects.map((p, i) => {
           const tint = TINTS[p.tint];
           return (
-            <Reveal key={p.title + p.client} delay={(i % 2) * 0.08}>
+            <Reveal key={p.title + p.client} delay={(i % 2) * 0.05}>
               <div className="group h-full flex flex-col rounded-2xl border border-line bg-surface p-7 transition-all duration-500 hover:-translate-y-1.5 hover:border-line-2 hover:shadow-[0_30px_60px_-38px_rgba(34,32,28,0.4)]">
                 <div
                   className="flex items-center justify-center rounded-xl aspect-[16/9] mb-6 overflow-hidden"
