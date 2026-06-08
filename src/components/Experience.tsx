@@ -83,7 +83,7 @@ export default function Experience() {
             <Reveal key={exp.id} delay={i * 0.08}>
               <div className="relative pl-20">
                 {/* node */}
-                <div className="absolute left-0 top-0 w-12 h-12 rounded-xl border border-line bg-surface flex items-center justify-center p-2 overflow-hidden">
+                <div className="absolute left-0 top-0 w-12 h-12 rounded-xl border border-line bg-white flex items-center justify-center p-2 overflow-hidden">
                   <Image
                     src={exp.logo}
                     alt={exp.company}
