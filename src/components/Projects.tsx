@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Reveal from "@/utilities/Reveal";
+import ProjectPreview from "./ProjectPreview";
 
 type Tint = { bg: string; glyph: string };
 
@@ -54,6 +55,7 @@ export default function Projects() {
         "Chart-of-accounts platform with multi-layer user management and auto-generated financial recaps.",
       tech: ["React", "Express", "Node"],
       live: true,
+      shots: [],
     },
     {
       title: "Web-based ERP",
@@ -65,6 +67,7 @@ export default function Projects() {
         "Inventory, transactions, and project management in one clean, responsive interface.",
       tech: ["React", "Material UI", "Node"],
       live: true,
+      shots: [],
     },
     {
       title: "Company profile",
@@ -75,6 +78,7 @@ export default function Projects() {
       description: "Catalogue API and product management.",
       tech: ["Express", "Node"],
       live: true,
+      shots: [],
     },
     {
       title: "Community catalogue",
@@ -85,6 +89,7 @@ export default function Projects() {
       description: "Responsive catalogue web for a flower-shop community.",
       tech: ["React", "Flutter", "Node"],
       live: false,
+      shots: [],
     },
     {
       title: "Company profile",
@@ -95,6 +100,7 @@ export default function Projects() {
       description: "Videotron company profile and product showcase.",
       tech: ["React", "Node", "Material UI"],
       live: false,
+      shots: [],
     },
   ];
 
@@ -121,9 +127,6 @@ export default function Projects() {
           <h2 className="font-serif font-light tracking-tight text-[clamp(2rem,4.5vw,3.2rem)]">
             Selected <em className="italic">work</em>
           </h2>
-          <span className="text-faint text-sm">
-            2023 — 2026 · five shipped, two in progress
-          </span>
         </div>
       </Reveal>
 
@@ -138,23 +141,21 @@ export default function Projects() {
             onClick={handleCaseStudyClick}
             className="group cursor-pointer grid grid-cols-1 md:grid-cols-2 overflow-hidden rounded-2xl border border-line bg-surface transition-all duration-500 hover:-translate-y-1.5 hover:border-line-2 hover:shadow-[0_30px_60px_-38px_rgba(34,32,28,0.4)]"
           >
-            <div
-              className="flex items-center justify-center min-h-[280px] overflow-hidden"
-              style={{ background: TINTS.sage.bg }}
-            >
-              <span
-                className="font-serif italic text-[6rem] opacity-50 transition-transform duration-700 group-hover:scale-110"
-                style={{ color: TINTS.sage.glyph }}
-              >
-                n
-              </span>
-            </div>
+            <ProjectPreview
+              size="featured"
+              frame="phone"
+              tintBg={TINTS.sage.bg}
+              glyph="n"
+              glyphColor={TINTS.sage.glyph}
+              shots={["/nest-shot-1.png", "/nest-shot-2.png"]}
+              alt="nest app screens"
+            />
             <div className="p-10 flex flex-col">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-faint text-xs uppercase tracking-[0.1em]">
                   Personal product
                 </span>
-                <span className="text-faint text-xs">v2.4</span>
+                <span className="text-faint text-xs">v2.4.6</span>
               </div>
               <h3 className="font-serif text-3xl mb-3">nest</h3>
               <p className="text-ink-2 max-w-[42ch] mb-auto leading-relaxed">
@@ -207,17 +208,13 @@ export default function Projects() {
           return (
             <Reveal key={p.title + p.client} delay={(i % 2) * 0.05}>
               <div className="group h-full flex flex-col rounded-2xl border border-line bg-surface p-7 transition-all duration-500 hover:-translate-y-1.5 hover:border-line-2 hover:shadow-[0_30px_60px_-38px_rgba(34,32,28,0.4)]">
-                <div
-                  className="flex items-center justify-center rounded-xl aspect-[16/9] mb-6 overflow-hidden"
-                  style={{ background: tint.bg }}
-                >
-                  <span
-                    className="font-serif italic text-5xl opacity-50 transition-transform duration-700 group-hover:scale-110"
-                    style={{ color: tint.glyph }}
-                  >
-                    {p.glyph}
-                  </span>
-                </div>
+                <ProjectPreview
+                  tintBg={tint.bg}
+                  glyph={p.glyph}
+                  glyphColor={tint.glyph}
+                  shots={p.shots}
+                  alt={p.title}
+                />
                 <span className="text-faint text-xs uppercase tracking-[0.1em] mb-1">
                   {p.client} · {p.date}
                 </span>
