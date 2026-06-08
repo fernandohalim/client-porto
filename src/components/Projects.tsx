@@ -191,40 +191,10 @@ export default function Projects() {
             onClick={handleCaseStudyClick("/projects/noted", "#0a0a0a")}
             className="group cursor-pointer grid grid-cols-1 md:grid-cols-2 overflow-hidden rounded-2xl border border-line bg-surface transition-all duration-500 hover:-translate-y-1.5 hover:border-line-2 hover:shadow-[0_30px_60px_-38px_rgba(34,32,28,0.4)]"
           >
-            <div className="p-10 flex flex-col">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-faint text-xs uppercase tracking-widest">
-                  Personal product
-                </span>
-                <span className="text-faint text-xs">v2.0.1</span>
-              </div>
-              <h3 className="font-serif text-3xl mb-3">noted</h3>
-              <p className="text-ink-2 max-w-[42ch] mb-auto leading-relaxed">
-                A minimalist, offline-first markdown editor for programmers —
-                local-first storage, background sync, and a true three-way merge
-                when the same note is edited on two devices.
-              </p>
-              <div className="flex flex-wrap gap-2 mt-6">
-                {["Next.js", "Supabase", "CodeMirror", "IndexedDB"].map((t) => (
-                  <span
-                    key={t}
-                    className="text-[12.5px] text-ink-2 border border-line rounded-full px-3 py-1"
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
-              <span className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-ink">
-                Read the case study
-                <span className="transition-transform duration-300 group-hover:translate-x-1.5">
-                  →
-                </span>
-              </span>
-            </div>
-
             {/* dark editor preview — signals noted's terminal identity */}
+            {/* mobile: top (order-1), desktop: right (md:order-2) */}
             <div
-              className="relative min-h-75 bg-[#0a0a0a] overflow-hidden flex flex-col"
+              className="relative min-h-75 bg-[#0a0a0a] overflow-hidden flex flex-col order-1 md:order-2"
               style={{
                 fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
               }}
@@ -253,6 +223,38 @@ export default function Projects() {
                   - [ ] <span className="text-[#e5e5e5]">ship v2.1</span>
                 </p>
               </div>
+            </div>
+
+            {/* mobile: bottom (order-2), desktop: left (md:order-1) */}
+            <div className="p-10 flex flex-col order-2 md:order-1">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-faint text-xs uppercase tracking-widest">
+                  Personal product
+                </span>
+                <span className="text-faint text-xs">v2.0.1</span>
+              </div>
+              <h3 className="font-serif text-3xl mb-3">noted</h3>
+              <p className="text-ink-2 max-w-[42ch] mb-auto leading-relaxed">
+                A minimalist, offline-first markdown editor for programmers —
+                local-first storage, background sync, and a true three-way merge
+                when the same note is edited on two devices.
+              </p>
+              <div className="flex flex-wrap gap-2 mt-6">
+                {["Next.js", "Supabase", "CodeMirror", "IndexedDB"].map((t) => (
+                  <span
+                    key={t}
+                    className="text-[12.5px] text-ink-2 border border-line rounded-full px-3 py-1"
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+              <span className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-ink">
+                Read the case study
+                <span className="transition-transform duration-300 group-hover:translate-x-1.5">
+                  →
+                </span>
+              </span>
             </div>
           </div>
         </Reveal>
