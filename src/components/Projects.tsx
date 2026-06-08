@@ -19,30 +19,31 @@ const TINTS: Record<string, Tint> = {
 
 export default function Projects() {
   const router = useRouter();
-  const [isAnimating, setIsAnimating] = useState(false);
+  const [crossfade, setCrossfade] = useState<{ bg: string } | null>(null);
 
-  // unchanged crossfade-into-nest transition
-  const handleCaseStudyClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setIsAnimating(true);
-
-    setTimeout(() => {
-      document.documentElement.classList.remove("scroll-smooth");
-
-      const layout = document.getElementById("global-layout");
-      if (layout) {
-        layout.style.transition = "none";
-        layout.style.backgroundColor = "#fdfbf7";
-      }
-
-      window.scrollTo(0, 0);
-      router.push("/projects/nest", { scroll: false });
+  // crossfade-into-case-study transition (brand-matched bg per project)
+  const handleCaseStudyClick =
+    (href: string, bg: string) => (e: React.MouseEvent) => {
+      e.preventDefault();
+      setCrossfade({ bg });
 
       setTimeout(() => {
-        document.documentElement.classList.add("scroll-smooth");
+        document.documentElement.classList.remove("scroll-smooth");
+
+        const layout = document.getElementById("global-layout");
+        if (layout) {
+          layout.style.transition = "none";
+          layout.style.backgroundColor = bg;
+        }
+
+        window.scrollTo(0, 0);
+        router.push(href, { scroll: false });
+
+        setTimeout(() => {
+          document.documentElement.classList.add("scroll-smooth");
+        }, 500);
       }, 500);
-    }, 500);
-  };
+    };
 
   const clientProjects = [
     {
@@ -110,14 +111,15 @@ export default function Projects() {
       className="max-w-5xl mx-auto px-6 py-28 scroll-mt-24"
     >
       {/* unchanged portal crossfade */}
-      {isAnimating &&
+      {crossfade &&
         typeof window !== "undefined" &&
         createPortal(
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
-            className="fixed inset-0 bg-[#fdfbf7] z-[99999] pointer-events-none"
+            style={{ backgroundColor: crossfade.bg }}
+            className="fixed inset-0 z-99999 pointer-events-none"
           />,
           document.body,
         )}
@@ -138,7 +140,7 @@ export default function Projects() {
         {/* featured: nest */}
         <Reveal className="md:col-span-2">
           <div
-            onClick={handleCaseStudyClick}
+            onClick={handleCaseStudyClick("/projects/nest", "#fdfbf7")}
             className="group cursor-pointer grid grid-cols-1 md:grid-cols-2 overflow-hidden rounded-2xl border border-line bg-surface transition-all duration-500 hover:-translate-y-1.5 hover:border-line-2 hover:shadow-[0_30px_60px_-38px_rgba(34,32,28,0.4)]"
           >
             <ProjectPreview
@@ -183,19 +185,77 @@ export default function Projects() {
           </div>
         </Reveal>
 
-        {/* two in-progress slots */}
-        {[0, 1].map((i) => (
-          <Reveal key={i} delay={0.1 + i * 0.08}>
-            <div className="flex flex-col items-center justify-center text-center min-h-[230px] rounded-2xl border border-dashed border-line-2 text-faint">
-              <span className="text-xs uppercase tracking-[0.1em] border border-line-2 rounded-full px-3 py-1.5 mb-4">
-                In progress
+        {/* featured: noted */}
+        <Reveal className="md:col-span-2" delay={0.1}>
+          <div
+            onClick={handleCaseStudyClick("/projects/noted", "#0a0a0a")}
+            className="group cursor-pointer grid grid-cols-1 md:grid-cols-2 overflow-hidden rounded-2xl border border-line bg-surface transition-all duration-500 hover:-translate-y-1.5 hover:border-line-2 hover:shadow-[0_30px_60px_-38px_rgba(34,32,28,0.4)]"
+          >
+            <div className="p-10 flex flex-col">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-faint text-xs uppercase tracking-widest">
+                  Personal product
+                </span>
+                <span className="text-faint text-xs">v2.0.1</span>
+              </div>
+              <h3 className="font-serif text-3xl mb-3">noted</h3>
+              <p className="text-ink-2 max-w-[42ch] mb-auto leading-relaxed">
+                A minimalist, offline-first markdown editor for programmers —
+                local-first storage, background sync, and a true three-way merge
+                when the same note is edited on two devices.
+              </p>
+              <div className="flex flex-wrap gap-2 mt-6">
+                {["Next.js", "Supabase", "CodeMirror", "IndexedDB"].map((t) => (
+                  <span
+                    key={t}
+                    className="text-[12.5px] text-ink-2 border border-line rounded-full px-3 py-1"
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+              <span className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-ink">
+                Read the case study
+                <span className="transition-transform duration-300 group-hover:translate-x-1.5">
+                  →
+                </span>
               </span>
-              <h3 className="font-serif italic text-xl text-ink-2">
-                case study, soon
-              </h3>
             </div>
-          </Reveal>
-        ))}
+
+            {/* dark editor preview — signals noted's terminal identity */}
+            <div
+              className="relative min-h-75 bg-[#0a0a0a] overflow-hidden flex flex-col"
+              style={{
+                fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+              }}
+            >
+              <div className="flex items-center gap-2 h-9 px-4 border-b border-[#262626] shrink-0">
+                <span className="w-2 h-2 rounded-full bg-[#d97757]" />
+                <span className="text-[#888] text-xs">noted</span>
+                <span className="ml-auto text-[#888] text-[11px]">saved</span>
+              </div>
+              <div className="flex-1 p-5 text-[13px] leading-relaxed">
+                <p className="text-[#d97757] font-bold">
+                  {"# local-first notes"}
+                </p>
+                <p className="text-[#e5e5e5] mt-2">
+                  markdown that saves offline,
+                </p>
+                <p className="text-[#e5e5e5]">syncs everywhere, and never</p>
+                <p className="text-[#e5e5e5]">loses a keystroke.</p>
+                <p className="mt-4 text-[#d97757]">
+                  - [x] <span className="text-[#e5e5e5]">offline queue</span>
+                </p>
+                <p className="text-[#d97757]">
+                  - [x] <span className="text-[#e5e5e5]">3-way merge</span>
+                </p>
+                <p className="text-[#d97757]">
+                  - [ ] <span className="text-[#e5e5e5]">ship v2.1</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </Reveal>
       </div>
 
       {/* CLIENT WORK */}

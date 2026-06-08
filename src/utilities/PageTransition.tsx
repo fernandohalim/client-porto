@@ -9,9 +9,11 @@ export default function PageTransition({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const isNestPage = pathname?.startsWith("/projects/nest");
+  const isCaseStudy =
+    pathname?.startsWith("/projects/nest") ||
+    pathname?.startsWith("/projects/noted");
 
-  if (isNestPage) {
+  if (isCaseStudy) {
     return <>{children}</>;
   }
 

@@ -15,19 +15,23 @@ export default function ClientLayout({
 }) {
   const pathname = usePathname();
   const isNestPage = pathname?.startsWith("/projects/nest");
+  const isNotedPage = pathname?.startsWith("/projects/noted");
+  const isCaseStudy = isNestPage || isNotedPage;
 
   const globalStyles = isNestPage
     ? "bg-[#fdfbf7] text-stone-800 selection:bg-emerald-200 selection:text-emerald-900"
-    : "bg-paper text-ink selection:bg-[#e3c9bd]";
+    : isNotedPage
+      ? "bg-[#0a0a0a] text-[#e5e5e5] selection:bg-[#d97757] selection:text-[#0a0a0a]"
+      : "bg-paper text-ink selection:bg-[#e3c9bd]";
 
   return (
     <div
       id="global-layout"
       className={`min-h-screen flex flex-col transition-colors duration-700 ${globalStyles}`}
     >
-      {!isNestPage && <ScrollProgress />}
+      {!isCaseStudy && <ScrollProgress />}
       <AnimatePresence>
-        {!isNestPage && (
+        {!isCaseStudy && (
           <motion.div
             key="navbar"
             initial={{ opacity: 0 }}
@@ -39,7 +43,7 @@ export default function ClientLayout({
         )}
       </AnimatePresence>
       <AnimatePresence>
-        {!isNestPage && (
+        {!isCaseStudy && (
           <motion.div
             key="cmd"
             initial={{ opacity: 0 }}
@@ -56,7 +60,7 @@ export default function ClientLayout({
       </div>
 
       <AnimatePresence>
-        {!isNestPage && (
+        {!isCaseStudy && (
           <motion.div
             key="footer"
             initial={{ opacity: 0 }}
