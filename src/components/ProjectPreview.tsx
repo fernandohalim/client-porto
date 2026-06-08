@@ -27,14 +27,14 @@ function Phone({
     <div
       className={`absolute bottom-0 transition-[translate] duration-700 ease-out ${className}`}
     >
-      <div className="relative rounded-[2.1rem] bg-stone-900 p-[5px] shadow-2xl shadow-stone-900/35 ring-1 ring-white/10">
+      <div className="relative rounded-[1rem] bg-stone-800 p-[5px] shadow-2xl shadow-stone-900/35 ring-1 ring-white/10">
         {/* side buttons */}
-        <span className="absolute left-[-2px] top-[20%] h-6 w-[3px] rounded-l-sm bg-stone-700" />
-        <span className="absolute left-[-2px] top-[31%] h-9 w-[3px] rounded-l-sm bg-stone-700" />
-        <span className="absolute right-[-2px] top-[26%] h-11 w-[3px] rounded-r-sm bg-stone-700" />
+        <span className="absolute left-[-2px] top-[20%] h-6 w-[3px] rounded-l-sm bg-stone-600" />
+        <span className="absolute left-[-2px] top-[31%] h-9 w-[3px] rounded-l-sm bg-stone-600" />
+        <span className="absolute right-[-2px] top-[26%] h-11 w-[3px] rounded-r-sm bg-stone-600" />
 
         {/* screen */}
-        <div className="relative rounded-[1.7rem] overflow-hidden bg-white">
+        <div className="relative rounded-[0.7rem] overflow-hidden bg-white">
           <Image
             src={src}
             alt={alt}
