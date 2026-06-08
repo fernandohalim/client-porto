@@ -18,7 +18,7 @@ type ExperienceEntry = {
 const experiences: ExperienceEntry[] = [
   {
     id: "rintis",
-    logo: "/logos/rintis.jfif",
+    logo: "/logos/rintis.png",
     company: "PT Rintis Sejahtera",
     role: "Java Application Developer",
     date: "Oct 2024 — Present",
@@ -33,7 +33,7 @@ const experiences: ExperienceEntry[] = [
   },
   {
     id: "webin",
-    logo: "/logos/webin.jfif",
+    logo: "/logos/webin.png",
     company: "WEBin",
     role: "Fullstack Web Developer",
     date: "Feb 2023 — Present",
@@ -48,7 +48,7 @@ const experiences: ExperienceEntry[] = [
   },
   {
     id: "overo",
-    logo: "/logos/overo.jfif",
+    logo: "/logos/overo.png",
     company: "PT Overo Digital Global",
     role: "Frontend Developer",
     date: "Aug 2022 — Jan 2023",
