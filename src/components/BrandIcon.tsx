@@ -14,8 +14,8 @@ type BrandKey =
   | "company-x-erp"
   | "company-x-finance";
 
-const STROKE = "#22c55e";
-const STROKE_DIM = "#86efac";
+const STROKE = "#22201c";
+const STROKE_DIM = "#bd6a4a";
 
 const baseProps = {
   viewBox: "0 0 56 56",

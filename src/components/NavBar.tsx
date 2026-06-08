@@ -12,39 +12,35 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const openCommandPalette = () => {
+  const openPalette = () => {
     window.dispatchEvent(new CustomEvent("open-command-palette"));
     setIsOpen(false);
   };
 
-  // order matches the new page flow: hero → projects → experience → skills → contact
-  const homeLinks = [
-    { name: "./projects", href: "#projects" },
-    { name: "./journey", href: "#experience" },
-    { name: "./skills", href: "#skills" },
-    { name: "./connect", href: "#contact" },
+  const sectionLinks = [
+    { name: "Work", href: "#projects" },
+    { name: "Experience", href: "#experience" },
+    { name: "Skills", href: "#skills" },
+    { name: "Contact", href: "#contact" },
   ];
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+      className={`fixed top-0 inset-x-0 z-40 transition-all duration-500 ${
         scrolled || isOpen
-          ? "bg-black/80 border-b border-zinc-900 py-4"
+          ? "bg-paper/75 backdrop-blur-md border-b border-line py-4"
           : "bg-transparent py-6"
       }`}
     >
       <div className="max-w-5xl mx-auto px-6 flex items-center justify-between">
-        {/* left: brand */}
+        {/* mark */}
         <Link
           href="/"
-          className="font-mono text-zinc-100 font-bold hover:text-green-400 transition-colors flex items-center gap-2 z-50"
           onClick={(e) => {
             setIsOpen(false);
             if (isHome) {
@@ -52,100 +48,111 @@ export default function Navbar() {
               window.scrollTo({ top: 0, behavior: "smooth" });
             }
           }}
+          className="font-serif text-lg tracking-tight text-ink"
         >
-          <span className="text-green-500">
-            root<span className="hidden sm:inline">@fernando_halim</span>
-          </span>
-          <span className="text-zinc-600">~#</span>
+          Fernando <em className="italic text-accent">Halim</em>
         </Link>
 
-        <div className="flex items-center gap-4 sm:gap-6">
-          {isHome && (
-            <div className="hidden md:flex items-center gap-6 font-mono text-sm text-zinc-400">
-              {homeLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  className="hover:text-green-400 transition-colors"
-                >
-                  {link.name}
-                </a>
-              ))}
-            </div>
-          )}
+        {/* desktop */}
+        <div className="hidden md:flex items-center gap-8 text-[15px]">
+          {isHome &&
+            sectionLinks.map((l) => (
+              <a
+                key={l.name}
+                href={l.href}
+                className="group relative text-ink-2 hover:text-ink transition-colors"
+              >
+                {l.name}
+                <span className="absolute left-0 -bottom-0.5 h-px w-full bg-ink origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
+              </a>
+            ))}
 
           <Link
             href="/uses"
-            className={`hidden md:block font-mono text-sm transition-colors ${
-              pathname === "/uses"
-                ? "text-green-400"
-                : "text-zinc-400 hover:text-green-400"
+            className={`group relative transition-colors ${
+              pathname === "/uses" ? "text-ink" : "text-ink-2 hover:text-ink"
             }`}
           >
-            /uses
+            Uses
+            <span
+              className={`absolute left-0 -bottom-0.5 h-px w-full bg-ink origin-left transition-transform duration-300 ${
+                pathname === "/uses"
+                  ? "scale-x-100"
+                  : "scale-x-0 group-hover:scale-x-100"
+              }`}
+            />
           </Link>
 
           <button
-            onClick={openCommandPalette}
-            className="group flex items-center gap-2 px-2 sm:px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900/50 hover:bg-zinc-800 hover:border-zinc-500 hover:shadow-[0_0_20px_rgba(255,255,255,0.15)] duration-500 transition-all cursor-pointer z-50"
-            title="open command palette"
+            onClick={openPalette}
+            title="Open command palette"
+            className="flex items-center gap-2 border border-line rounded-full px-3 py-1.5 text-ink-2 hover:text-ink hover:border-line-2 transition-colors"
           >
-            <span className="hidden sm:block text-zinc-500 font-mono text-xs group-hover:text-zinc-300 transition-colors">
-              cmd
-            </span>
-            <div className="flex items-center gap-1 font-mono text-[10px] text-zinc-400">
-              <span className="bg-zinc-950 px-1.5 py-0.5 rounded border border-zinc-800 group-hover:border-zinc-600 transition-colors">
-                ctrl
-              </span>
-              <span>+</span>
-              <span className="bg-zinc-950 px-1.5 py-0.5 rounded border border-zinc-800 group-hover:border-zinc-600 transition-colors">
-                k
-              </span>
-            </div>
-          </button>
-
-          <button
-            className="md:hidden font-mono text-sm text-zinc-400 hover:text-green-400 transition-colors z-50"
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            {isOpen ? "[x]" : "[menu]"}
+            <span className="text-[13px]">Search</span>
+            <kbd className="text-[11px] text-faint border border-line rounded px-1.5 py-0.5">
+              ⌘K
+            </kbd>
           </button>
         </div>
+
+        {/* mobile toggle */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          aria-label="Menu"
+          className="md:hidden flex flex-col gap-1.5 items-end"
+        >
+          <span
+            className={`h-px bg-ink transition-all duration-300 ${
+              isOpen ? "w-6 rotate-45 translate-y-[3.5px]" : "w-6"
+            }`}
+          />
+          <span
+            className={`h-px bg-ink transition-all duration-300 ${
+              isOpen ? "w-6 -rotate-45 -translate-y-[3.5px]" : "w-4"
+            }`}
+          />
+        </button>
       </div>
 
+      {/* mobile menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.2, ease: "easeInOut" }}
-            className="md:hidden absolute top-full left-0 right-0 border-b border-zinc-900 bg-black/95 backdrop-blur-xl shadow-2xl"
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.25, ease: [0.2, 0.7, 0.2, 1] }}
+            className="md:hidden border-t border-line bg-paper/95 backdrop-blur-xl"
           >
-            <div className="flex flex-col px-6 py-6 font-mono text-sm text-zinc-400 gap-6">
+            <div className="flex flex-col px-6 py-7 gap-5 text-[15px]">
               {isHome &&
-                homeLinks.map((link) => (
+                sectionLinks.map((l) => (
                   <a
-                    key={link.name}
-                    href={link.href}
+                    key={l.name}
+                    href={l.href}
                     onClick={() => setIsOpen(false)}
-                    className="block hover:text-green-400 transition-colors border-l border-zinc-800 pl-4 hover:border-green-500"
+                    className="text-ink-2 hover:text-ink transition-colors"
                   >
-                    {link.name}
+                    {l.name}
                   </a>
                 ))}
-
               <Link
                 href="/uses"
                 onClick={() => setIsOpen(false)}
-                className={`block transition-colors border-l pl-4 ${
+                className={
                   pathname === "/uses"
-                    ? "text-green-400 border-green-500"
-                    : "hover:text-green-400 border-zinc-800 hover:border-green-500"
-                }`}
+                    ? "text-ink"
+                    : "text-ink-2 hover:text-ink transition-colors"
+                }
               >
-                /uses
+                Uses
               </Link>
+              <button
+                onClick={openPalette}
+                className="text-left text-ink-2 hover:text-ink transition-colors"
+              >
+                Search (⌘K)
+              </button>
             </div>
           </motion.div>
         )}

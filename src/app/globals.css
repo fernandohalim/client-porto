@@ -1,52 +1,72 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #000000;
-  --color-foreground: #ffffff;
-  
-  --animate-marquee-left: marquee-left 30s linear infinite;
-  --animate-marquee-right: marquee-right 30s linear infinite;
+  /* surfaces */
+  --color-paper: #f4f1ea;
+  --color-surface: #faf8f3;
+  --color-background: #f4f1ea;
+  --color-foreground: #22201c;
 
-  @keyframes marquee-left {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-  }
-  @keyframes marquee-right {
-    0% { transform: translateX(-50%); }
-    100% { transform: translateX(0); }
+  /* text */
+  --color-ink: #22201c;
+  --color-ink-2: #5c574e;
+  --color-faint: #9a948a;
+
+  /* lines + accent */
+  --color-line: rgba(34, 32, 28, 0.09);
+  --color-line-2: rgba(34, 32, 28, 0.16);
+  --color-accent: #bd6a4a;
+
+  /* fonts — variables come from next/font in layout.tsx */
+  --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), Georgia, "Times New Roman", serif;
+
+  /* slow drifting marquee for the skills strip (Phase 3) */
+  --animate-marquee: marquee 34s linear infinite;
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
   }
 
+  /* legacy — still referenced by Hero/Typewriter until the cleanup phase */
   --animate-blink: blink 1s step-end infinite;
-
   @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
   }
 }
 
 body {
-  background-color: var(--color-background);
-  color: var(--color-foreground);
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-optical-sizing: auto;
+}
+
+::selection {
+  background: #e3c9bd;
+  color: #22201c;
 }
 
 html {
   scrollbar-width: thin;
-  scrollbar-color: #27272a #000000;
+  scrollbar-color: #d8d2c7 #f4f1ea;
 }
-
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 9px;
 }
-
 ::-webkit-scrollbar-track {
-  background: #000000;
+  background: #f4f1ea;
 }
-
 ::-webkit-scrollbar-thumb {
-  background: #27272a;
-  border-radius: 4px;
+  background: #d8d2c7;
+  border-radius: 5px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
-  background: #22c55e;
+  background: #bd6a4a;
 }

@@ -4,14 +4,23 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import Typewriter from "@/utilities/Typewriter";
-import DecryptText from "../utilities/DecryptText";
-import BrandIcon, { BrandKey } from "./BrandIcon";
+import Reveal from "@/utilities/Reveal";
+
+type Tint = { bg: string; glyph: string };
+
+const TINTS: Record<string, Tint> = {
+  sage: { bg: "linear-gradient(160deg,#e9efe6,#dbe7da)", glyph: "#5f8a5a" },
+  clay: { bg: "linear-gradient(160deg,#efe9e2,#e7dfd4)", glyph: "#9a7a52" },
+  slate: { bg: "linear-gradient(160deg,#e6ebef,#d9e1e8)", glyph: "#5a7390" },
+  sand: { bg: "linear-gradient(160deg,#f0ece3,#e8e1d3)", glyph: "#8a7a5a" },
+  rose: { bg: "linear-gradient(160deg,#f1e8e6,#e9dad6)", glyph: "#a06a60" },
+};
 
 export default function Projects() {
   const router = useRouter();
   const [isAnimating, setIsAnimating] = useState(false);
 
+  // unchanged crossfade-into-nest transition
   const handleCaseStudyClick = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsAnimating(true);
@@ -34,110 +43,67 @@ export default function Projects() {
     }, 500);
   };
 
-  const featuredProjects: Array<{
-    id: string;
-    brand: BrandKey;
-    title: string;
-    subtitle: string;
-    date: string;
-    description: string;
-    tech: string[];
-    liveLink: string;
-    repoLink: string;
-  }> = [
+  const clientProjects = [
     {
-      id: "nest",
-      brand: "nest",
-      title: "nest_group_splitbill_app",
-      subtitle: "split expenses, keep the peace",
-      date: "v1.2.3",
+      title: "Financial record app",
+      client: "Company X",
+      date: "2024",
+      glyph: "f",
+      tint: "clay",
       description:
-        "a beautifully bouncy, modern web app designed to eliminate spreadsheet math. built with a highly interactive ui and an advanced ai engine that optically reads your receipts so you don't have to type a thing.",
-      tech: [
-        "next.js 16",
-        "react 19",
-        "tailwind v4",
-        "supabase",
-        "zustand",
-        "gemini 2.5 flash",
-      ],
-      liveLink: "https://nest-splitbill-app.vercel.app",
-      repoLink: "https://nest-splitbill-app.vercel.app/changelog",
+        "Chart-of-accounts platform with multi-layer user management and auto-generated financial recaps.",
+      tech: ["React", "Express", "Node"],
+      live: true,
     },
-  ];
-
-  const clientProjects: Array<{
-    brand: BrandKey;
-    title: string;
-    client: string;
-    date: string;
-    description: string;
-    tech: string[];
-    status: "live" | "inactive";
-    accent: string;
-  }> = [
     {
-      brand: "maju-jaya",
-      title: "company_profile_website",
+      title: "Web-based ERP",
+      client: "Company X",
+      date: "2024",
+      glyph: "e",
+      tint: "slate",
+      description:
+        "Inventory, transactions, and project management in one clean, responsive interface.",
+      tech: ["React", "Material UI", "Node"],
+      live: true,
+    },
+    {
+      title: "Company profile",
       client: "PT Maju Jaya Arkananta",
-      date: "jul 2024 — aug 2024",
-      description: "catalogue api and product management.",
-      tech: ["express", "node"],
-      status: "live",
-      accent: "#c79a4a",
+      date: "2024",
+      glyph: "m",
+      tint: "sand",
+      description: "Catalogue API and product management.",
+      tech: ["Express", "Node"],
+      live: true,
     },
     {
-      brand: "company-x-finance",
-      title: "financial_record_app",
-      client: "Company X",
-      date: "jun 2024 — jul 2024",
-      description:
-        "chart of account web-based app, multi-layer user management and auto-generated financial recap.",
-      tech: ["react", "tailwind css", "express", "node"],
-      status: "live",
-      accent: "#71717a",
-    },
-    {
-      brand: "company-x-erp",
-      title: "web_based_erp",
-      client: "Company X",
-      date: "feb 2024 — may 2024",
-      description:
-        "responsive design and clean user interface web for inventory, transaction and project management.",
-      tech: ["react", "node", "material ui"],
-      status: "live",
-      accent: "#71717a",
-    },
-    {
-      brand: "rawa-belong",
-      title: "community_catalogue",
+      title: "Community catalogue",
       client: "Rawa Belong Community",
-      date: "aug 2023 — nov 2023",
-      description:
-        "responsive design and clean user interface web for flower shop community catalogue.",
-      tech: ["react", "flutter", "node", "webview"],
-      status: "inactive",
-      accent: "#22c55e",
+      date: "2023",
+      glyph: "r",
+      tint: "rose",
+      description: "Responsive catalogue web for a flower-shop community.",
+      tech: ["React", "Flutter", "Node"],
+      live: false,
     },
     {
-      brand: "leseen",
-      title: "company_profile_website",
+      title: "Company profile",
       client: "LeSeen Electronics",
-      date: "feb 2023 — mar 2023",
-      description:
-        "responsive design and clean user interface web for videotron company profile and products.",
-      tech: ["react", "node", "material ui"],
-      status: "inactive",
-      accent: "#3b82f6",
+      date: "2023",
+      glyph: "l",
+      tint: "slate",
+      description: "Videotron company profile and product showcase.",
+      tech: ["React", "Node", "Material UI"],
+      live: false,
     },
   ];
 
   return (
     <section
       id="projects"
-      className="py-24 border-t border-zinc-900 bg-black relative overflow-hidden"
+      className="max-w-5xl mx-auto px-6 py-28 scroll-mt-24"
     >
-      {/* portal animation overlay */}
+      {/* unchanged portal crossfade */}
       {isAnimating &&
         typeof window !== "undefined" &&
         createPortal(
@@ -145,174 +111,142 @@ export default function Projects() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
-            className="fixed inset-0 bg-[#fdfbf7] z-99999 pointer-events-none"
+            className="fixed inset-0 bg-[#fdfbf7] z-[99999] pointer-events-none"
           />,
           document.body,
         )}
 
-      {/* dotted matrix background unique to projects */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(#52525b_1px,transparent_1px)] bg-size-[28px_28px] opacity-30 mask-[radial-gradient(ellipse_60%_60%_at_50%_50%,#000_0%,transparent_70%)]"></div>
-        <div className="absolute top-0 left-1/3 -translate-y-1/2 w-150 h-150 bg-emerald-900/10 rounded-full blur-[120px]"></div>
-        <div className="absolute top-1/2 left-2/3 -translate-x-1/2 w-125 h-125 bg-zinc-800/40 rounded-full blur-[120px]"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_60%,rgba(0,0,0,0.85)_100%)]"></div>
+      <Reveal>
+        <div className="flex items-baseline justify-between flex-wrap gap-4 mb-14">
+          <h2 className="font-serif font-light tracking-tight text-[clamp(2rem,4.5vw,3.2rem)]">
+            Selected <em className="italic">work</em>
+          </h2>
+          <span className="text-faint text-sm">
+            2023 — 2026 · five shipped, two in progress
+          </span>
+        </div>
+      </Reveal>
+
+      {/* CASE STUDIES */}
+      <p className="text-faint text-xs uppercase tracking-[0.16em] mb-5">
+        Case studies
+      </p>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-20">
+        {/* featured: nest */}
+        <Reveal className="md:col-span-2">
+          <div
+            onClick={handleCaseStudyClick}
+            className="group cursor-pointer grid grid-cols-1 md:grid-cols-2 overflow-hidden rounded-2xl border border-line bg-surface transition-all duration-500 hover:-translate-y-1.5 hover:border-line-2 hover:shadow-[0_30px_60px_-38px_rgba(34,32,28,0.4)]"
+          >
+            <div
+              className="flex items-center justify-center min-h-[280px] overflow-hidden"
+              style={{ background: TINTS.sage.bg }}
+            >
+              <span
+                className="font-serif italic text-[6rem] opacity-50 transition-transform duration-700 group-hover:scale-110"
+                style={{ color: TINTS.sage.glyph }}
+              >
+                n
+              </span>
+            </div>
+            <div className="p-10 flex flex-col">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-faint text-xs uppercase tracking-[0.1em]">
+                  Personal product
+                </span>
+                <span className="text-faint text-xs">v2.4</span>
+              </div>
+              <h3 className="font-serif text-3xl mb-3">nest</h3>
+              <p className="text-ink-2 max-w-[42ch] mb-auto leading-relaxed">
+                A bouncy expense splitter that photographs receipts, extracts
+                the math with Gemini, and settles who-owes-who in the fewest
+                possible transactions.
+              </p>
+              <div className="flex flex-wrap gap-2 mt-6">
+                {["Next.js", "Supabase", "Gemini 2.5", "Zustand"].map((t) => (
+                  <span
+                    key={t}
+                    className="text-[12.5px] text-ink-2 border border-line rounded-full px-3 py-1"
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+              <span className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-ink">
+                Read the case study
+                <span className="transition-transform duration-300 group-hover:translate-x-1.5">
+                  →
+                </span>
+              </span>
+            </div>
+          </div>
+        </Reveal>
+
+        {/* two in-progress slots */}
+        {[0, 1].map((i) => (
+          <Reveal key={i} delay={0.1 + i * 0.08}>
+            <div className="flex flex-col items-center justify-center text-center min-h-[230px] rounded-2xl border border-dashed border-line-2 text-faint">
+              <span className="text-xs uppercase tracking-[0.1em] border border-line-2 rounded-full px-3 py-1.5 mb-4">
+                In progress
+              </span>
+              <h3 className="font-serif italic text-xl text-ink-2">
+                case study, soon
+              </h3>
+            </div>
+          </Reveal>
+        ))}
       </div>
 
-      <div className="max-w-5xl mx-auto px-6 relative z-10">
-        <div className="mb-12">
-          <Typewriter command="ls -la " args="/var/www/projects" />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* FEATURED */}
-          {featuredProjects.map((project) => (
-            <div
-              key={project.id}
-              className="p-8 rounded-2xl border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900/40 hover:border-emerald-500/50 hover:shadow-[0_0_30px_rgba(16,185,129,0.15)] duration-500 transition-all group relative overflow-hidden flex flex-col h-full md:col-span-2"
-            >
-              <div className="absolute -top-20 -right-20 w-64 h-64 bg-emerald-500/10 rounded-full blur-[80px] pointer-events-none group-hover:bg-emerald-500/20 transition-colors duration-500"></div>
-
-              <div className="relative z-10 flex flex-col grow">
-                {/* header with icon */}
-                <div className="flex items-start gap-4 mb-4">
-                  <div className="shrink-0 w-12 h-12 rounded-xl bg-zinc-950/60 border border-zinc-800 group-hover:border-emerald-500/50 transition-colors p-2 flex items-center justify-center">
-                    <BrandIcon variant={project.brand} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-3">
-                      <h3 className="text-lg font-mono text-zinc-100 font-bold group-hover:text-emerald-400 transition-colors break-all">
-                        <DecryptText text={project.title} />
-                      </h3>
-                      <span className="text-xs font-mono text-zinc-500 bg-zinc-950 px-2 py-1 rounded border border-zinc-800 shrink-0 whitespace-nowrap">
-                        {project.date}
-                      </span>
-                    </div>
-                    <p className="font-mono text-sm text-zinc-500 mt-1">
-                      {project.subtitle}
-                    </p>
-                  </div>
-                </div>
-
-                <p className="text-zinc-400 font-mono text-sm mb-8 grow">
-                  {project.description}
-                </p>
-
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {project.tech.map((t) => (
-                    <span
-                      key={t}
-                      className="text-xs font-mono text-emerald-400/80 bg-emerald-500/5 px-2 py-1 rounded border border-emerald-500/20"
-                    >
-                      [{t}]
-                    </span>
-                  ))}
-                </div>
-
-                <div className="mt-auto pt-4 border-t border-zinc-800/50 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
-                    <span className="text-xs font-mono text-zinc-500">
-                      sys.state:{" "}
-                      <span className="text-emerald-400/90">running</span>
-                    </span>
-                  </div>
-                  <button
-                    onClick={handleCaseStudyClick}
-                    className="text-[10px] font-mono text-emerald-500 hover:text-emerald-300 uppercase tracking-wider transition-colors z-50 cursor-pointer"
+      {/* CLIENT WORK */}
+      <p className="text-faint text-xs uppercase tracking-[0.16em] mb-5">
+        Client work
+      </p>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        {clientProjects.map((p, i) => {
+          const tint = TINTS[p.tint];
+          return (
+            <Reveal key={p.title + p.client} delay={(i % 2) * 0.08}>
+              <div className="group h-full flex flex-col rounded-2xl border border-line bg-surface p-7 transition-all duration-500 hover:-translate-y-1.5 hover:border-line-2 hover:shadow-[0_30px_60px_-38px_rgba(34,32,28,0.4)]">
+                <div
+                  className="flex items-center justify-center rounded-xl aspect-[16/9] mb-6 overflow-hidden"
+                  style={{ background: tint.bg }}
+                >
+                  <span
+                    className="font-serif italic text-5xl opacity-50 transition-transform duration-700 group-hover:scale-110"
+                    style={{ color: tint.glyph }}
                   >
-                    [view_case_study]
-                  </button>
+                    {p.glyph}
+                  </span>
                 </div>
-              </div>
-            </div>
-          ))}
-
-          {/* CLIENT PROJECTS */}
-          {clientProjects.map((project, index) => {
-            const isLastOddItem =
-              clientProjects.length % 2 !== 0 &&
-              index === clientProjects.length - 1;
-            const isLive = project.status === "live";
-
-            const accentStyle = {
-              "--accent": project.accent,
-            } as React.CSSProperties;
-
-            return (
-              <div
-                key={index}
-                style={accentStyle}
-                className={`p-8 rounded-2xl border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900/40 hover:border-[var(--accent)]/60 hover:shadow-[0_0_30px_rgba(255,255,255,0.07)] duration-500 transition-all group relative overflow-hidden flex flex-col h-full ${
-                  isLastOddItem ? "md:col-span-2" : ""
-                }`}
-              >
-                <div className="absolute -top-20 -right-20 w-64 h-64 bg-zinc-600/10 rounded-full blur-[80px] pointer-events-none group-hover:bg-[var(--accent)]/15 transition-colors"></div>
-
-                <div className="relative z-10 flex flex-col grow">
-                  {/* header with icon */}
-                  <div className="flex items-start gap-4 mb-4">
-                    <div className="shrink-0 w-12 h-12 rounded-xl bg-zinc-950/60 border border-zinc-800 group-hover:border-[var(--accent)]/60 transition-colors p-2 flex items-center justify-center">
-                      <BrandIcon variant={project.brand} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-3">
-                        <h3 className="text-lg font-mono text-zinc-100 font-bold group-hover:text-zinc-300 transition-colors break-all">
-                          <DecryptText text={project.title} />
-                        </h3>
-                        <span className="text-xs font-mono text-zinc-500 bg-zinc-950 px-2 py-1 rounded border border-zinc-800 shrink-0 whitespace-nowrap">
-                          {project.date}
-                        </span>
-                      </div>
-                      <p className="font-mono text-sm text-zinc-500 mt-1">
-                        @ {project.client}
-                      </p>
-                    </div>
-                  </div>
-
-                  <p className="text-zinc-400 font-mono text-sm mb-8 grow">
-                    {project.description}
-                  </p>
-
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {project.tech.map((t) => (
+                <span className="text-faint text-xs uppercase tracking-[0.1em] mb-1">
+                  {p.client} · {p.date}
+                </span>
+                <h3 className="font-serif text-xl mb-2">{p.title}</h3>
+                <p className="text-ink-2 text-sm mb-auto leading-relaxed">
+                  {p.description}
+                </p>
+                <div className="flex items-center justify-between mt-6">
+                  <div className="flex flex-wrap gap-2">
+                    {p.tech.map((t) => (
                       <span
                         key={t}
-                        className="text-xs font-mono text-zinc-400 bg-zinc-800/30 px-2 py-1 rounded border border-zinc-700/30"
+                        className="text-[12px] text-ink-2 border border-line rounded-full px-2.5 py-0.5"
                       >
-                        [{t}]
+                        {t}
                       </span>
                     ))}
                   </div>
-
-                  <div className="mt-auto pt-4 border-t border-zinc-800/50 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={`w-2 h-2 rounded-full ${
-                          isLive
-                            ? "bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.5)]"
-                            : "bg-zinc-600"
-                        }`}
-                      ></span>
-                      <span className="text-xs font-mono text-zinc-500">
-                        sys.state:{" "}
-                        <span
-                          className={
-                            isLive ? "text-green-400/90" : "text-zinc-500"
-                          }
-                        >
-                          {isLive ? "running" : "archived"}
-                        </span>
-                      </span>
-                    </div>
-                    <span className="text-[10px] font-mono text-zinc-600 uppercase tracking-wider">
-                      [client_owned]
-                    </span>
-                  </div>
+                  <span
+                    className={`shrink-0 w-1.5 h-1.5 rounded-full ${
+                      p.live ? "bg-[#6f9a6a]" : "bg-faint"
+                    }`}
+                    title={p.live ? "live" : "archived"}
+                  />
                 </div>
               </div>
-            );
-          })}
-        </div>
+            </Reveal>
+          );
+        })}
       </div>
     </section>
   );

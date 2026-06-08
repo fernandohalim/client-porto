@@ -1,6 +1,20 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import ClientLayout from "@/components/ClientLayout";
+import { Fraunces, Hanken_Grotesk } from "next/font/google";
+
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-fraunces",
+  display: "swap",
+  style: ["normal", "italic"],
+});
+
+const hanken = Hanken_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-hanken",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://fernando-halim.vercel.app/"),
@@ -46,13 +60,21 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: "#f4f1ea",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html
+      lang="en"
+      className={`${fraunces.variable} ${hanken.variable} scroll-smooth`}
+    >
+      {" "}
       <body className="antialiased font-sans">
         <ClientLayout>{children}</ClientLayout>
       </body>

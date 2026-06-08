@@ -24,7 +24,5 @@ export default function JakartaTime() {
     return () => clearInterval(id);
   }, []);
 
-  return (
-    <span className="tabular-nums text-zinc-300">{time || "--:--:--"} WIB</span>
-  );
+  return <span className="tabular-nums">{time || "--:--:--"} WIB</span>;
 }
