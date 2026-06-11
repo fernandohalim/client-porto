@@ -7,6 +7,7 @@ import Footer from "./Footer";
 import PageTransition from "@/utilities/PageTransition";
 import { motion, AnimatePresence } from "framer-motion";
 import ScrollProgress from "@/utilities/ScrollProgress";
+import Cursor from "@/utilities/Cursor";
 
 export default function ClientLayout({
   children,
@@ -22,13 +23,14 @@ export default function ClientLayout({
     ? "bg-[#fdfbf7] text-stone-800 selection:bg-emerald-200 selection:text-emerald-900"
     : isNotedPage
       ? "bg-[#0a0a0a] text-[#e5e5e5] selection:bg-[#d97757] selection:text-[#0a0a0a]"
-      : "bg-paper text-ink selection:bg-[#e3c9bd]";
+      : "bg-bone text-ink selection:bg-ink selection:text-bone";
 
   return (
     <div
       id="global-layout"
       className={`min-h-screen flex flex-col transition-colors duration-700 ${globalStyles}`}
     >
+      <Cursor />
       {!isCaseStudy && <ScrollProgress />}
       <AnimatePresence>
         {!isCaseStudy && (

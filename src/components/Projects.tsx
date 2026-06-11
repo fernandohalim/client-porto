@@ -3,114 +3,169 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
-import Reveal from "@/utilities/Reveal";
-import ProjectPreview from "./ProjectPreview";
+import {
+  motion,
+  AnimatePresence,
+  useMotionValue,
+  useSpring,
+} from "framer-motion";
+import Image from "next/image";
+import { Chars } from "@/utilities/TextReveal";
 
-type Tint = { bg: string; glyph: string };
+type Preview =
+  | { type: "shot"; src: string; bg: string }
+  | { type: "noted" }
+  | { type: "tint"; bg: string; glyph: string; color: string };
 
-const TINTS: Record<string, Tint> = {
-  sage: { bg: "linear-gradient(160deg,#e9efe6,#dbe7da)", glyph: "#5f8a5a" },
-  clay: { bg: "linear-gradient(160deg,#efe9e2,#e7dfd4)", glyph: "#9a7a52" },
-  slate: { bg: "linear-gradient(160deg,#e6ebef,#d9e1e8)", glyph: "#5a7390" },
-  sand: { bg: "linear-gradient(160deg,#f0ece3,#e8e1d3)", glyph: "#8a7a5a" },
-  rose: { bg: "linear-gradient(160deg,#f1e8e6,#e9dad6)", glyph: "#a06a60" },
+type Entry = {
+  no: string;
+  title: string;
+  kind: string;
+  year: string;
+  meta: string;
+  live?: boolean;
+  href?: string; // case-study route
+  crossfade?: string; // bg for the route transition
+  preview: Preview;
 };
+
+const FEATURED: Entry[] = [
+  {
+    no: "01",
+    title: "NEST",
+    kind: "Product — Case Study",
+    year: "2026",
+    meta: "AI receipt scanning · settlement engine",
+    href: "/projects/nest",
+    crossfade: "#fdfbf7",
+    preview: {
+      type: "shot",
+      src: "/nest-shot-1.png",
+      bg: "linear-gradient(160deg,#e9efe6,#dbe7da)",
+    },
+  },
+  {
+    no: "02",
+    title: "NOTED",
+    kind: "Product — Case Study",
+    year: "2026",
+    meta: "Offline-first markdown · 3-way merge",
+    href: "/projects/noted",
+    crossfade: "#0a0a0a",
+    preview: { type: "noted" },
+  },
+];
+
+const CLIENTS: Entry[] = [
+  {
+    no: "03",
+    title: "FINANCIAL RECORD APP",
+    kind: "Company X",
+    year: "2024",
+    meta: "React · Express · Node",
+    live: true,
+    preview: {
+      type: "tint",
+      bg: "linear-gradient(160deg,#efe9e2,#e7dfd4)",
+      glyph: "f",
+      color: "#9a7a52",
+    },
+  },
+  {
+    no: "04",
+    title: "WEB-BASED ERP",
+    kind: "Company X",
+    year: "2024",
+    meta: "React · Material UI · Node",
+    live: true,
+    preview: {
+      type: "tint",
+      bg: "linear-gradient(160deg,#e6ebef,#d9e1e8)",
+      glyph: "e",
+      color: "#5a7390",
+    },
+  },
+  {
+    no: "05",
+    title: "COMPANY PROFILE",
+    kind: "PT Maju Jaya Arkananta",
+    year: "2024",
+    meta: "Express · Node",
+    live: true,
+    preview: {
+      type: "tint",
+      bg: "linear-gradient(160deg,#f0ece3,#e8e1d3)",
+      glyph: "m",
+      color: "#8a7a5a",
+    },
+  },
+  {
+    no: "06",
+    title: "COMMUNITY CATALOGUE",
+    kind: "Rawa Belong Community",
+    year: "2023",
+    meta: "React · Flutter · Node",
+    preview: {
+      type: "tint",
+      bg: "linear-gradient(160deg,#f1e8e6,#e9dad6)",
+      glyph: "r",
+      color: "#a06a60",
+    },
+  },
+  {
+    no: "07",
+    title: "COMPANY PROFILE",
+    kind: "LeSeen Electronics",
+    year: "2023",
+    meta: "React · Node · Material UI",
+    preview: {
+      type: "tint",
+      bg: "linear-gradient(160deg,#e6ebef,#d9e1e8)",
+      glyph: "l",
+      color: "#5a7390",
+    },
+  },
+];
 
 export default function Projects() {
   const router = useRouter();
   const [crossfade, setCrossfade] = useState<{ bg: string } | null>(null);
+  const [active, setActive] = useState<Entry | null>(null);
 
-  // crossfade-into-case-study transition (brand-matched bg per project)
-  const handleCaseStudyClick =
-    (href: string, bg: string) => (e: React.MouseEvent) => {
-      e.preventDefault();
-      setCrossfade({ bg });
+  // cursor-chasing preview card
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const px = useSpring(mx, { stiffness: 220, damping: 24, mass: 0.5 });
+  const py = useSpring(my, { stiffness: 220, damping: 24, mass: 0.5 });
 
-      setTimeout(() => {
-        document.documentElement.classList.remove("scroll-smooth");
-
-        const layout = document.getElementById("global-layout");
-        if (layout) {
-          layout.style.transition = "none";
-          layout.style.backgroundColor = bg;
-        }
-
-        window.scrollTo(0, 0);
-        router.push(href, { scroll: false });
-
-        setTimeout(() => {
-          document.documentElement.classList.add("scroll-smooth");
-        }, 500);
-      }, 500);
-    };
-
-  const clientProjects = [
-    {
-      title: "Financial record app",
-      client: "Company X",
-      date: "2024",
-      glyph: "f",
-      tint: "clay",
-      description:
-        "Chart-of-accounts platform with multi-layer user management and auto-generated financial recaps.",
-      tech: ["React", "Express", "Node"],
-      live: true,
-      shots: [],
-    },
-    {
-      title: "Web-based ERP",
-      client: "Company X",
-      date: "2024",
-      glyph: "e",
-      tint: "slate",
-      description:
-        "Inventory, transactions, and project management in one clean, responsive interface.",
-      tech: ["React", "Material UI", "Node"],
-      live: true,
-      shots: [],
-    },
-    {
-      title: "Company profile",
-      client: "PT Maju Jaya Arkananta",
-      date: "2024",
-      glyph: "m",
-      tint: "sand",
-      description: "Catalogue API and product management.",
-      tech: ["Express", "Node"],
-      live: true,
-      shots: [],
-    },
-    {
-      title: "Community catalogue",
-      client: "Rawa Belong Community",
-      date: "2023",
-      glyph: "r",
-      tint: "rose",
-      description: "Responsive catalogue web for a flower-shop community.",
-      tech: ["React", "Flutter", "Node"],
-      live: false,
-      shots: [],
-    },
-    {
-      title: "Company profile",
-      client: "LeSeen Electronics",
-      date: "2023",
-      glyph: "l",
-      tint: "slate",
-      description: "Videotron company profile and product showcase.",
-      tech: ["React", "Node", "Material UI"],
-      live: false,
-      shots: [],
-    },
-  ];
+  const handleCaseStudyClick = (href: string, bg: string) => () => {
+    setCrossfade({ bg });
+    setTimeout(() => {
+      document.documentElement.classList.remove("scroll-smooth");
+      const layout = document.getElementById("global-layout");
+      if (layout) {
+        layout.style.transition = "none";
+        layout.style.backgroundColor = bg;
+      }
+      window.scrollTo(0, 0);
+      router.push(href, { scroll: false });
+      setTimeout(
+        () => document.documentElement.classList.add("scroll-smooth"),
+        500,
+      );
+    }, 500);
+  };
 
   return (
     <section
-      id="projects"
-      className="max-w-5xl mx-auto px-6 py-28 scroll-mt-24"
+      id="work"
+      className="relative py-28 scroll-mt-24"
+      onMouseMove={(e) => {
+        mx.set(e.clientX);
+        my.set(e.clientY);
+      }}
+      onMouseLeave={() => setActive(null)}
     >
-      {/* unchanged portal crossfade */}
       {crossfade &&
         typeof window !== "undefined" &&
         createPortal(
@@ -119,194 +174,146 @@ export default function Projects() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
             style={{ backgroundColor: crossfade.bg }}
-            className="fixed inset-0 z-99999 pointer-events-none"
+            className="fixed inset-0 z-[99999] pointer-events-none"
           />,
           document.body,
         )}
 
-      <Reveal>
-        <div className="flex items-baseline justify-between flex-wrap gap-4 mb-14">
-          <h2 className="font-serif font-light tracking-tight text-[clamp(2rem,4.5vw,3.2rem)]">
-            Selected <em className="italic">work</em>
-          </h2>
+      {/* floating preview — desktop only */}
+      <div className="hidden md:block">
+        <motion.div
+          style={{ x: px, y: py }}
+          className="fixed top-0 left-0 z-30 pointer-events-none"
+        >
+          <AnimatePresence mode="wait">
+            {active && (
+              <motion.div
+                key={active.no}
+                initial={{ scale: 0.6, opacity: 0, rotate: -4 }}
+                animate={{ scale: 1, opacity: 1, rotate: 2 }}
+                exit={{ scale: 0.6, opacity: 0, rotate: 4 }}
+                transition={{ type: "spring", stiffness: 320, damping: 22 }}
+                className="w-[300px] -translate-x-1/2 -translate-y-[115%] overflow-hidden shadow-2xl shadow-ink/30"
+              >
+                <PreviewCard entry={active} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      </div>
+
+      {/* heading */}
+      <div className="px-5 md:px-8 pb-12 flex flex-wrap items-end justify-between gap-4">
+        <h2 className="display text-ink text-[clamp(3rem,9vw,8rem)]">
+          <Chars text="INDEX" stagger={0.05} />
+        </h2>
+        <span className="mono-label text-smoke pb-3">
+          Selected work — 2023 → 26
+        </span>
+      </div>
+
+      {/* featured releases */}
+      {FEATURED.map((e, i) => (
+        <div
+          key={e.no}
+          onClick={handleCaseStudyClick(e.href!, e.crossfade!)}
+          onMouseEnter={() => setActive(e)}
+          data-cursor="View"
+          className={`group relative overflow-hidden border-t border-line ${i === FEATURED.length - 1 ? "border-b" : ""}`}
+        >
+          {/* dark flood on hover */}
+          <span className="absolute inset-0 bg-coal translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)]" />
+          <div className="relative z-10 px-5 md:px-8 py-8 md:py-12 grid grid-cols-12 items-baseline gap-x-3 gap-y-2 transition-colors duration-500 group-hover:text-bone">
+            <span className="col-span-2 md:col-span-1 font-mono text-xs text-smoke transition-colors duration-500 group-hover:text-accent">
+              {e.no}
+            </span>
+            <h3 className="col-span-10 md:col-span-6 display text-[clamp(2.6rem,8vw,6.5rem)] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-4">
+              {e.title}
+            </h3>
+            <div className="col-span-12 md:col-span-5 flex flex-wrap md:justify-end items-baseline gap-x-6 gap-y-1 mono-label text-smoke transition-colors duration-500 group-hover:text-ash">
+              <span>{e.kind}</span>
+              <span>{e.year}</span>
+              <span className="hidden lg:inline">{e.meta}</span>
+              <span className="text-accent">→</span>
+            </div>
+          </div>
         </div>
-      </Reveal>
+      ))}
 
-      {/* CASE STUDIES */}
-      <p className="text-faint text-xs uppercase tracking-[0.16em] mb-5">
-        Case studies
+      {/* client sub-index */}
+      <p className="mono-label text-smoke px-5 md:px-8 mt-20 mb-2">
+        Also produced — via WEBin
       </p>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-20">
-        {/* featured: nest */}
-        <Reveal className="md:col-span-2">
-          <div
-            onClick={handleCaseStudyClick("/projects/nest", "#fdfbf7")}
-            className="group cursor-pointer grid grid-cols-1 md:grid-cols-2 overflow-hidden rounded-2xl border border-line bg-surface transition-all duration-500 hover:-translate-y-1.5 hover:border-line-2 hover:shadow-[0_30px_60px_-38px_rgba(34,32,28,0.4)]"
-          >
-            <ProjectPreview
-              size="featured"
-              frame="phone"
-              tintBg={TINTS.sage.bg}
-              glyph="n"
-              glyphColor={TINTS.sage.glyph}
-              shots={["/nest-shot-1.png", "/nest-shot-2.png"]}
-              alt="nest app screens"
-            />
-            <div className="p-10 flex flex-col">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-faint text-xs uppercase tracking-[0.1em]">
-                  Personal product
-                </span>
-                <span className="text-faint text-xs">v2.4.6</span>
-              </div>
-              <h3 className="font-serif text-3xl mb-3">nest</h3>
-              <p className="text-ink-2 max-w-[42ch] mb-auto leading-relaxed">
-                A bouncy expense splitter that photographs receipts, extracts
-                the math with Gemini, and settles who-owes-who in the fewest
-                possible transactions.
-              </p>
-              <div className="flex flex-wrap gap-2 mt-6">
-                {["Next.js", "Supabase", "Gemini 2.5", "Zustand"].map((t) => (
-                  <span
-                    key={t}
-                    className="text-[12.5px] text-ink-2 border border-line rounded-full px-3 py-1"
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
-              <span className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-ink">
-                Read the case study
-                <span className="transition-transform duration-300 group-hover:translate-x-1.5">
-                  →
-                </span>
-              </span>
+      {CLIENTS.map((e, i) => (
+        <div
+          key={e.no}
+          onMouseEnter={() => setActive(e)}
+          data-cursor={e.live ? "Live" : "Archived"}
+          className={`group border-t border-line ${i === CLIENTS.length - 1 ? "border-b" : ""}`}
+        >
+          <div className="px-5 md:px-8 py-5 grid grid-cols-12 items-baseline gap-x-3">
+            <span className="col-span-2 md:col-span-1 font-mono text-xs text-ash transition-colors duration-300 group-hover:text-accent">
+              {e.no}
+            </span>
+            <h3 className="col-span-10 md:col-span-6 display font-semibold text-[clamp(1.3rem,3.4vw,2.4rem)] text-ink/80 transition-all duration-300 group-hover:translate-x-3 group-hover:text-ink">
+              {e.title}
+            </h3>
+            <div className="col-span-12 md:col-span-5 flex md:justify-end items-center gap-x-6 mono-label text-smoke">
+              <span>{e.kind}</span>
+              <span className="hidden sm:inline">{e.year}</span>
+              <span
+                className={`w-1.5 h-1.5 rounded-full ${e.live ? "bg-accent" : "bg-ash"}`}
+              />
             </div>
           </div>
-        </Reveal>
-
-        {/* featured: noted */}
-        <Reveal className="md:col-span-2" delay={0.1}>
-          <div
-            onClick={handleCaseStudyClick("/projects/noted", "#0a0a0a")}
-            className="group cursor-pointer grid grid-cols-1 md:grid-cols-2 overflow-hidden rounded-2xl border border-line bg-surface transition-all duration-500 hover:-translate-y-1.5 hover:border-line-2 hover:shadow-[0_30px_60px_-38px_rgba(34,32,28,0.4)]"
-          >
-            {/* dark editor preview — signals noted's terminal identity */}
-            {/* mobile: top (order-1), desktop: right (md:order-2) */}
-            <div
-              className="relative min-h-75 bg-[#0a0a0a] overflow-hidden flex flex-col order-1 md:order-2"
-              style={{
-                fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
-              }}
-            >
-              <div className="flex items-center gap-2 h-9 px-4 border-b border-[#262626] shrink-0">
-                <span className="w-2 h-2 rounded-full bg-[#d97757]" />
-                <span className="text-[#888] text-xs">noted</span>
-                <span className="ml-auto text-[#888] text-[11px]">saved</span>
-              </div>
-              <div className="flex-1 p-5 text-[13px] leading-relaxed">
-                <p className="text-[#d97757] font-bold">
-                  {"# local-first notes"}
-                </p>
-                <p className="text-[#e5e5e5] mt-2">
-                  markdown that saves offline,
-                </p>
-                <p className="text-[#e5e5e5]">syncs everywhere, and never</p>
-                <p className="text-[#e5e5e5]">loses a keystroke.</p>
-                <p className="mt-4 text-[#d97757]">
-                  - [x] <span className="text-[#e5e5e5]">offline queue</span>
-                </p>
-                <p className="text-[#d97757]">
-                  - [x] <span className="text-[#e5e5e5]">3-way merge</span>
-                </p>
-                <p className="text-[#d97757]">
-                  - [ ] <span className="text-[#e5e5e5]">ship v2.1</span>
-                </p>
-              </div>
-            </div>
-
-            {/* mobile: bottom (order-2), desktop: left (md:order-1) */}
-            <div className="p-10 flex flex-col order-2 md:order-1">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-faint text-xs uppercase tracking-widest">
-                  Personal product
-                </span>
-                <span className="text-faint text-xs">v2.0.1</span>
-              </div>
-              <h3 className="font-serif text-3xl mb-3">noted</h3>
-              <p className="text-ink-2 max-w-[42ch] mb-auto leading-relaxed">
-                A minimalist, offline-first markdown editor for programmers —
-                local-first storage, background sync, and a true three-way merge
-                when the same note is edited on two devices.
-              </p>
-              <div className="flex flex-wrap gap-2 mt-6">
-                {["Next.js", "Supabase", "CodeMirror", "IndexedDB"].map((t) => (
-                  <span
-                    key={t}
-                    className="text-[12.5px] text-ink-2 border border-line rounded-full px-3 py-1"
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
-              <span className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-ink">
-                Read the case study
-                <span className="transition-transform duration-300 group-hover:translate-x-1.5">
-                  →
-                </span>
-              </span>
-            </div>
-          </div>
-        </Reveal>
-      </div>
-
-      {/* CLIENT WORK */}
-      <p className="text-faint text-xs uppercase tracking-[0.16em] mb-5">
-        Client work
-      </p>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        {clientProjects.map((p, i) => {
-          const tint = TINTS[p.tint];
-          return (
-            <Reveal key={p.title + p.client} delay={(i % 2) * 0.05}>
-              <div className="group h-full flex flex-col rounded-2xl border border-line bg-surface p-7 transition-all duration-500 hover:-translate-y-1.5 hover:border-line-2 hover:shadow-[0_30px_60px_-38px_rgba(34,32,28,0.4)]">
-                <ProjectPreview
-                  tintBg={tint.bg}
-                  glyph={p.glyph}
-                  glyphColor={tint.glyph}
-                  shots={p.shots}
-                  alt={p.title}
-                />
-                <span className="text-faint text-xs uppercase tracking-[0.1em] mb-1">
-                  {p.client} · {p.date}
-                </span>
-                <h3 className="font-serif text-xl mb-2">{p.title}</h3>
-                <p className="text-ink-2 text-sm mb-auto leading-relaxed">
-                  {p.description}
-                </p>
-                <div className="flex items-center justify-between mt-6">
-                  <div className="flex flex-wrap gap-2">
-                    {p.tech.map((t) => (
-                      <span
-                        key={t}
-                        className="text-[12px] text-ink-2 border border-line rounded-full px-2.5 py-0.5"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                  <span
-                    className={`shrink-0 w-1.5 h-1.5 rounded-full ${
-                      p.live ? "bg-[#6f9a6a]" : "bg-faint"
-                    }`}
-                    title={p.live ? "live" : "archived"}
-                  />
-                </div>
-              </div>
-            </Reveal>
-          );
-        })}
-      </div>
+        </div>
+      ))}
     </section>
+  );
+}
+
+function PreviewCard({ entry }: { entry: Entry }) {
+  const p = entry.preview;
+  if (p.type === "shot") {
+    return (
+      <div
+        className="aspect-[4/3] flex items-end justify-center pt-6 px-10"
+        style={{ background: p.bg }}
+      >
+        <Image
+          src={p.src}
+          alt={entry.title}
+          width={180}
+          height={380}
+          className="w-[150px] h-auto rounded-t-xl shadow-xl"
+        />
+      </div>
+    );
+  }
+  if (p.type === "noted") {
+    return (
+      <div className="aspect-[4/3] bg-[#0a0a0a] p-5 font-mono text-[12px] leading-relaxed">
+        <p className="text-[#d97757] font-bold"># local-first notes</p>
+        <p className="text-[#e5e5e5] mt-2">markdown that saves offline,</p>
+        <p className="text-[#e5e5e5]">syncs everywhere, never loses</p>
+        <p className="text-[#e5e5e5]">a keystroke.</p>
+        <p className="text-[#d97757] mt-3">
+          - [x] <span className="text-[#e5e5e5]">3-way merge</span>
+        </p>
+      </div>
+    );
+  }
+  return (
+    <div
+      className="aspect-[4/3] flex items-center justify-center"
+      style={{ background: p.bg }}
+    >
+      <span
+        className="font-serif italic text-7xl opacity-60"
+        style={{ color: p.color }}
+      >
+        {p.glyph}
+      </span>
+    </div>
   );
 }

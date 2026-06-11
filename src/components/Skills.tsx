@@ -1,125 +1,95 @@
 "use client";
 
-import Reveal from "@/utilities/Reveal";
-import TechIcon, { TechKey } from "./TechIcon";
+import { motion } from "framer-motion";
+import { Chars } from "@/utilities/TextReveal";
+import Marquee from "@/utilities/Marquee";
 
-type SkillItem = {
-  key: TechKey;
-  name: string;
-  tier: "expert" | "comfortable" | "learning";
-};
+type Item = { name: string; tier: "Expert" | "Comfortable" | "Learning" };
 
-const ACTIVE_STACK: SkillItem[] = [
-  { key: "java", name: "Java", tier: "expert" },
-  { key: "spring-boot", name: "Spring Boot", tier: "expert" },
-  { key: "typescript", name: "TypeScript", tier: "expert" },
-  { key: "next", name: "Next.js", tier: "expert" },
-  { key: "react", name: "React", tier: "expert" },
-  { key: "tailwind", name: "Tailwind", tier: "expert" },
-  { key: "oracle-sql", name: "Oracle SQL", tier: "comfortable" },
-  { key: "redis", name: "Redis", tier: "comfortable" },
-  { key: "git", name: "Git", tier: "expert" },
+const NOW: Item[] = [
+  { name: "JAVA", tier: "Expert" },
+  { name: "SPRING BOOT", tier: "Expert" },
+  { name: "TYPESCRIPT", tier: "Expert" },
+  { name: "NEXT.JS", tier: "Expert" },
+  { name: "REACT", tier: "Expert" },
+  { name: "TAILWIND", tier: "Expert" },
+  { name: "ORACLE SQL", tier: "Comfortable" },
+  { name: "REDIS", tier: "Comfortable" },
+  { name: "GIT", tier: "Expert" },
+  { name: "SUPABASE", tier: "Expert" },
 ];
 
-const ARCHIVE_STACK: SkillItem[] = [
-  { key: "javascript", name: "JavaScript", tier: "expert" },
-  { key: "go", name: "Go", tier: "comfortable" },
-  { key: "node", name: "Node", tier: "comfortable" },
-  { key: "express", name: "Express", tier: "comfortable" },
-  { key: "flutter", name: "Flutter", tier: "comfortable" },
-  { key: "react-native", name: "React Native", tier: "comfortable" },
-  { key: "mysql", name: "MySQL", tier: "comfortable" },
-  { key: "firebase", name: "Firebase", tier: "learning" },
-  { key: "maven", name: "Maven", tier: "comfortable" },
+const BEFORE: Item[] = [
+  { name: "JAVASCRIPT", tier: "Expert" },
+  { name: "GO", tier: "Expert" },
+  { name: "NODE", tier: "Comfortable" },
+  { name: "EXPRESS", tier: "Comfortable" },
+  { name: "FLUTTER", tier: "Expert" },
+  { name: "REACT NATIVE", tier: "Comfortable" },
+  { name: "MYSQL", tier: "Comfortable" },
+  { name: "FIREBASE", tier: "Comfortable" },
+  { name: "MAVEN", tier: "Comfortable" },
+  { name: "XCODE", tier: "Comfortable" },
 ];
 
-const TIERS: Record<SkillItem["tier"], { label: string; dot: string }> = {
-  expert: { label: "expert", dot: "bg-[#6f9a6a]" },
-  comfortable: { label: "comfortable", dot: "bg-accent" },
-  learning: { label: "learning", dot: "bg-faint" },
-};
-
-const MARQUEE =
-  "Java · Spring Boot · React · Next.js · TypeScript · Tailwind · Oracle · Redis · Go · Node · Flutter · Supabase · ";
-
-function SkillCard({ item }: { item: SkillItem }) {
-  const tier = TIERS[item.tier];
+function Row({ item, i }: { item: Item; i: number }) {
   return (
-    <div className="group flex items-center gap-3 rounded-xl border border-line bg-surface px-4 py-3 transition-all duration-300 hover:-translate-y-0.5 hover:border-line-2">
-      <span className="w-7 h-7 flex items-center justify-center shrink-0">
-        <TechIcon variant={item.key} />
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: (i % 9) * 0.04 }}
+      className="group flex items-baseline justify-between border-b border-line py-3"
+    >
+      <span className="display font-semibold text-lg md:text-xl [font-stretch:100%] transition-[font-stretch,color] duration-300 group-hover:[font-stretch:125%] group-hover:text-accent">
+        {item.name}
       </span>
-      <div className="min-w-0">
-        <p className="text-sm text-ink truncate">{item.name}</p>
-        <p className="text-[11px] text-faint flex items-center gap-1.5 mt-0.5">
-          <span className={`w-1.5 h-1.5 rounded-full ${tier.dot}`} />
-          {tier.label}
-        </p>
-      </div>
-    </div>
+      <span
+        className={`mono-label ${item.tier === "Expert" ? "text-ink" : item.tier === "Learning" ? "text-ash" : "text-smoke"}`}
+      >
+        {item.tier}
+      </span>
+    </motion.div>
   );
 }
 
 export default function Skills() {
   return (
-    <section id="skills" className="py-28 scroll-mt-24">
-      {/* marquee flourish */}
-      <div className="group overflow-hidden border-y border-line py-6 mb-16 [mask-image:linear-gradient(90deg,transparent,#000_12%,#000_88%,transparent)]">
-        <div className="flex w-max animate-marquee group-hover:[animation-play-state:paused]">
-          <span className="font-serif italic font-light text-2xl text-ink-2 whitespace-nowrap">
-            {MARQUEE}
+    <section id="stack" className="py-28 scroll-mt-24">
+      <Marquee className="border-b border-line py-3 mb-20">
+        {["TOOLING", "IS", "TASTE", "MADE", "OPERATIONAL"].map((t) => (
+          <span key={t} className="flex items-center">
+            <span className="display text-2xl text-ash px-6">{t}</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-accent" />
           </span>
-          <span className="font-serif italic font-light text-2xl text-ink-2 whitespace-nowrap">
-            {MARQUEE}
-          </span>
-        </div>
-      </div>
+        ))}
+      </Marquee>
 
-      <div className="max-w-5xl mx-auto px-6">
-        <Reveal>
-          <div className="flex items-baseline justify-between flex-wrap gap-4 mb-4">
-            <h2 className="font-serif font-light tracking-tight text-[clamp(2rem,4.5vw,3.2rem)]">
-              What I build <em className="italic">with</em>
-            </h2>
-            <div className="flex flex-wrap gap-x-5 gap-y-2 text-[11px] text-faint">
-              {(["expert", "comfortable", "learning"] as const).map((t) => (
-                <span key={t} className="flex items-center gap-1.5">
-                  <span
-                    className={`w-1.5 h-1.5 rounded-full ${TIERS[t].dot}`}
-                  />
-                  {TIERS[t].label}
-                </span>
-              ))}
-            </div>
+      <div className="px-5 md:px-8">
+        <div className="flex flex-wrap items-end justify-between gap-4 mb-14">
+          <h2 className="display text-[clamp(3rem,9vw,8rem)] text-ink">
+            <Chars text="STACK" stagger={0.05} />
+          </h2>
+          <span className="mono-label text-smoke pb-3">Hover a row</span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
+          <div>
+            <p className="mono-label text-smoke mb-4 border-t border-line-2 pt-3">
+              Everyday tech stack
+            </p>
+            {NOW.map((it, i) => (
+              <Row key={it.name} item={it} i={i} />
+            ))}
           </div>
-        </Reveal>
-
-        {/* active */}
-        <Reveal>
-          <p className="text-faint text-xs uppercase tracking-[0.16em] mt-10 mb-5">
-            Currently shipping with
-          </p>
-        </Reveal>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-          {ACTIVE_STACK.map((item, i) => (
-            <Reveal key={item.key} delay={(i % 3) * 0.04}>
-              <SkillCard item={item} />
-            </Reveal>
-          ))}
-        </div>
-
-        {/* archive */}
-        <Reveal>
-          <p className="text-faint text-xs uppercase tracking-[0.16em] mt-12 mb-5">
-            Shipped with before
-          </p>
-        </Reveal>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 opacity-90">
-          {ARCHIVE_STACK.map((item, i) => (
-            <Reveal key={item.key} delay={(i % 3) * 0.04}>
-              <SkillCard item={item} />
-            </Reveal>
-          ))}
+          <div>
+            <p className="mono-label text-smoke mb-4 border-t border-line-2 pt-3">
+              Other tech stack
+            </p>
+            {BEFORE.map((it, i) => (
+              <Row key={it.name} item={it} i={i} />
+            ))}
+          </div>
         </div>
       </div>
     </section>

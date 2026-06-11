@@ -11,9 +11,9 @@ export default function Footer() {
   });
 
   const navigate = [
-    { name: "Work", href: "/#projects" },
-    { name: "Experience", href: "/#experience" },
-    { name: "Skills", href: "/#skills" },
+    { name: "Work", href: "/#work" },
+    { name: "Experience", href: "/#about" },
+    { name: "Skills", href: "/#stack" },
     { name: "Uses", href: "/uses" },
     { name: "Contact", href: "/#contact" },
   ];

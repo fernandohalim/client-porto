@@ -1,19 +1,21 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import ClientLayout from "@/components/ClientLayout";
-import { Fraunces, Hanken_Grotesk } from "next/font/google";
+import { Archivo, Fraunces } from "next/font/google";
+import { GeistMono } from "geist/font/mono";
+
+const archivo = Archivo({
+  subsets: ["latin"],
+  variable: "--font-archivo",
+  display: "swap",
+  axes: ["wdth"],
+});
 
 const fraunces = Fraunces({
   subsets: ["latin"],
   variable: "--font-fraunces",
   display: "swap",
   style: ["normal", "italic"],
-});
-
-const hanken = Hanken_Grotesk({
-  subsets: ["latin"],
-  variable: "--font-hanken",
-  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -61,7 +63,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f4f1ea",
+  themeColor: "#f2f0ea",
 };
 
 export default function RootLayout({
@@ -72,7 +74,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${hanken.variable} scroll-smooth`}
+      className={`${archivo.variable} ${fraunces.variable} ${GeistMono.variable} scroll-smooth`}
     >
       {" "}
       <body className="antialiased font-sans">

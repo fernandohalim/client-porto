@@ -1,102 +1,136 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
-import Reveal from "@/utilities/Reveal";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { Chars } from "@/utilities/TextReveal";
+import Marquee from "@/utilities/Marquee";
 
 export default function Hero() {
-  const lineVariant: Variants = {
-    hidden: { opacity: 0, y: 24, filter: "blur(6px)" },
-    visible: {
-      opacity: 1,
-      y: 0,
-      filter: "blur(0px)",
-      transition: { duration: 0.8, ease: [0.2, 0.7, 0.2, 1] },
-    },
-  };
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+  const stretch = useTransform(scrollYProgress, [0, 1], ["125%", "65%"]);
+  const drift = useTransform(scrollYProgress, [0, 1], ["0%", "14%"]);
+  const fade = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
+
   return (
     <section
+      ref={ref}
       id="hero"
-      className="min-h-screen flex flex-col justify-center max-w-5xl mx-auto px-6 pt-32 pb-24 scroll-mt-24"
+      className="relative min-h-screen flex flex-col justify-between pt-24 overflow-hidden"
     >
-      <Reveal>
-        <div className="flex items-center gap-3 text-faint text-sm tracking-[0.16em] uppercase">
-          <span className="w-7 h-px bg-line-2" />
-          Fullstack developer · Jakarta
-        </div>
-      </Reveal>
-
-      <motion.h1
-        className="font-serif font-light tracking-tight leading-[1.06] text-[clamp(2.6rem,7vw,5.6rem)] mt-7"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={{
-          visible: {
-            transition: { staggerChildren: 0.14, delayChildren: 0.1 },
-          },
-        }}
+      {/* metadata strip */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.8, duration: 0.6 }}
+        className="px-5 md:px-8 flex items-center justify-between mono-label text-smoke"
       >
-        <motion.span className="block" variants={lineVariant}>
-          I build software that{" "}
-          <span className="relative inline-block">
-            <em className="italic text-accent font-normal">respects</em>
+        <span>Portfolio — Vol. 02</span>
+        <span className="hidden sm:block">
+          Fullstack · Interface Engineering
+        </span>
+        <span>Jakarta, ID — 6.2°S 106.8°E</span>
+      </motion.div>
+
+      {/* the name */}
+      <motion.div
+        style={{ y: drift, opacity: fade }}
+        className="px-2 md:px-5 select-none"
+      >
+        <motion.h1
+          style={{ fontStretch: stretch }}
+          className="display text-ink text-[clamp(3.4rem,16.5vw,16rem)]"
+        >
+          <span className="block">
+            <Chars text="FERNANDO" stagger={0.045} delay={0.1} />
+          </span>
+          <span className="block text-right">
+            <Chars text="HALIM" stagger={0.05} delay={0.45} />
             <motion.span
-              className="absolute left-0 -bottom-1 h-0.5 w-full origin-left bg-accent/60"
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true }}
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
               transition={{
-                delay: 0.75,
-                duration: 0.6,
-                ease: [0.2, 0.7, 0.2, 1],
+                delay: 1.1,
+                type: "spring",
+                stiffness: 300,
+                damping: 18,
               }}
-            />
-          </span>{" "}
-          its
-        </motion.span>
-        <motion.span className="block" variants={lineVariant}>
-          users — in <em className="italic font-normal">speed</em> and in{" "}
-          <em className="italic font-normal">detail.</em>
-        </motion.span>
-      </motion.h1>
+              className="inline-block align-top text-accent text-[0.35em] ml-2 mt-[0.18em]"
+            >
+              ®
+            </motion.span>
+          </span>
+        </motion.h1>
+      </motion.div>
 
-      <Reveal delay={0.24}>
-        <p className="mt-8 max-w-[52ch] text-ink-2 text-[clamp(1.05rem,1.7vw,1.3rem)] leading-relaxed">
-          By day I engineer real-time fraud detection for banks at{" "}
-          <span className="text-ink">PT Rintis Sejahtera</span>. By night I ship
-          modern web products under <span className="text-ink">WEBin</span> —
-          with an obsessive eye for the parts nobody notices.
-        </p>
-      </Reveal>
+      {/* statement + status */}
+      <div>
+        <div className="px-5 md:px-8 pb-10 grid grid-cols-1 md:grid-cols-12 gap-8 items-end">
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.15, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            className="md:col-span-6 text-smoke leading-relaxed max-w-[46ch] text-[15px]"
+          >
+            I direct and build interfaces. By day — real-time fraud detection
+            for banks at <span className="text-ink">PT Rintis Sejahtera</span>.
+            After hours — self-produced products like{" "}
+            <span className="text-ink">nest.</span> and{" "}
+            <span className="text-ink">noted.</span>, where the interaction
+            design is the whole point.
+          </motion.p>
 
-      <Reveal delay={0.36}>
-        <div className="mt-14 flex flex-wrap gap-x-12 gap-y-6 border-t border-line pt-7 text-sm">
-          <div>
-            <span className="inline-flex items-center gap-2 text-ink-2">
-              <span className="relative flex w-2 h-2">
-                <span className="absolute inline-flex w-full h-full rounded-full bg-[#6f9a6a] opacity-60 animate-ping" />
-                <span className="relative inline-flex w-2 h-2 rounded-full bg-[#6f9a6a]" />
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.3, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            className="md:col-span-3 mono-label text-smoke"
+          >
+            <span className="flex items-center gap-2 text-ink">
+              <span className="relative flex w-1.5 h-1.5">
+                <span className="absolute inline-flex w-full h-full rounded-full bg-accent opacity-60 animate-ping" />
+                <span className="relative inline-flex w-1.5 h-1.5 rounded-full bg-accent" />
               </span>
-              Available
+              Now showing
             </span>
-            <span className="block text-ink mt-1">
-              for select freelance work
+            <span className="block mt-2 leading-relaxed normal-case tracking-normal font-sans text-sm">
+              Available for select freelance via WEBin
             </span>
-          </div>
-          <div>
-            <span className="text-faint">Currently</span>
-            <span className="block text-ink mt-1">
-              Java Application Developer @ Rintis
-            </span>
-          </div>
-          <div>
-            <span className="text-faint">Focus</span>
-            <span className="block text-ink mt-1">
-              Spring Boot · React · Next.js
-            </span>
-          </div>
+          </motion.div>
+
+          <motion.a
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.45, duration: 0.7 }}
+            href="#work"
+            data-cursor="↓"
+            className="md:col-span-3 md:text-right mono-label text-ink hover:text-accent transition-colors"
+          >
+            Scroll — Selected Index
+          </motion.a>
         </div>
-      </Reveal>
+
+        {/* marquee divider */}
+        <Marquee className="border-y border-line py-3">
+          {[
+            "NEST",
+            "NOTED",
+            "FRAUD DETECTION SYSTEMS",
+            "WEBIN",
+            "DESIGN ENGINEERING",
+          ].map((t) => (
+            <span key={t} className="flex items-center">
+              <span className="display text-2xl md:text-3xl text-ink px-6">
+                {t}
+              </span>
+              <span className="w-2 h-2 rounded-full bg-accent" />
+            </span>
+          ))}
+        </Marquee>
+      </div>
     </section>
   );
 }

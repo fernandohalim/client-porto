@@ -1,63 +1,55 @@
 "use client";
 
-import Reveal from "@/utilities/Reveal";
-import Image from "next/image";
+import { motion } from "framer-motion";
+import { Chars } from "@/utilities/TextReveal";
 
-type ExperienceEntry = {
-  id: string;
-  logo: string;
-  company: string;
+type Credit = {
+  no: string;
   role: string;
+  company: string;
   date: string;
   type: string;
-  stack: string[];
+  stack: string;
   points: string[];
   active: boolean;
 };
 
-const experiences: ExperienceEntry[] = [
+const CREDITS: Credit[] = [
   {
-    id: "rintis",
-    logo: "/logos/rintis.png",
+    no: "A",
+    role: "JAVA APPLICATION DEVELOPER",
     company: "PT Rintis Sejahtera",
-    role: "Java Application Developer",
-    date: "Oct 2024 — Present",
+    date: "Oct 2024 — Now",
     type: "Full-time",
-    stack: ["Java", "Spring Boot", "Redis", "Oracle SQL", "Maven"],
+    stack: "Java · Spring Boot · Redis · Oracle",
     points: [
-      "Engineer and maintain scalable Java microservices processing real-time transaction data for the core fraud detection system.",
-      "Design and execute complex database operations supporting massive volumes of financial records.",
-      "Continuously develop the Java-based fraud detection platform used by banks.",
+      "Real-time fraud detection microservices for interbank transaction networks.",
+      "Complex database operations across massive volumes of financial records.",
     ],
     active: true,
   },
   {
-    id: "webin",
-    logo: "/logos/webin.png",
+    no: "B",
+    role: "FULLSTACK DEVELOPER",
     company: "WEBin",
-    role: "Fullstack Web Developer",
-    date: "Feb 2023 — Present",
-    type: "Freelance",
-    stack: ["React", "Next.js", "Node", "TypeScript", "Go", "Flutter"],
+    date: "Feb 2023 — Now",
+    type: "Freelance studio",
+    stack: "Next.js · React · Node · Go",
     points: [
-      "Deliver end-to-end custom solutions for B2B clients, from system design to frontend deployment.",
-      "Develop and maintain scalable, responsive web applications.",
-      "Build robust APIs with clean, well-documented interfaces.",
+      "End-to-end custom builds for B2B clients — system design through deployment.",
+      "Clean, documented APIs and responsive product interfaces.",
     ],
     active: true,
   },
   {
-    id: "overo",
-    logo: "/logos/overo.png",
+    no: "C",
+    role: "FRONTEND DEVELOPER",
     company: "PT Overo Digital Global",
-    role: "Frontend Developer",
     date: "Aug 2022 — Jan 2023",
     type: "Hybrid",
-    stack: ["React", "Tailwind CSS", "Flutter", "GetX"],
+    stack: "React · Tailwind · Flutter",
     points: [
-      "Engineered responsive, client-facing web and mobile applications.",
-      "Developed high-performance cross-platform mobile interfaces.",
-      "Collaborated with the UI/UX team across web and mobile surfaces.",
+      "Client-facing web and cross-platform mobile interfaces with the UI/UX team.",
     ],
     active: false,
   },
@@ -66,74 +58,94 @@ const experiences: ExperienceEntry[] = [
 export default function Experience() {
   return (
     <section
-      id="experience"
-      className="max-w-5xl mx-auto px-6 py-28 scroll-mt-24"
+      id="about"
+      className="bg-coal text-bone py-28 md:py-36 scroll-mt-24"
     >
-      <Reveal>
-        <h2 className="font-serif font-light tracking-tight text-[clamp(2rem,4.5vw,3.2rem)] mb-14">
-          Where I&apos;ve <em className="italic">worked</em>
+      <div className="px-5 md:px-8">
+        <span className="mono-label text-smoke">About — In production</span>
+
+        <h2 className="display text-[clamp(2.2rem,6.5vw,5.5rem)] mt-8 max-w-[16ch]">
+          <span className="block">
+            <Chars text="I CARE ABOUT THE" stagger={0.02} />
+          </span>
+          <span className="block text-bone/40">
+            <Chars text="PARTS NOBODY" stagger={0.02} delay={0.2} />
+          </span>
+          <span className="block">
+            <Chars text="NOTICES" stagger={0.03} delay={0.4} />
+            <span className="text-accent">.</span>
+          </span>
         </h2>
-      </Reveal>
 
-      <div className="relative">
-        <div className="absolute left-6 top-2 bottom-2 w-px bg-line" />
-
-        <div className="space-y-8">
-          {experiences.map((exp, i) => (
-            <Reveal key={exp.id} delay={i * 0.08}>
-              <div className="relative pl-20">
-                {/* node */}
-                <div className="absolute left-0 top-0 w-12 h-12 rounded-xl border border-line bg-white flex items-center justify-center p-2 overflow-hidden">
-                  <Image
-                    src={exp.logo}
-                    alt={exp.company}
-                    width={32}
-                    height={32}
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-
-                {/* card */}
-                <div className="rounded-2xl border border-line bg-surface p-7 transition-all duration-500 hover:border-line-2 hover:shadow-[0_30px_60px_-40px_rgba(34,32,28,0.35)]">
-                  <h3 className="font-serif text-2xl mb-2">{exp.role}</h3>
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-2 mb-5">
-                    <span className="text-accent text-sm">{exp.company}</span>
-                    <span className="text-faint">·</span>
-                    <span className="text-xs text-ink-2 border border-line rounded-full px-2.5 py-0.5">
-                      {exp.date}
-                    </span>
-                    <span className="text-xs text-ink-2 border border-line rounded-full px-2.5 py-0.5">
-                      {exp.type}
-                    </span>
-                  </div>
-
-                  <div className="flex flex-wrap gap-2 mb-5">
-                    {exp.stack.map((t) => (
-                      <span
-                        key={t}
-                        className="text-[12px] text-ink-2 border border-line rounded-full px-2.5 py-0.5"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-
-                  <ul className="space-y-2.5">
-                    {exp.points.map((p, idx) => (
-                      <li
-                        key={idx}
-                        className="flex gap-3 text-sm text-ink-2 leading-relaxed"
-                      >
-                        <span className="text-accent mt-1 shrink-0">↳</span>
-                        <span>{p}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </Reveal>
-          ))}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mt-12 mb-20">
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            className="md:col-start-7 md:col-span-6 text-ash leading-relaxed max-w-[52ch]"
+          >
+            Two productions running in parallel: by day, payment-scale fraud
+            systems where a missed millisecond is a missed transaction — by
+            night, self-directed products where I own everything from the data
+            model to the easing curve. The first taught me rigor. The second is
+            where the rigor gets a personality.
+          </motion.p>
         </div>
+
+        {/* credit roll */}
+        {CREDITS.map((c, i) => (
+          <motion.div
+            key={c.no}
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{
+              duration: 0.6,
+              delay: i * 0.08,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+            className={`group border-t border-bone/15 py-8 grid grid-cols-12 gap-x-3 gap-y-4 ${
+              i === CREDITS.length - 1 ? "border-b" : ""
+            }`}
+          >
+            <span className="col-span-1 font-mono text-xs text-smoke group-hover:text-accent transition-colors">
+              {c.no}
+            </span>
+            <div className="col-span-11 md:col-span-5">
+              <h3 className="display font-semibold text-[clamp(1.2rem,2.6vw,1.9rem)] transition-transform duration-500 group-hover:translate-x-2">
+                {c.role}
+              </h3>
+              <p className="mono-label text-smoke mt-2 flex flex-wrap items-center gap-x-4 gap-y-1">
+                <span className="text-bone/70">{c.company}</span>
+                <span>{c.date}</span>
+                <span>{c.type}</span>
+                {c.active && (
+                  <span className="flex items-center gap-1.5 text-accent">
+                    <span className="w-1 h-1 rounded-full bg-accent animate-pulse" />
+                    Active
+                  </span>
+                )}
+              </p>
+            </div>
+            <div className="col-span-12 md:col-span-6 md:col-start-7">
+              <ul className="space-y-2">
+                {c.points.map((p) => (
+                  <li
+                    key={p}
+                    className="flex gap-3 text-sm text-ash leading-relaxed"
+                  >
+                    <span className="text-accent shrink-0">↳</span>
+                    <span>{p}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="font-mono text-[11px] text-smoke mt-4 tracking-wide">
+                {c.stack}
+              </p>
+            </div>
+          </motion.div>
+        ))}
       </div>
     </section>
   );

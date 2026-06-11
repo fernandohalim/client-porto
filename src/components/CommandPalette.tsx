@@ -22,19 +22,19 @@ export default function CommandPalette() {
       id: "work",
       name: "Selected work",
       desc: "Projects & case studies",
-      action: () => router.push("/#projects"),
+      action: () => router.push("/#work"),
     },
     {
       id: "experience",
       name: "Experience",
       desc: "Where I've worked",
-      action: () => router.push("/#experience"),
+      action: () => router.push("/#about"),
     },
     {
       id: "skills",
       name: "Skills",
       desc: "What I build with",
-      action: () => router.push("/#skills"),
+      action: () => router.push("/#stack"),
     },
     {
       id: "uses",
