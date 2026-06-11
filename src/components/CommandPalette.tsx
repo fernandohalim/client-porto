@@ -20,19 +20,19 @@ export default function CommandPalette() {
     },
     {
       id: "work",
-      name: "Selected work",
-      desc: "Projects & case studies",
+      name: "Index",
+      desc: "Selected work & case studies",
       action: () => router.push("/#work"),
     },
     {
-      id: "experience",
-      name: "Experience",
-      desc: "Where I've worked",
+      id: "about",
+      name: "About",
+      desc: "In production — where I work",
       action: () => router.push("/#about"),
     },
     {
-      id: "skills",
-      name: "Skills",
+      id: "stack",
+      name: "Stack",
       desc: "What I build with",
       action: () => router.push("/#stack"),
     },
@@ -133,17 +133,18 @@ export default function CommandPalette() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsOpen(false)}
-            className="absolute inset-0 bg-ink/25 backdrop-blur-sm"
+            className="absolute inset-0 bg-coal/40 backdrop-blur-sm"
           />
           <motion.div
-            initial={{ opacity: 0, scale: 0.97, y: -8 }}
+            initial={{ opacity: 0, scale: 0.98, y: -8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.97, y: -8 }}
-            transition={{ duration: 0.2, ease: [0.2, 0.7, 0.2, 1] }}
-            className="relative w-full max-w-lg bg-surface border border-line-2 rounded-2xl shadow-[0_40px_80px_-30px_rgba(34,32,28,0.45)] overflow-hidden"
+            exit={{ opacity: 0, scale: 0.98, y: -8 }}
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="relative w-full max-w-lg bg-bone border border-line-2 shadow-[0_40px_80px_-30px_rgba(14,13,12,0.5)] overflow-hidden"
           >
+            {/* input row */}
             <div className="flex items-center gap-3 px-5 py-4 border-b border-line">
-              <span className="text-faint text-sm">↳</span>
+              <span className="text-accent font-mono text-sm">↳</span>
               <input
                 ref={inputRef}
                 value={query}
@@ -152,19 +153,20 @@ export default function CommandPalette() {
                   setSelected(0);
                 }}
                 onKeyDown={onInputKey}
-                placeholder="Search or jump to…"
+                placeholder="SEARCH OR JUMP TO…"
                 spellCheck={false}
                 autoComplete="off"
-                className="w-full bg-transparent text-ink placeholder:text-faint outline-none text-[15px]"
+                className="w-full bg-transparent text-ink placeholder:text-ash outline-none font-mono text-[13px] uppercase tracking-[0.08em]"
               />
-              <kbd className="text-[11px] text-faint border border-line rounded px-1.5 py-0.5">
+              <kbd className="font-mono text-[10px] uppercase tracking-[0.18em] text-smoke border border-line px-1.5 py-0.5">
                 esc
               </kbd>
             </div>
 
+            {/* results */}
             <div className="max-h-[52vh] overflow-y-auto p-2">
               {filtered.length === 0 ? (
-                <p className="px-4 py-8 text-center text-sm text-faint">
+                <p className="px-4 py-8 text-center font-mono text-[11px] uppercase tracking-[0.18em] text-smoke">
                   No matches.
                 </p>
               ) : (
@@ -173,31 +175,47 @@ export default function CommandPalette() {
                     key={c.id}
                     onClick={() => run(i)}
                     onMouseEnter={() => setSelected(i)}
-                    className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-left transition-colors ${
-                      selected === i ? "bg-paper" : "hover:bg-paper/60"
+                    data-cursor="Go"
+                    className={`w-full flex items-center justify-between px-4 py-3 text-left transition-colors ${
+                      selected === i
+                        ? "bg-ink text-bone"
+                        : "text-ink hover:bg-ink/5"
                     }`}
                   >
-                    <span className="flex items-center gap-3">
+                    <span className="flex items-baseline gap-3 min-w-0">
                       <span
-                        className={`w-1 h-1 rounded-full ${
-                          selected === i ? "bg-accent" : "bg-transparent"
+                        className={`font-mono text-[10px] shrink-0 ${
+                          selected === i ? "text-accent" : "text-ash"
                         }`}
-                      />
-                      <span className="text-[15px] text-ink">{c.name}</span>
-                      <span className="text-[13px] text-faint">{c.desc}</span>
+                      >
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <span className="text-[15px] font-semibold uppercase tracking-tight">
+                        {c.name}
+                      </span>
+                      <span
+                        className={`font-mono text-[11px] truncate ${
+                          selected === i ? "text-ash" : "text-smoke"
+                        }`}
+                      >
+                        {c.desc}
+                      </span>
                     </span>
                     {selected === i && (
-                      <span className="text-faint text-xs">↵</span>
+                      <span className="font-mono text-xs text-accent shrink-0 ml-3">
+                        ↵
+                      </span>
                     )}
                   </button>
                 ))
               )}
             </div>
 
-            <div className="flex items-center gap-4 px-5 py-3 border-t border-line text-[11px] text-faint">
-              <span>↑↓ navigate</span>
-              <span>↵ select</span>
-              <span>esc close</span>
+            {/* footer hints */}
+            <div className="flex items-center gap-5 px-5 py-3 border-t border-line font-mono text-[10px] uppercase tracking-[0.18em] text-smoke">
+              <span>↑↓ Navigate</span>
+              <span>↵ Select</span>
+              <span>esc Close</span>
             </div>
           </motion.div>
         </div>

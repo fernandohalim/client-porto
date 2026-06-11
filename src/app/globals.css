@@ -27,8 +27,12 @@
   --animate-marquee: marquee 28s linear infinite;
 
   @keyframes marquee {
-    from { transform: translateX(0); }
-    to   { transform: translateX(var(--marquee-shift, -50%)); }
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(var(--marquee-shift, -50%));
+    }
   }
 }
 
@@ -37,13 +41,27 @@ body {
   color: var(--color-ink);
 }
 
-::selection { background: #141312; color: #f2f0ea; }
+::selection {
+  background: #141312;
+  color: #f2f0ea;
+}
 
-html { scrollbar-width: thin; scrollbar-color: #c9c4b9 #f2f0ea; }
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: #f2f0ea; }
-::-webkit-scrollbar-thumb { background: #c9c4b9; }
-::-webkit-scrollbar-thumb:hover { background: #c84f2c; }
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #c9c4b9 #f2f0ea;
+}
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f2f0ea;
+}
+::-webkit-scrollbar-thumb {
+  background: #c9c4b9;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c84f2c;
+}
 
 /* the studio voice: expanded, heavy, tight */
 .display {
@@ -64,5 +82,22 @@ html { scrollbar-width: thin; scrollbar-color: #c9c4b9 #f2f0ea; }
 
 /* hand pointer duty to the custom cursor on precise-pointer devices */
 @media (hover: hover) and (pointer: fine) {
-  body, a, button, [data-cursor] { cursor: none; }
+  body,
+  a,
+  button,
+  [data-cursor] {
+    cursor: none;
+  }
+}
+
+/* lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
 }

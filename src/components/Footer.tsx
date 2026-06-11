@@ -1,7 +1,7 @@
 import Link from "next/link";
 import JakartaTime from "@/utilities/JakartaTime";
 
-const LAST_DEPLOYED = "2026-05-08";
+const LAST_DEPLOYED = "2026-06-11";
 
 export default function Footer() {
   const deploy = new Date(LAST_DEPLOYED).toLocaleDateString("en-GB", {
@@ -11,13 +11,12 @@ export default function Footer() {
   });
 
   const navigate = [
-    { name: "Work", href: "/#work" },
-    { name: "Experience", href: "/#about" },
-    { name: "Skills", href: "/#stack" },
+    { name: "Index", href: "/#work" },
+    { name: "About", href: "/#about" },
+    { name: "Stack", href: "/#stack" },
     { name: "Uses", href: "/uses" },
     { name: "Contact", href: "/#contact" },
   ];
-
   const elsewhere = [
     { name: "LinkedIn", href: "https://www.linkedin.com/in/fernando-halimm" },
     { name: "GitHub", href: "https://github.com/fernandohalim" },
@@ -26,28 +25,24 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="border-t border-line bg-paper mt-auto">
-      <div className="max-w-5xl mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-[1.4fr_1fr_1fr] gap-10">
-          <div>
-            <p className="font-serif text-2xl text-ink">
-              Fernando <em className="italic text-accent">Halim</em>
-            </p>
-            <p className="text-ink-2 text-sm mt-3 max-w-[28ch]">
-              Fullstack developer building considered software in West Jakarta.
+    <footer className="bg-coal text-bone mt-auto overflow-hidden">
+      <div className="px-5 md:px-8 pt-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 pb-16">
+          <div className="col-span-2 md:col-span-2">
+            <p className="mono-label text-smoke mb-3">The studio</p>
+            <p className="text-ash text-sm leading-relaxed max-w-[34ch]">
+              Fernando Halim — fullstack developer producing considered software
+              from West Jakarta. Vol. 02.
             </p>
           </div>
-
           <div>
-            <p className="text-faint text-xs uppercase tracking-[0.16em] mb-4">
-              Navigate
-            </p>
+            <p className="mono-label text-smoke mb-4">Navigate</p>
             <ul className="space-y-2.5 text-sm">
               {navigate.map((l) => (
                 <li key={l.name}>
                   <Link
                     href={l.href}
-                    className="text-ink-2 hover:text-ink transition-colors"
+                    className="text-ash hover:text-bone transition-colors"
                   >
                     {l.name}
                   </Link>
@@ -55,11 +50,8 @@ export default function Footer() {
               ))}
             </ul>
           </div>
-
           <div>
-            <p className="text-faint text-xs uppercase tracking-[0.16em] mb-4">
-              Elsewhere
-            </p>
+            <p className="mono-label text-smoke mb-4">Elsewhere</p>
             <ul className="space-y-2.5 text-sm">
               {elsewhere.map((l) => (
                 <li key={l.name}>
@@ -67,7 +59,7 @@ export default function Footer() {
                     href={l.href}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-ink-2 hover:text-ink transition-colors"
+                    className="text-ash hover:text-bone transition-colors"
                   >
                     {l.name}
                   </a>
@@ -77,19 +69,15 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-14 pt-6 border-t border-line flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-faint">
-          <span>
-            © {new Date().getFullYear()} Fernando Halim — West Jakarta, ID
-          </span>
-          <span className="flex items-center gap-5">
-            <span className="tabular-nums">
-              <JakartaTime />
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-bone/15 py-5 mono-label text-smoke">
+          <span>© {new Date().getFullYear()} — West Jakarta, ID</span>
+          <span className="flex items-center gap-6">
+            <JakartaTime />
+            <span className="flex items-center gap-1.5 text-accent">
+              <span className="w-1 h-1 rounded-full bg-accent animate-pulse" />{" "}
+              Available
             </span>
-            <span className="inline-flex items-center gap-1.5 text-ink-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#6f9a6a]" />
-              available
-            </span>
-            <span>updated {deploy}</span>
+            <span>Updated {deploy}</span>
           </span>
         </div>
       </div>

@@ -8,6 +8,7 @@ import PageTransition from "@/utilities/PageTransition";
 import { motion, AnimatePresence } from "framer-motion";
 import ScrollProgress from "@/utilities/ScrollProgress";
 import Cursor from "@/utilities/Cursor";
+import SmoothScroll from "@/utilities/SmoothScroll";
 
 export default function ClientLayout({
   children,
@@ -31,6 +32,7 @@ export default function ClientLayout({
       className={`min-h-screen flex flex-col transition-colors duration-700 ${globalStyles}`}
     >
       <Cursor />
+      <SmoothScroll />
       {!isCaseStudy && <ScrollProgress />}
       <AnimatePresence>
         {!isCaseStudy && (

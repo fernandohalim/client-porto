@@ -53,10 +53,7 @@ export default function NestCaseStudy() {
   };
 
   return (
-    <main
-      className="min-h-screen bg-[#fdfbf7] text-stone-800 font-sans selection:bg-emerald-200 selection:text-emerald-900 pb-32 relative overflow-hidden"
-      style={{ fontFamily: "'Geist', sans-serif" }}
-    >
+    <main className="min-h-screen bg-[#fdfbf7] text-stone-800 selection:bg-emerald-200 selection:text-emerald-900 pb-32 relative overflow-hidden">
       <ScrollProgress />
       {/* ─── ambient background ─────────────────────────────────────────── */}
       <motion.div
@@ -94,7 +91,7 @@ export default function NestCaseStudy() {
         />
       </motion.div>
 
-      <div className="max-w-6xl mx-auto px-6 pt-12 md:pt-24 relative z-10 perspective-1000">
+      <div className="max-w-6xl mx-auto px-6 pt-12 md:pt-24 relative z-10 [perspective:1000px]">
         {/* ─── escape hatch back to terminal ──────────────────────────── */}
         <motion.div
           initial={{ opacity: 0, x: -40, rotateY: 10 }}
@@ -269,9 +266,9 @@ function SocialSquares() {
 
 function Hero({ fadeUp }: { fadeUp: Variants }) {
   return (
-    <div className="mb-24 md:mb-40 relative grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+    <div className="mb-24 md:mb-40 relative grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
       <motion.div
-        className="md:col-span-7"
+        className="lg:col-span-7"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: false, amount: 0.3 }}
@@ -365,7 +362,7 @@ function Hero({ fadeUp }: { fadeUp: Variants }) {
       </motion.div>
 
       {/* ─── floating UI cluster (real app pieces, not mockups) ─────────── */}
-      <div className="md:col-span-5 h-96 md:h-[460px] relative hidden md:block perspective-1000">
+      <div className="lg:col-span-5 h-96 lg:h-[460px] relative hidden lg:block perspective-1000">
         {/* receipt total card */}
         <motion.div
           animate={{
@@ -396,7 +393,6 @@ function Hero({ fadeUp }: { fadeUp: Variants }) {
             </span>
           </div>
         </motion.div>
-
         {/* settlement card */}
         <motion.div
           animate={{
@@ -426,7 +422,6 @@ function Hero({ fadeUp }: { fadeUp: Variants }) {
             </span>
           </div>
         </motion.div>
-
         {/* scan-receipt pill */}
         <motion.div
           animate={{
@@ -448,7 +443,6 @@ function Hero({ fadeUp }: { fadeUp: Variants }) {
             ✨
           </div>
         </motion.div>
-
         {/* floating member avatar */}
         <motion.div
           animate={{ y: [0, -10, 0], rotateZ: [-12, -8, -12] }}
@@ -462,7 +456,6 @@ function Hero({ fadeUp }: { fadeUp: Variants }) {
         >
           fh
         </motion.div>
-
         {/* item-by-item line */}
         <motion.div
           animate={{ y: [0, 14, 0], rotateZ: [2, 5, 2] }}
@@ -494,7 +487,6 @@ function StatsRibbon() {
     { value: "3", label: "split modes" },
     { value: "24+", label: "releases" },
     { value: "<3s", label: "scan time" },
-    { value: "0", label: "ratio drift" },
   ];
 
   return (
@@ -521,7 +513,7 @@ function StatsRibbon() {
             shipped &amp; live
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-y-8 gap-x-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-y-8 gap-x-4">
             {stats.map((s, i) => (
               <motion.div
                 key={s.label}
@@ -715,9 +707,9 @@ function ScannerSection({ fadeUp }: { fadeUp: Variants }) {
         <div className="text-emerald-500 font-black text-sm tracking-widest uppercase mb-3">
           02. The scanner
         </div>
-        <h2 className="text-3xl md:text-5xl font-black tracking-tight text-stone-800 mb-4">
-          photo →{" "}
-          <span className="font-mono text-2xl md:text-4xl text-emerald-600 bg-emerald-50 px-3 py-1 rounded-2xl border-2 border-emerald-100">
+        <h2 className="flex flex-wrap items-center gap-x-3 gap-y-2 text-3xl md:text-5xl font-black tracking-tight text-stone-800 mb-4">
+          <span>photo →</span>
+          <span className="font-mono text-lg sm:text-2xl md:text-4xl text-emerald-600 bg-emerald-50 px-3 py-1 rounded-2xl border-2 border-emerald-100 whitespace-nowrap">
             {"{ items, total, date }"}
           </span>
         </h2>
@@ -736,7 +728,7 @@ function ScannerSection({ fadeUp }: { fadeUp: Variants }) {
         {/* LEFT: scanner viewfinder */}
         <motion.div
           variants={fadeUp}
-          className="lg:col-span-7 relative h-[440px] bg-stone-900 rounded-[2rem] overflow-hidden border-4 border-stone-800 shadow-2xl flex items-center justify-center"
+          className="lg:col-span-7 relative h-[360px] sm:h-[440px] bg-stone-900 rounded-[2rem] overflow-hidden border-4 border-stone-800 shadow-2xl flex items-center justify-center"
         >
           <div className="absolute inset-0 bg-[linear-gradient(rgba(16,185,129,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(16,185,129,0.08)_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
 
@@ -765,7 +757,7 @@ function ScannerSection({ fadeUp }: { fadeUp: Variants }) {
           />
 
           {/* corner brackets */}
-          <div className="absolute inset-12 pointer-events-none">
+          <div className="absolute inset-6 sm:inset-12 pointer-events-none">
             <div className="absolute top-0 left-0 w-10 h-10 border-t-4 border-l-4 border-emerald-400 rounded-tl-2xl" />
             <div className="absolute top-0 right-0 w-10 h-10 border-t-4 border-r-4 border-emerald-400 rounded-tr-2xl" />
             <div className="absolute bottom-0 left-0 w-10 h-10 border-b-4 border-l-4 border-emerald-400 rounded-bl-2xl" />
@@ -850,7 +842,7 @@ function ScannerSection({ fadeUp }: { fadeUp: Variants }) {
       {/* stage strip */}
       <motion.div
         variants={fadeUp}
-        className="mt-6 grid grid-cols-3 gap-3 md:gap-6"
+        className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-6"
       >
         {stages.map((stage, i) => (
           <div
@@ -1239,14 +1231,14 @@ function SettlementGraphSection({ fadeUp }: { fadeUp: Variants }) {
                 transition={{ delay: i * 0.08 }}
                 className="bg-white rounded-2xl px-4 py-3 flex items-center gap-3 border border-rose-100"
               >
-                <span className="text-xs font-black text-stone-700 w-20 truncate">
+                <span className="text-xs font-black text-stone-700 flex-1 min-w-0 truncate">
                   {t.from}
                 </span>
                 <span className="text-rose-400">→</span>
-                <span className="text-xs font-black text-stone-700 w-20 truncate">
+                <span className="text-xs font-black text-stone-700 flex-1 min-w-0 truncate">
                   {t.to}
                 </span>
-                <span className="ml-auto text-sm font-black text-rose-500 tabular-nums">
+                <span className="ml-auto text-sm font-black shrink-0 text-rose-500 tabular-nums">
                   Rp {t.amt.toLocaleString()}
                 </span>
               </motion.div>
@@ -1288,14 +1280,14 @@ function SettlementGraphSection({ fadeUp }: { fadeUp: Variants }) {
                   transition={{ delay: 0.3 + i * 0.12, type: "spring" }}
                   className="bg-white/5 backdrop-blur-sm rounded-2xl px-4 py-3 flex items-center gap-3 border border-white/10"
                 >
-                  <span className="text-xs font-black text-white w-20 truncate">
+                  <span className="text-xs font-black text-white flex-1 min-w-0 truncate">
                     {t.from}
                   </span>
                   <span className="text-emerald-400">→</span>
-                  <span className="text-xs font-black text-white w-20 truncate">
+                  <span className="text-xs font-black text-white flex-1 min-w-0 truncate">
                     {t.to}
                   </span>
-                  <span className="ml-auto text-sm font-black text-emerald-400 tabular-nums">
+                  <span className="ml-auto text-sm font-black shrink-0 text-emerald-400 tabular-nums">
                     Rp {t.amt.toLocaleString()}
                   </span>
                 </motion.div>
@@ -1474,7 +1466,7 @@ function BugBountySection({ fadeUp }: { fadeUp: Variants }) {
         </div>
 
         {/* detail panel */}
-        <div className="lg:col-span-8 bg-white rounded-[2rem] border-2 border-stone-100 shadow-xl overflow-hidden">
+        <div className="lg:col-span-8 bg-white rounded-[2rem] lg:min-h-[380px] border-2 border-stone-100 shadow-xl overflow-hidden">
           <motion.div
             key={active}
             initial={{ opacity: 0, y: 10 }}
@@ -1710,7 +1702,7 @@ function TechStackSection({ fadeUp }: { fadeUp: Variants }) {
       whileInView="visible"
       viewport={{ once: false, amount: 0.2 }}
       variants={{ visible: { transition: { staggerChildren: 0.06 } } }}
-      className="mb-32 md:mb-40"
+      className="mb-32 md:mb-48"
     >
       <motion.div variants={fadeUp} className="mb-10 md:mb-14 max-w-3xl">
         <div className="text-stone-400 font-black text-sm tracking-widest uppercase mb-3">
