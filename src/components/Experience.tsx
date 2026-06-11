@@ -165,7 +165,7 @@ export default function Experience() {
           rel="noreferrer"
           onMouseEnter={() => setActive(c)}
           onMouseLeave={() => setActive(null)}
-          data-cursor="Open ↗"
+          data-cursor="View LinkedIn"
           className={`group relative block overflow-hidden border-t border-bone/15 ${
             i === CREDITS.length - 1 ? "border-b" : ""
           }`}

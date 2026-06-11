@@ -11,6 +11,7 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import { Chars } from "@/utilities/TextReveal";
+import Link from "next/link";
 
 type Entry = {
   no: string;
@@ -44,6 +45,33 @@ const FEATURED: Entry[] = [
     href: "/projects/noted",
     crossfade: "#0a0a0a",
     img: "/work-noted.png",
+  },
+];
+
+const PERSONAL: Entry[] = [
+  {
+    no: "03",
+    title: "BOUNTY",
+    kind: "Product",
+    year: "2026",
+    meta: "Gamified expense tracker · social feature",
+    href: "https://bounty-app-iota.vercel.app",
+  },
+  {
+    no: "04",
+    title: "PIXELEMOJI",
+    kind: "Product",
+    year: "2026",
+    meta: "Emoji to pixel art converter · customizeable",
+    href: "https://pixelemoji-delta.vercel.app/",
+  },
+  {
+    no: "05",
+    title: "PIXELIMAGE",
+    kind: "Product",
+    year: "2026",
+    meta: "Image to pixel art converter · customizeable",
+    href: "https://pixelimage.vercel.app/",
   },
 ];
 
@@ -181,9 +209,7 @@ export default function Projects() {
         <h2 className="display text-ink text-[clamp(3rem,9vw,8rem)]">
           <Chars text="INDEX" stagger={0.05} />
         </h2>
-        <span className="mono-label text-smoke pb-3">
-          Selected work — 2023 → 26
-        </span>
+        <span className="mono-label text-smoke pb-3">Selected work</span>
       </div>
 
       {/* featured releases */}
@@ -213,6 +239,38 @@ export default function Projects() {
             </div>
           </div>
         </div>
+      ))}
+
+      {PERSONAL.map((e, i) => (
+        <Link
+          href={e.href || "#"}
+          key={e.no}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <div
+            key={e.no}
+            data-cursor="Visit"
+            className={`group relative overflow-hidden border-b border-line`}
+          >
+            {/* same flood language as the featured releases */}
+            <span className="absolute inset-0 bg-coal translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)]" />
+            <div className="relative z-10 px-5 md:px-8 py-5 grid grid-cols-12 items-baseline gap-x-3 gap-y-1 transition-colors duration-500 group-hover:text-bone">
+              <span className="col-span-2 md:col-span-1 font-mono text-xs text-ash transition-colors duration-500 group-hover:text-accent">
+                {e.no}
+              </span>
+              <h3 className="col-span-10 md:col-span-6 display font-semibold text-[clamp(1.3rem,3.4vw,2.4rem)] text-ink/80 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-3 group-hover:text-bone">
+                {e.title}
+              </h3>
+              <div className="col-span-12 md:col-span-5 flex md:justify-end items-center gap-x-6 mono-label text-smoke transition-colors duration-500 group-hover:text-ash">
+                <span>{e.kind}</span>
+                <span>{e.year}</span>
+                <span className="hidden lg:inline">{e.meta}</span>
+                <span className="text-accent">→</span>
+              </div>
+            </div>
+          </div>
+        </Link>
       ))}
 
       {/* client sub-index */}
