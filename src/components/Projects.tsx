@@ -51,14 +51,6 @@ const FEATURED: Entry[] = [
 const PERSONAL: Entry[] = [
   {
     no: "03",
-    title: "BOUNTY",
-    kind: "Product",
-    year: "2026",
-    meta: "Gamified expense tracker · social feature",
-    href: "https://bounty-app-iota.vercel.app",
-  },
-  {
-    no: "04",
     title: "PIXELEMOJI",
     kind: "Product",
     year: "2026",
@@ -66,7 +58,7 @@ const PERSONAL: Entry[] = [
     href: "https://pixelemoji-delta.vercel.app/",
   },
   {
-    no: "05",
+    no: "04",
     title: "PIXELIMAGE",
     kind: "Product",
     year: "2026",
@@ -77,7 +69,7 @@ const PERSONAL: Entry[] = [
 
 const CLIENTS: Entry[] = [
   {
-    no: "03",
+    no: "01",
     title: "PT Maju Jaya Arkananta",
     kind: "Company profile and catalogue website with CMS",
     year: "2024",
@@ -85,7 +77,7 @@ const CLIENTS: Entry[] = [
     live: true,
   },
   {
-    no: "04",
+    no: "02",
     title: "PT Jasplast Sukses Bersama",
     kind: "Financial record website",
     year: "2024",
@@ -93,7 +85,7 @@ const CLIENTS: Entry[] = [
     live: true,
   },
   {
-    no: "05",
+    no: "03",
     title: "PT Argotehnik Kreasindo Abadi",
     kind: "Web-based operational ERP",
     year: "2024",
@@ -101,14 +93,14 @@ const CLIENTS: Entry[] = [
     live: true,
   },
   {
-    no: "06",
+    no: "04",
     title: "Rawa Belong Florist Community",
     kind: "Marketplace mobile application and website",
     year: "2023",
     meta: "React · Flutter · Node",
   },
   {
-    no: "07",
+    no: "05",
     title: "LeSeen Electronics",
     kind: "Company profile website",
     year: "2023",
