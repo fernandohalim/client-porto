@@ -60,7 +60,7 @@ const FEATURED: Entry[] = [
 
 const PERSONAL: Entry[] = [
   {
-    no: "01",
+    no: "04",
     title: "PIXELEMOJI",
     kind: "Product",
     year: "2026",
@@ -68,7 +68,7 @@ const PERSONAL: Entry[] = [
     href: "https://pixelemoji-delta.vercel.app/",
   },
   {
-    no: "02",
+    no: "05",
     title: "PIXELIMAGE",
     kind: "Product",
     year: "2026",
