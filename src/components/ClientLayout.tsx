@@ -18,13 +18,16 @@ export default function ClientLayout({
   const pathname = usePathname();
   const isNestPage = pathname?.startsWith("/projects/nest");
   const isNotedPage = pathname?.startsWith("/projects/noted");
-  const isCaseStudy = isNestPage || isNotedPage;
+  const isPiggyPage = pathname?.startsWith("/projects/piggy-wallet");
+  const isCaseStudy = isNestPage || isNotedPage || isPiggyPage;
 
   const globalStyles = isNestPage
     ? "bg-[#fdfbf7] text-stone-800 selection:bg-emerald-200 selection:text-emerald-900"
     : isNotedPage
       ? "bg-[#0a0a0a] text-[#e5e5e5] selection:bg-[#d97757] selection:text-[#0a0a0a]"
-      : "bg-bone text-ink selection:bg-ink selection:text-bone";
+      : isPiggyPage
+        ? "bg-[#f5f4fb] text-[#1e1b2e] selection:bg-[#e8e8fb] selection:text-[#4646b8]"
+        : "bg-bone text-ink selection:bg-ink selection:text-bone";
 
   return (
     <div

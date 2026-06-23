@@ -29,7 +29,7 @@ const FEATURED: Entry[] = [
   {
     no: "01",
     title: "NEST",
-    kind: "Product — Case Study",
+    kind: "Case Study",
     year: "2026",
     meta: "AI receipt scanning · settlement engine",
     href: "/projects/nest",
@@ -39,18 +39,28 @@ const FEATURED: Entry[] = [
   {
     no: "02",
     title: "NOTED",
-    kind: "Product — Case Study",
+    kind: "Case Study",
     year: "2026",
     meta: "Offline-first markdown · 3-way merge",
     href: "/projects/noted",
     crossfade: "#0a0a0a",
     img: "/work-noted.png",
   },
+  {
+    no: "03",
+    title: "Piggy Wallet",
+    kind: "Case Study",
+    year: "2026",
+    meta: "Offline-first expense tracker · budget system",
+    href: "/projects/piggy-wallet",
+    crossfade: "#f5f4fb",
+    img: "/work-piggy.png",
+  },
 ];
 
 const PERSONAL: Entry[] = [
   {
-    no: "03",
+    no: "01",
     title: "PIXELEMOJI",
     kind: "Product",
     year: "2026",
@@ -58,7 +68,7 @@ const PERSONAL: Entry[] = [
     href: "https://pixelemoji-delta.vercel.app/",
   },
   {
-    no: "04",
+    no: "02",
     title: "PIXELIMAGE",
     kind: "Product",
     year: "2026",
@@ -140,7 +150,7 @@ export default function Projects() {
   return (
     <section
       id="work"
-      className="relative py-28 scroll-mt-24"
+      className="relative py-20 md:py-28 scroll-mt-24"
       onMouseMove={(e) => {
         mx.set(e.clientX);
         my.set(e.clientY);
@@ -216,18 +226,25 @@ export default function Projects() {
         >
           {/* dark flood on hover */}
           <span className="absolute inset-0 bg-coal translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)]" />
-          <div className="relative z-10 px-5 md:px-8 py-8 md:py-12 grid grid-cols-12 items-baseline gap-x-3 gap-y-2 transition-colors duration-500 group-hover:text-bone">
+          <div className="relative z-10 px-5 md:px-8 py-8 md:py-12 grid grid-cols-12 items-baseline gap-x-3 gap-y-3 md:gap-y-2 transition-colors duration-500 group-hover:text-bone">
             <span className="col-span-2 md:col-span-1 font-mono text-xs text-smoke transition-colors duration-500 group-hover:text-accent">
               {e.no}
             </span>
-            <h3 className="col-span-10 md:col-span-6 display text-[clamp(2.6rem,8vw,6.5rem)] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-4">
+            <h3 className="col-span-10 md:col-span-9 md:whitespace-nowrap display text-[clamp(2.6rem,7vw,6rem)] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-4">
               {e.title}
             </h3>
-            <div className="col-span-12 md:col-span-5 flex flex-wrap md:justify-end items-baseline gap-x-6 gap-y-1 mono-label text-smoke transition-colors duration-500 group-hover:text-ash">
-              <span>{e.kind}</span>
-              <span>{e.year}</span>
-              <span className="hidden lg:inline">{e.meta}</span>
-              <span className="text-accent">→</span>
+
+            {/* mobile-only caption — stands in for the desktop hover preview */}
+            <p className="col-span-10 col-start-3 md:hidden font-mono text-[11px] leading-[1.7] text-smoke transition-colors duration-500 group-hover:text-ash">
+              {e.meta}
+            </p>
+
+            <div className="col-span-10 col-start-3 md:col-span-2 md:col-start-auto flex justify-between md:justify-end items-baseline gap-x-6 mono-label text-smoke transition-colors duration-500 group-hover:text-ash">
+              <span className="md:hidden">{e.kind}</span>
+              <span className="flex items-baseline gap-x-6">
+                <span>{e.year}</span>
+                <span className="text-accent">→</span>
+              </span>
             </div>
           </div>
         </div>
@@ -239,6 +256,7 @@ export default function Projects() {
           key={e.no}
           target="_blank"
           rel="noopener noreferrer"
+          className="block"
         >
           <div
             key={e.no}
@@ -247,18 +265,25 @@ export default function Projects() {
           >
             {/* same flood language as the featured releases */}
             <span className="absolute inset-0 bg-coal translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)]" />
-            <div className="relative z-10 px-5 md:px-8 py-5 grid grid-cols-12 items-baseline gap-x-3 gap-y-1 transition-colors duration-500 group-hover:text-bone">
+            <div className="relative z-10 px-5 md:px-8 py-5 grid grid-cols-12 items-baseline gap-x-3 gap-y-2 md:gap-y-1 transition-colors duration-500 group-hover:text-bone">
               <span className="col-span-2 md:col-span-1 font-mono text-xs text-ash transition-colors duration-500 group-hover:text-accent">
                 {e.no}
               </span>
-              <h3 className="col-span-10 md:col-span-6 display font-semibold text-[clamp(1.3rem,3.4vw,2.4rem)] text-ink/80 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-3 group-hover:text-bone">
+              <h3 className="col-span-10 md:col-span-6 display font-semibold text-[clamp(1.5rem,3.4vw,2.4rem)] text-ink/80 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-3 group-hover:text-bone">
                 {e.title}
               </h3>
-              <div className="col-span-12 md:col-span-5 flex md:justify-end items-center gap-x-6 mono-label text-smoke transition-colors duration-500 group-hover:text-ash">
-                <span>{e.kind}</span>
-                <span>{e.year}</span>
-                <span className="hidden lg:inline">{e.meta}</span>
-                <span className="text-accent">→</span>
+
+              {/* mobile-only caption */}
+              <p className="col-span-10 col-start-3 md:hidden font-mono text-[11px] leading-[1.7] text-smoke transition-colors duration-500 group-hover:text-ash">
+                {e.meta}
+              </p>
+
+              <div className="col-span-10 col-start-3 md:col-span-5 md:col-start-auto flex justify-between md:justify-end items-center gap-x-6 mono-label text-smoke transition-colors duration-500 group-hover:text-ash">
+                <span className="md:hidden">{e.kind}</span>
+                <span className="flex items-center gap-x-6">
+                  <span>{e.year}</span>
+                  <span className="text-accent">→</span>
+                </span>
               </div>
             </div>
           </div>
@@ -277,19 +302,30 @@ export default function Projects() {
         >
           {/* same flood language as the featured releases */}
           <span className="absolute inset-0 bg-coal translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)]" />
-          <div className="relative z-10 px-5 md:px-8 py-5 grid grid-cols-12 items-baseline gap-x-3 gap-y-1 transition-colors duration-500 group-hover:text-bone">
+          <div className="relative z-10 px-5 md:px-8 py-5 grid grid-cols-12 items-baseline gap-x-3 gap-y-2 md:gap-y-1 transition-colors duration-500 group-hover:text-bone">
             <span className="col-span-2 md:col-span-1 font-mono text-xs text-ash transition-colors duration-500 group-hover:text-accent">
               {e.no}
             </span>
-            <h3 className="col-span-10 md:col-span-6 display font-semibold text-[clamp(1.3rem,3.4vw,2.4rem)] text-ink/80 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-3 group-hover:text-bone">
+            <h3 className="col-span-10 md:col-span-6 display font-semibold text-[clamp(1.5rem,3.4vw,2.4rem)] text-ink/80 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-3 group-hover:text-bone">
               {e.title}
             </h3>
-            <div className="col-span-12 md:col-span-5 flex md:justify-end items-center gap-x-6 mono-label text-smoke transition-colors duration-500 group-hover:text-ash">
-              <span>{e.kind}</span>
-              <span className="hidden sm:inline">{e.year}</span>
-              <span
-                className={`w-1.5 h-1.5 rounded-full ${e.live ? "bg-accent" : "bg-ash"}`}
-              />
+
+            {/* mobile-only caption (the build type) */}
+            <p className="col-span-10 col-start-3 md:hidden font-mono text-[11px] leading-[1.7] text-smoke transition-colors duration-500 group-hover:text-ash">
+              {e.kind}
+            </p>
+
+            <div className="col-span-10 col-start-3 md:col-span-5 md:col-start-auto flex items-center justify-between md:justify-end gap-x-6 mono-label text-smoke transition-colors duration-500 group-hover:text-ash">
+              <span className="hidden md:inline">{e.kind}</span>
+              <span className="flex items-center gap-x-4">
+                <span className="md:hidden">
+                  {e.live ? "Live" : "Archived"}
+                </span>
+                <span>{e.year}</span>
+                <span
+                  className={`w-1.5 h-1.5 rounded-full ${e.live ? "bg-accent" : "bg-ash"}`}
+                />
+              </span>
             </div>
           </div>
         </div>

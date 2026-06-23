@@ -103,8 +103,8 @@ function Row({ item, i }: { item: Item; i: number }) {
 
 export default function Skills() {
   return (
-    <section id="stack" className="py-28 scroll-mt-24">
-      <Marquee className="border-b border-line py-3 mb-20">
+    <section id="stack" className="py-20 md:py-28 scroll-mt-24">
+      <Marquee className="border-b border-line py-3 mb-14 md:mb-20">
         {["TOOLING", "IS", "TASTE", "MADE", "OPERATIONAL"].map((t) => (
           <span key={t} className="flex items-center">
             <span className="display text-2xl text-ash px-6">{t}</span>
