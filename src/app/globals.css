@@ -105,6 +105,20 @@ html {
   [data-cursor] {
     cursor: none;
   }
+
+  /* …except on case-study pages, which use the native cursor */
+  .case-study,
+  .case-study a,
+  .case-study button,
+  .case-study [data-cursor] {
+    cursor: auto;
+  }
+  .case-study a,
+  .case-study button,
+  .case-study [role="button"],
+  .case-study [data-cursor] {
+    cursor: pointer;
+  }
 }
 
 /* lenis smooth scroll */

@@ -1,13 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
-import {
-  motion,
-  AnimatePresence,
-  useMotionValue,
-  useSpring,
-} from "framer-motion";
+import { motion } from "framer-motion";
 import { Chars } from "@/utilities/TextReveal";
 
 type Credit = {
@@ -19,7 +12,6 @@ type Credit = {
   stack: string;
   points: string[];
   active: boolean;
-  img: string;
   linkedin: string;
 };
 
@@ -36,7 +28,6 @@ const CREDITS: Credit[] = [
       "Complex database operations across massive volumes of financial records.",
     ],
     active: true,
-    img: "/exp-rintis.png",
     linkedin: "https://www.linkedin.com/company/pt-rintis-sejahtera/",
   },
   {
@@ -51,7 +42,6 @@ const CREDITS: Credit[] = [
       "Clean, documented APIs and responsive product interfaces.",
     ],
     active: true,
-    img: "/exp-webin.png",
     linkedin: "www.linkedin.com/company/91073950",
   },
   {
@@ -65,64 +55,16 @@ const CREDITS: Credit[] = [
       "Client-facing web and cross-platform mobile interfaces with the UI/UX team.",
     ],
     active: false,
-    img: "/exp-overo.png",
     linkedin: "https://www.linkedin.com/company/overo-global-technologies/",
   },
 ];
 
 export default function Experience() {
-  const [active, setActive] = useState<Credit | null>(null);
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-  const px = useSpring(mx, { stiffness: 220, damping: 24, mass: 0.5 });
-  const py = useSpring(my, { stiffness: 220, damping: 24, mass: 0.5 });
-
   return (
     <section
       id="about"
       className="bg-coal text-bone py-28 md:py-36 scroll-mt-24 relative"
-      onMouseMove={(e) => {
-        mx.set(e.clientX);
-        my.set(e.clientY);
-      }}
-      onMouseLeave={() => setActive(null)}
     >
-      {/* cursor-chasing company still — desktop only */}
-      <div className="hidden md:block">
-        <motion.div
-          style={{ x: px, y: py }}
-          className="fixed top-0 left-0 z-30 pointer-events-none"
-        >
-          <AnimatePresence mode="popLayout">
-            {active && (
-              <motion.div
-                key={active.no}
-                initial={{ scale: 0.6, opacity: 0, rotate: 4 }}
-                animate={{ scale: 1, opacity: 1, rotate: -2 }}
-                exit={{
-                  scale: 0.7,
-                  opacity: 0,
-                  transition: { duration: 0.12, ease: "easeIn" },
-                }}
-                transition={{ type: "spring", stiffness: 420, damping: 26 }}
-                className="relative w-[300px] -translate-x-1/2 -translate-y-[115%] overflow-hidden shadow-2xl shadow-black/50"
-              >
-                <Image
-                  src={active.img}
-                  alt={active.company}
-                  width={900}
-                  height={620}
-                  className="w-full h-auto"
-                />
-                <span className="absolute bottom-2 left-2 mono-label bg-coal/80 text-bone px-2.5 py-1.5">
-                  {active.company}
-                </span>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.div>
-      </div>
-
       <div className="px-5 md:px-8">
         <span className="mono-label text-smoke">About — In production</span>
 
@@ -163,8 +105,6 @@ export default function Experience() {
           href={c.linkedin}
           target="_blank"
           rel="noreferrer"
-          onMouseEnter={() => setActive(c)}
-          onMouseLeave={() => setActive(null)}
           data-cursor="View LinkedIn"
           className={`group relative block overflow-hidden border-t border-bone/15 ${
             i === CREDITS.length - 1 ? "border-b" : ""

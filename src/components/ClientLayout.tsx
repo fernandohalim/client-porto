@@ -19,7 +19,8 @@ export default function ClientLayout({
   const isNestPage = pathname?.startsWith("/projects/nest");
   const isNotedPage = pathname?.startsWith("/projects/noted");
   const isPiggyPage = pathname?.startsWith("/projects/piggy-wallet");
-  const isCaseStudy = isNestPage || isNotedPage || isPiggyPage;
+  const isLumePage = pathname?.startsWith("/projects/lume");
+  const isCaseStudy = isNestPage || isNotedPage || isPiggyPage || isLumePage;
 
   const globalStyles = isNestPage
     ? "bg-[#fdfbf7] text-stone-800 selection:bg-emerald-200 selection:text-emerald-900"
@@ -27,14 +28,18 @@ export default function ClientLayout({
       ? "bg-[#0a0a0a] text-[#e5e5e5] selection:bg-[#d97757] selection:text-[#0a0a0a]"
       : isPiggyPage
         ? "bg-[#f5f4fb] text-[#1e1b2e] selection:bg-[#e8e8fb] selection:text-[#4646b8]"
-        : "bg-bone text-ink selection:bg-ink selection:text-bone";
+        : isLumePage
+          ? "bg-[#0b0b0f] text-[#f2f3f5] selection:bg-[#c8b6ff] selection:text-[#0b0b0f]"
+          : "bg-bone text-ink selection:bg-ink selection:text-bone";
 
   return (
     <div
       id="global-layout"
-      className={`min-h-screen flex flex-col transition-colors duration-700 ${globalStyles}`}
+      className={`min-h-screen flex flex-col transition-colors duration-700 ${isCaseStudy ? "case-study" : ""} ${globalStyles}`}
     >
-      <Cursor />
+      {/* case-study pages hand the cursor back to the OS — the custom one is
+          portfolio-chrome only. */}
+      {!isCaseStudy && <Cursor />}
       <SmoothScroll />
       {!isCaseStudy && <ScrollProgress />}
       <AnimatePresence>
