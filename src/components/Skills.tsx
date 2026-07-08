@@ -15,24 +15,26 @@ const NOW: Item[] = [
   { key: "java", name: "JAVA", tier: "Expert" },
   { key: "spring-boot", name: "SPRING BOOT", tier: "Expert" },
   { key: "typescript", name: "TYPESCRIPT", tier: "Expert" },
+  { key: "python", name: "PYTHON", tier: "Comfortable" },
   { key: "next", name: "NEXT.JS", tier: "Expert" },
-  { key: "react", name: "REACT", tier: "Expert" },
+  { key: "go", name: "GO", tier: "Expert" },
+  { key: "supabase", name: "SUPABASE", tier: "Expert" },
+  { key: "firebase", name: "FIREBASE", tier: "Comfortable" },
   { key: "tailwind", name: "TAILWIND", tier: "Expert" },
-  { key: "oracle-sql", name: "ORACLE SQL", tier: "Comfortable" },
-  { key: "redis", name: "REDIS", tier: "Comfortable" },
   { key: "git", name: "GIT", tier: "Expert" },
 ];
 
 const BEFORE: Item[] = [
-  { key: "javascript", name: "JAVASCRIPT", tier: "Expert" },
-  { key: "go", name: "GO", tier: "Comfortable" },
+  { key: "rust", name: "RUST", tier: "Comfortable" },
+  { key: "csharp", name: "C#", tier: "Comfortable" },
   { key: "node", name: "NODE", tier: "Comfortable" },
-  { key: "express", name: "EXPRESS", tier: "Comfortable" },
-  { key: "flutter", name: "FLUTTER", tier: "Comfortable" },
+  { key: "express", name: "EXPRESS", tier: "Expert" },
+  { key: "flutter", name: "FLUTTER", tier: "Expert" },
   { key: "react-native", name: "REACT NATIVE", tier: "Comfortable" },
   { key: "mysql", name: "MYSQL", tier: "Comfortable" },
-  { key: "firebase", name: "FIREBASE", tier: "Learning" },
   { key: "maven", name: "MAVEN", tier: "Comfortable" },
+  { key: "oracle-sql", name: "ORACLE SQL", tier: "Expert" },
+  { key: "redis", name: "REDIS", tier: "Comfortable" },
 ];
 
 function Row({ item, i }: { item: Item; i: number }) {

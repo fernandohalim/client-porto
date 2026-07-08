@@ -6,8 +6,11 @@
   --color-ink: #141312;
   --color-smoke: #6e6a61;
   --color-ash: #b9b4a9;
-  --color-line: rgba(20, 19, 18, 0.12);
-  --color-line-2: rgba(20, 19, 18, 0.3);
+  /* opaque hairlines — pre-blended over --color-bone. translucent 1px lines
+     anti-alias inconsistently across rows at fractional pixel offsets (fluid
+     row heights + Lenis transforms); solid colors stay crisp and even. */
+  --color-line: #d7d5d0; /* was rgba(20, 19, 18, 0.12) over bone */
+  --color-line-2: #afaea9; /* was rgba(20, 19, 18, 0.3) over bone */
   --color-accent: #c84f2c;
 
   /* legacy aliases so /uses, not-found, palette keep working during migration */

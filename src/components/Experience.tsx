@@ -106,13 +106,22 @@ export default function Experience() {
           target="_blank"
           rel="noreferrer"
           data-cursor="View LinkedIn"
-          className={`group relative block overflow-hidden border-t border-bone/15 ${
+          className={`group relative block overflow-hidden border-t border-[#302f2d] ${
             i === CREDITS.length - 1 ? "border-b" : ""
           }`}
         >
           {/* bone flood — the inverse of the index hover */}
           <span className="absolute inset-0 bg-bone translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)]" />
-          <div className="relative z-10 px-5 md:px-8 py-8 grid grid-cols-12 gap-x-3 gap-y-4 transition-colors duration-500 group-hover:text-ink">
+          {/* snap row height to a multiple of 4 (whole device pixels at
+              1×/1.25×/1.5×/2× scaling) so every divider — including the last
+              border-b — lands on the same pixel phase and renders at a uniform
+              weight. taller value fits 2 bullet points, shorter fits 1. min-h
+              (not h) lets a wrapped bullet grow instead of clipping. */}
+          <div
+            className={`relative z-10 px-5 md:px-8 py-8 ${
+              c.points.length > 1 ? "md:min-h-[156px]" : "md:min-h-[124px]"
+            } grid grid-cols-12 gap-x-3 gap-y-4 transition-colors duration-500 group-hover:text-ink`}
+          >
             <span className="col-span-1 font-mono text-xs text-smoke transition-colors duration-500 group-hover:text-accent">
               {c.no}
             </span>

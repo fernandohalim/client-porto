@@ -142,7 +142,10 @@ function Hero({ no, e }: { no: string; e: Work }) {
     <div className="group relative overflow-hidden border-t border-line cursor-pointer">
       {/* dark flood on hover */}
       <span className="absolute inset-0 bg-coal translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)]" />
-      <div className="relative z-10 px-5 md:px-8 py-9 md:py-14 transition-colors duration-500 group-hover:text-bone">
+      {/* snap to a multiple of 4 (whole device pixels at 1×/1.25×/1.5×/2×
+          scaling) so the hero dividers land on a uniform pixel phase like the
+          index rows. min-h (not h) lets a wrapped blurb grow instead of clip. */}
+      <div className="relative z-10 px-5 md:px-8 py-9 md:py-14 md:min-h-[288px] flex flex-col justify-center transition-colors duration-500 group-hover:text-bone">
         {/* meta — number · kind · year */}
         <div className="flex items-center gap-x-4 mono-label text-smoke transition-colors duration-500 group-hover:text-ash">
           <span className="text-accent">{no}</span>
@@ -195,7 +198,10 @@ function Row({
     >
       {/* dark flood on hover */}
       <span className="absolute inset-0 bg-coal translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)]" />
-      <div className="relative z-10 px-5 md:px-8 py-4 md:py-5 grid grid-cols-12 items-baseline gap-x-3 transition-colors duration-500 group-hover:text-bone">
+      {/* fixed 72px height (multiple of 4 → whole device pixels at 1×/1.25×/
+          1.5×/2× scaling) so every divider lands on the same pixel phase and
+          renders at a uniform weight instead of alternating thin/thick */}
+      <div className="relative z-10 px-5 md:px-8 py-4 md:py-0 md:h-[72px] grid grid-cols-12 items-baseline md:items-center gap-x-3 transition-colors duration-500 group-hover:text-bone">
         {/* number */}
         <span className="col-span-2 md:col-span-1 font-mono text-xs text-smoke transition-colors duration-500 group-hover:text-accent">
           {no}

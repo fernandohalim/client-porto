@@ -15,8 +15,12 @@ import {
   SiMysql,
   SiFirebase,
   SiApachemaven,
+  SiRust,
+  SiSupabase,
+  SiPython,
 } from "react-icons/si";
 import { FaJava, FaDatabase } from "react-icons/fa6";
+import { TbBrandCSharp } from "react-icons/tb";
 
 type TechKey =
   | "java"
@@ -36,7 +40,11 @@ type TechKey =
   | "react-native"
   | "mysql"
   | "firebase"
-  | "maven";
+  | "maven"
+  | "rust"
+  | "supabase"
+  | "python"
+  | "csharp";
 
 const REGISTRY: Record<TechKey, IconType> = {
   java: FaJava,
@@ -57,6 +65,10 @@ const REGISTRY: Record<TechKey, IconType> = {
   mysql: SiMysql,
   firebase: SiFirebase,
   maven: SiApachemaven,
+  rust: SiRust,
+  supabase: SiSupabase,
+  python: SiPython,
+  csharp: TbBrandCSharp,
 };
 
 const COLORS: Record<TechKey, string> = {
@@ -78,6 +90,10 @@ const COLORS: Record<TechKey, string> = {
   mysql: "#4479A1",
   firebase: "#F57C00",
   maven: "#C71A36",
+  rust: "#CE422B",
+  supabase: "#3FCF8E",
+  python: "#3776AB",
+  csharp: "#68217A",
 };
 
 // mono = silhouette mode: renders in currentColor so the parent's
