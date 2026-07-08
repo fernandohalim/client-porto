@@ -42,7 +42,7 @@ const CREDITS: Credit[] = [
       "Clean, documented APIs and responsive product interfaces.",
     ],
     active: true,
-    linkedin: "www.linkedin.com/company/91073950",
+    linkedin: "https://www.linkedin.com/company/91073950",
   },
   {
     no: "C",

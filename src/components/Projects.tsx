@@ -85,6 +85,20 @@ const PERSONAL: Work[] = [
 
 const CLIENTS: Work[] = [
   {
+    title: "Handy and Sharon",
+    blurb: "Wedding invitation site with RSVP",
+    stack: ["Next", "Firestore"],
+    year: "2026",
+    live: true,
+  },
+  {
+    title: "Nenggala Academy",
+    blurb: "Student portal and marketing site",
+    stack: ["Next", "Express"],
+    year: "2026",
+    live: true,
+  },
+  {
     title: "PT Maju Jaya Arkananta",
     blurb: "Company profile and catalogue website with CMS",
     stack: ["CRA", "Go"],

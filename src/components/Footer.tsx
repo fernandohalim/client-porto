@@ -32,7 +32,7 @@ export default function Footer() {
             <p className="mono-label text-smoke mb-3">The studio</p>
             <p className="text-ash text-sm leading-relaxed max-w-[34ch]">
               Fernando Halim — fullstack developer producing considered software
-              from West Jakarta. Vol. 02.
+              from West Jakarta.
             </p>
           </div>
           <div>

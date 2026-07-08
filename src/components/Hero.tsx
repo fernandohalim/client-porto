@@ -133,7 +133,7 @@ export default function Hero() {
       {/* vertical spine label */}
       <div className="absolute right-3 top-1/2 z-0 hidden -translate-y-1/2 lg:block">
         <span className="mono-label text-smoke [writing-mode:vertical-rl] [transform:rotate(180deg)] tracking-[0.32em]">
-          Vol. 02 — Negative / Positive
+          Negative / Positive
         </span>
       </div>
 
@@ -147,7 +147,7 @@ export default function Hero() {
           className="mono-label flex items-start justify-between gap-6 border-b border-line pb-4 text-smoke"
         >
           <div className="flex flex-col gap-1">
-            <span className="text-ink">Vol. 02 — Now showing</span>
+            <span className="text-ink">Now showing</span>
             <span className="hidden sm:block">
               Fullstack · Interface Engineering
             </span>

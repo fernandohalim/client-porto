@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
 @theme {
-  /* Vol.02 palette */
   --color-bone: #f2f0ea;
   --color-coal: #0e0d0c;
   --color-ink: #141312;
