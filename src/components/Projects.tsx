@@ -35,6 +35,17 @@ const FEATURED: Work[] = [
     crossfade: "#fdfbf7",
   },
   {
+    title: "Tempo",
+    blurb: "Desktop clock widget · timer, alarm, stopwatch",
+    stack: ["Electron", "React"],
+    year: "2026",
+    href: "/projects/tempo",
+    crossfade: "#f7f1e8",
+  },
+];
+
+const PERSONAL: Work[] = [
+  {
     title: "Piggy Wallet",
     blurb: "Offline-first expense tracker · budget system",
     stack: ["Next", "IDB"],
@@ -42,9 +53,6 @@ const FEATURED: Work[] = [
     href: "/projects/piggy-wallet",
     crossfade: "#f5f4fb",
   },
-];
-
-const PERSONAL: Work[] = [
   {
     title: "noted.",
     blurb: "Offline-first markdown · 3-way merge",

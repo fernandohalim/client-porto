@@ -20,7 +20,9 @@ export default function ClientLayout({
   const isNotedPage = pathname?.startsWith("/projects/noted");
   const isPiggyPage = pathname?.startsWith("/projects/piggy-wallet");
   const isLumePage = pathname?.startsWith("/projects/lume");
-  const isCaseStudy = isNestPage || isNotedPage || isPiggyPage || isLumePage;
+  const isTempoPage = pathname?.startsWith("/projects/tempo");
+  const isCaseStudy =
+    isNestPage || isNotedPage || isPiggyPage || isLumePage || isTempoPage;
 
   const globalStyles = isNestPage
     ? "bg-[#fdfbf7] text-stone-800 selection:bg-emerald-200 selection:text-emerald-900"
@@ -30,7 +32,9 @@ export default function ClientLayout({
         ? "bg-[#f5f4fb] text-[#1e1b2e] selection:bg-[#e8e8fb] selection:text-[#4646b8]"
         : isLumePage
           ? "bg-[#0b0b0f] text-[#f2f3f5] selection:bg-[#c8b6ff] selection:text-[#0b0b0f]"
-          : "bg-bone text-ink selection:bg-ink selection:text-bone";
+          : isTempoPage
+            ? "bg-[#f7f1e8] text-[#4a3f38] selection:bg-[#e6c2b0] selection:text-[#4a3f38]"
+            : "bg-bone text-ink selection:bg-ink selection:text-bone";
 
   return (
     <div

@@ -21,6 +21,7 @@ const NOW: Item[] = [
   { key: "supabase", name: "SUPABASE", tier: "Expert" },
   { key: "firebase", name: "FIREBASE", tier: "Comfortable" },
   { key: "tailwind", name: "TAILWIND", tier: "Expert" },
+  { key: "framer-motion", name: "FRAMER MOTION", tier: "Expert" },
   { key: "git", name: "GIT", tier: "Expert" },
 ];
 
@@ -31,6 +32,7 @@ const BEFORE: Item[] = [
   { key: "express", name: "EXPRESS", tier: "Expert" },
   { key: "flutter", name: "FLUTTER", tier: "Expert" },
   { key: "react-native", name: "REACT NATIVE", tier: "Comfortable" },
+  { key: "electron", name: "ELECTRON", tier: "Comfortable" },
   { key: "mysql", name: "MYSQL", tier: "Comfortable" },
   { key: "maven", name: "MAVEN", tier: "Comfortable" },
   { key: "oracle-sql", name: "ORACLE SQL", tier: "Expert" },

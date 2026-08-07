@@ -18,6 +18,8 @@ import {
   SiRust,
   SiSupabase,
   SiPython,
+  SiElectron,
+  SiFramer,
 } from "react-icons/si";
 import { FaJava, FaDatabase } from "react-icons/fa6";
 import { TbBrandCSharp } from "react-icons/tb";
@@ -44,7 +46,9 @@ type TechKey =
   | "rust"
   | "supabase"
   | "python"
-  | "csharp";
+  | "csharp"
+  | "electron"
+  | "framer-motion";
 
 const REGISTRY: Record<TechKey, IconType> = {
   java: FaJava,
@@ -69,6 +73,8 @@ const REGISTRY: Record<TechKey, IconType> = {
   supabase: SiSupabase,
   python: SiPython,
   csharp: TbBrandCSharp,
+  electron: SiElectron,
+  "framer-motion": SiFramer,
 };
 
 const COLORS: Record<TechKey, string> = {
@@ -94,6 +100,8 @@ const COLORS: Record<TechKey, string> = {
   supabase: "#3FCF8E",
   python: "#3776AB",
   csharp: "#68217A",
+  electron: "#47848F",
+  "framer-motion": "#0055FF",
 };
 
 // mono = silhouette mode: renders in currentColor so the parent's
