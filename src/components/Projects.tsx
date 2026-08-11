@@ -7,22 +7,32 @@ import { motion } from "framer-motion";
 import { Chars } from "@/utilities/TextReveal";
 import Link from "next/link";
 
+// every entry renders as the same row — no featured tier. `kind` decides the
+// status verb and where (or whether) the row navigates:
+//   case     → internal case-study route, crossfade nav
+//   source   → external repo, new tab
+//   live     → client site in production, no public link
+//   archived → client work no longer running
+type Kind = "case" | "source" | "live" | "archived";
+
 type Work = {
   title: string; // project OR client name
   blurb: string; // one-line description
   stack: string[]; // tech — first two are rendered
   year: string;
-  href?: string; // omit = no link (archived clients)
-  crossfade?: string; // set = internal case-study route (crossfade nav)
-  live?: boolean; // client status only
+  kind: Kind;
+  href?: string; // omit = no destination (client rows)
+  crossfade?: string; // case only — the case study's background color
 };
 
-const FEATURED: Work[] = [
+// own products and open source — one register, no tiers inside it.
+const WORK: Work[] = [
   {
     title: "lūme",
     blurb: "Spotify miniplayer · art-sampled glow",
     stack: ["Tauri", "Rust"],
     year: "2026",
+    kind: "case",
     href: "/projects/lume",
     crossfade: "#0b0b0f",
   },
@@ -31,6 +41,7 @@ const FEATURED: Work[] = [
     blurb: "AI receipt scanning · settlement engine",
     stack: ["Next", "Gemini"],
     year: "2026",
+    kind: "case",
     href: "/projects/nest",
     crossfade: "#fdfbf7",
   },
@@ -39,17 +50,16 @@ const FEATURED: Work[] = [
     blurb: "Desktop clock widget · timer, alarm, stopwatch",
     stack: ["Electron", "React"],
     year: "2026",
+    kind: "case",
     href: "/projects/tempo",
     crossfade: "#f7f1e8",
   },
-];
-
-const PERSONAL: Work[] = [
   {
     title: "Piggy Wallet",
     blurb: "Offline-first expense tracker · budget system",
     stack: ["Next", "IDB"],
     year: "2026",
+    kind: "case",
     href: "/projects/piggy-wallet",
     crossfade: "#f5f4fb",
   },
@@ -58,6 +68,7 @@ const PERSONAL: Work[] = [
     blurb: "Offline-first markdown · 3-way merge",
     stack: ["Next", "IDB"],
     year: "2026",
+    kind: "case",
     href: "/projects/noted",
     crossfade: "#0a0a0a",
   },
@@ -66,6 +77,7 @@ const PERSONAL: Work[] = [
     blurb: "Emoji to pixel art converter · customizeable",
     stack: ["Next", "Canvas"],
     year: "2026",
+    kind: "source",
     href: "https://github.com/fernandohalim/pixel-emoji",
   },
   {
@@ -73,6 +85,7 @@ const PERSONAL: Work[] = [
     blurb: "Image to pixel art converter · customizeable",
     stack: ["Next", "Canvas"],
     year: "2026",
+    kind: "source",
     href: "https://github.com/fernandohalim/pixel-image",
   },
   {
@@ -80,6 +93,7 @@ const PERSONAL: Work[] = [
     blurb: "Application log monitoring · advanced",
     stack: ["Go", "Win"],
     year: "2026",
+    kind: "source",
     href: "https://github.com/fernandohalim/log-watchdog",
   },
   {
@@ -87,119 +101,83 @@ const PERSONAL: Work[] = [
     blurb: "Application log cleanup · multi-retention",
     stack: ["Go", "Win"],
     year: "2025",
+    kind: "source",
     href: "https://github.com/fernandohalim/log-janitor",
   },
 ];
 
+// commissioned work — same row treatment, own register. numbering continues
+// from WORK so the page still reads as one index.
 const CLIENTS: Work[] = [
   {
     title: "Handy and Sharon",
     blurb: "Wedding invitation site with RSVP",
     stack: ["Next", "Firestore"],
     year: "2026",
-    live: true,
+    kind: "live",
   },
   {
     title: "Nenggala Academy",
     blurb: "Student portal and marketing site",
     stack: ["Next", "Express"],
     year: "2026",
-    live: true,
+    kind: "live",
   },
   {
     title: "PT Maju Jaya Arkananta",
     blurb: "Company profile and catalogue website with CMS",
     stack: ["CRA", "Go"],
     year: "2024",
-    live: true,
+    kind: "live",
   },
   {
     title: "PT Jasplast Sukses Bersama",
     blurb: "Financial record website",
     stack: ["CRA", "Express"],
     year: "2024",
-    live: true,
+    kind: "live",
   },
   {
     title: "PT Argotehnik Kreasindo Abadi",
     blurb: "Web-based operational ERP",
     stack: ["CRA", "Express"],
     year: "2024",
-    live: true,
+    kind: "live",
   },
   {
     title: "Rawa Belong Florist Community",
     blurb: "Marketplace mobile application and website",
     stack: ["Flutter", "Express"],
     year: "2023",
+    kind: "archived",
   },
   {
     title: "LeSeen Electronics",
     blurb: "Company profile website",
     stack: ["CRA", "Tailwind"],
     year: "2023",
+    kind: "archived",
   },
 ];
 
+// the one thing every row surfaces at rest besides title and year — it tells
+// you whether the row leads anywhere before you commit a hover to it.
+const STATUS: Record<Kind, { label: string; tone: string }> = {
+  case: { label: "Case Study", tone: "text-accent" },
+  source: { label: "Source", tone: "text-smoke group-hover:text-ash" },
+  live: { label: "Live", tone: "text-accent" },
+  archived: { label: "Archived", tone: "text-ash" },
+};
+
 const pad = (n: number) => String(n).padStart(2, "0");
 
-// featured work — a large stacked hero. shows everything (blurb + tech) up
-// front since there are only two; hover floods to coal and inverts.
-function Hero({ no, e }: { no: string; e: Work }) {
-  return (
-    <div className="group relative overflow-hidden border-t border-line cursor-pointer">
-      {/* dark flood on hover */}
-      <span className="absolute inset-0 bg-coal translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)]" />
-      {/* snap to a multiple of 4 (whole device pixels at 1×/1.25×/1.5×/2×
-          scaling) so the hero dividers land on a uniform pixel phase like the
-          index rows. min-h (not h) lets a wrapped blurb grow instead of clip. */}
-      <div className="relative z-10 px-5 md:px-8 py-9 md:py-14 md:min-h-[288px] flex flex-col justify-center transition-colors duration-500 group-hover:text-bone">
-        {/* meta — number · kind · year */}
-        <div className="flex items-center gap-x-4 mono-label text-smoke transition-colors duration-500 group-hover:text-ash">
-          <span className="text-accent">{no}</span>
-          <span>Case Study</span>
-          <span className="ml-auto">{e.year}</span>
-        </div>
+// uniform index row. every entry is the same compact height, so the dividers
+// land on an even rhythm. collapsed it shows only [no · title · verb · year];
+// on desktop the blurb + tech crossfade OVER the title 1s after hover
+// (constant height, no reflow). touch keeps it open.
+function Row({ no, e, last }: { no: string; e: Work; last?: boolean }) {
+  const status = STATUS[e.kind];
 
-        {/* title */}
-        <h3 className="display text-[clamp(3rem,10vw,7rem)] mt-4 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-3">
-          {e.title}
-        </h3>
-
-        {/* blurb + tech + arrow */}
-        <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1 mt-4 md:mt-5">
-          <p className="font-mono text-[12px] leading-[1.7] text-smoke transition-colors duration-500 group-hover:text-ash">
-            {e.blurb}
-          </p>
-          <p className="mono-label text-smoke/70 transition-colors duration-500 group-hover:text-ash whitespace-nowrap">
-            {e.stack.slice(0, 2).join(" · ")}
-          </p>
-          <span className="ml-auto text-accent inline-block transition-transform duration-500 group-hover:translate-x-1">
-            →
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// uniform index row for personal + client work. every row is the same
-// compact height, so the dividers land on an even rhythm. collapsed it shows
-// only [no · title · year]; on desktop the blurb + tech crossfade OVER the
-// title 1s after hover (constant height, no reflow). touch keeps it open.
-function Row({
-  no,
-  e,
-  indicator,
-  status,
-  last,
-}: {
-  no: string;
-  e: Work;
-  indicator: React.ReactNode;
-  status?: React.ReactNode;
-  last?: boolean;
-}) {
   return (
     <div
       className={`group relative overflow-hidden border-t border-line ${last ? "border-b" : ""}`}
@@ -229,26 +207,29 @@ function Row({
               <p className="mono-label text-smoke/70 transition-colors duration-500 group-hover:text-ash whitespace-nowrap">
                 {e.stack.slice(0, 2).join(" · ")}
               </p>
-              {status}
+              {/* mobile carries the verb here — the right column is too narrow
+                  for it at that width, and this block is always open on touch */}
+              <span className={`mono-label md:hidden ${status.tone}`}>
+                {status.label}
+              </span>
             </div>
           </div>
         </div>
 
-        {/* year + indicator — always visible */}
-        <div className="col-span-3 flex justify-end items-baseline gap-x-4 md:gap-x-5 mono-label text-smoke transition-colors duration-500 group-hover:text-ash">
+        {/* verb + year — always visible. the verb sits in a fixed-width slot so
+            it reads as a real column instead of ragging off the year */}
+        <div className="col-span-3 flex justify-end items-baseline gap-x-4 md:gap-x-6 mono-label text-smoke transition-colors duration-500 group-hover:text-ash">
+          <span
+            className={`hidden md:inline md:w-[7rem] transition-colors duration-500 ${status.tone}`}
+          >
+            {status.label}
+          </span>
           <span>{e.year}</span>
-          {indicator}
         </div>
       </div>
     </div>
   );
 }
-
-const ARROW = (
-  <span className="text-accent inline-block transition-transform duration-500 group-hover:translate-x-1">
-    →
-  </span>
-);
 
 export default function Projects() {
   const router = useRouter();
@@ -272,6 +253,44 @@ export default function Projects() {
     }, 500);
   };
 
+  // `kind` picks the wrapper — the row inside it is identical either way
+  const renderRow = (e: Work, no: string, last: boolean) => {
+    const row = <Row no={no} e={e} last={last} />;
+
+    if (e.kind === "case")
+      return (
+        <div
+          key={e.title}
+          onClick={handleCaseStudyClick(e.href!, e.crossfade!)}
+          data-cursor="Case Study"
+          className="block cursor-pointer"
+        >
+          {row}
+        </div>
+      );
+
+    if (e.kind === "source")
+      return (
+        <Link
+          key={e.title}
+          href={e.href!}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-cursor="Source"
+          className="block"
+        >
+          {row}
+        </Link>
+      );
+
+    // client rows have no public destination — the verb is the whole signal
+    return (
+      <div key={e.title} data-cursor={STATUS[e.kind].label}>
+        {row}
+      </div>
+    );
+  };
+
   return (
     <section id="work" className="relative py-20 md:py-28 scroll-mt-24">
       {crossfade &&
@@ -292,82 +311,20 @@ export default function Projects() {
         <h2 className="display text-ink text-[clamp(3rem,9vw,8rem)]">
           <Chars text="INDEX" stagger={0.05} />
         </h2>
-        <span className="mono-label text-smoke pb-3">Selected work</span>
+        <span className="mono-label text-smoke pb-3">
+          Selected work — {WORK.length + CLIENTS.length} entries
+        </span>
       </div>
 
-      {/* featured — large stacked heroes */}
-      {FEATURED.map((e, i) => (
-        <div
-          key={e.title}
-          onClick={handleCaseStudyClick(e.href!, e.crossfade!)}
-          data-cursor="Case Study"
-          className="block"
-        >
-          <Hero no={pad(i + 1)} e={e} />
-        </div>
-      ))}
+      {/* two registers, one row treatment — the label is the only break */}
+      {WORK.map((e, i) => renderRow(e, pad(i + 1), i === WORK.length - 1))}
 
-      {/* the rest — one uniform divider list. personal first, then freelances */}
-      {PERSONAL.map((e, i) => {
-        const no = pad(FEATURED.length + i + 1);
-        const isCaseStudy = e.href?.startsWith("/projects/");
-        const row = (
-          <Row
-            no={no}
-            e={e}
-            indicator={ARROW}
-            last={i === PERSONAL.length - 1}
-          />
-        );
-
-        return isCaseStudy ? (
-          <div
-            key={e.title}
-            onClick={handleCaseStudyClick(e.href!, e.crossfade!)}
-            data-cursor="Case Study"
-            className="block cursor-pointer"
-          >
-            {row}
-          </div>
-        ) : (
-          <Link
-            key={e.title}
-            href={e.href || "#"}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-cursor="Visit"
-            className="block"
-          >
-            {row}
-          </Link>
-        );
-      })}
-
-      {/* client sub-index */}
       <p className="mono-label text-smoke px-5 md:px-8 mt-20 mb-2">
         Also produced — freelances
       </p>
-      {CLIENTS.map((e, i) => (
-        <div key={e.title} data-cursor={e.live ? "Live" : "Archived"}>
-          <Row
-            no={pad(i + 1)}
-            e={e}
-            last={i === CLIENTS.length - 1}
-            status={
-              <span
-                className={`mono-label ${e.live ? "text-accent" : "text-ash"}`}
-              >
-                {e.live ? "Live" : "Archived"}
-              </span>
-            }
-            indicator={
-              <span
-                className={`w-1.5 h-1.5 rounded-full ${e.live ? "bg-accent" : "bg-ash"}`}
-              />
-            }
-          />
-        </div>
-      ))}
+      {CLIENTS.map((e, i) =>
+        renderRow(e, pad(WORK.length + i + 1), i === CLIENTS.length - 1),
+      )}
     </section>
   );
 }
