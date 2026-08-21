@@ -9,11 +9,13 @@ import Link from "next/link";
 
 // every entry renders as the same row — no featured tier. `kind` decides the
 // status verb and where (or whether) the row navigates:
-//   case     → internal case-study route, crossfade nav
-//   source   → external repo, new tab
-//   live     → client site in production, no public link
-//   archived → client work no longer running
-type Kind = "case" | "source" | "live" | "archived";
+//   case      → internal case-study route, crossfade nav
+//   source    → external repo, new tab
+//   live      → client site in production, href opens it in a new tab
+//   internal  → running, but only reachable inside the client's own network
+//   prelaunch → built and handed over, no public domain pointed at it yet
+//   archived  → client work no longer running
+type Kind = "case" | "source" | "live" | "internal" | "prelaunch" | "archived";
 
 type Work = {
   title: string; // project OR client name
@@ -21,7 +23,7 @@ type Work = {
   stack: string[]; // tech — first two are rendered
   year: string;
   kind: Kind;
-  href?: string; // omit = no destination (client rows)
+  href?: string; // omit = no destination (rows with nothing public to open)
   crossfade?: string; // case only — the case study's background color
 };
 
@@ -110,18 +112,27 @@ const WORK: Work[] = [
 // from WORK so the page still reads as one index.
 const CLIENTS: Work[] = [
   {
+    title: "PT Ciputra Development Tbk - The Forestine",
+    blurb: "Properties marketing site",
+    stack: ["Next", "Tailwind"],
+    year: "2026",
+    kind: "live",
+    href: "https://forestine.id",
+  },
+  {
     title: "Handy and Sharon",
     blurb: "Wedding invitation site with RSVP",
     stack: ["Next", "Firestore"],
     year: "2026",
     kind: "live",
+    href: "https://handpickedforshar.com",
   },
   {
     title: "Nenggala Academy",
     blurb: "Student portal and marketing site",
     stack: ["Next", "Express"],
     year: "2026",
-    kind: "live",
+    kind: "prelaunch",
   },
   {
     title: "PT Maju Jaya Arkananta",
@@ -129,20 +140,21 @@ const CLIENTS: Work[] = [
     stack: ["CRA", "Go"],
     year: "2024",
     kind: "live",
+    href: "https://hydraulicpump.co.id",
   },
   {
     title: "PT Jasplast Sukses Bersama",
     blurb: "Financial record website",
     stack: ["CRA", "Express"],
     year: "2024",
-    kind: "live",
+    kind: "internal",
   },
   {
     title: "PT Argotehnik Kreasindo Abadi",
     blurb: "Web-based operational ERP",
     stack: ["CRA", "Express"],
     year: "2024",
-    kind: "live",
+    kind: "internal",
   },
   {
     title: "Rawa Belong Florist Community",
@@ -152,7 +164,7 @@ const CLIENTS: Work[] = [
     kind: "archived",
   },
   {
-    title: "LeSeen Electronics",
+    title: "PT Loyalty Development - LeSeen",
     blurb: "Company profile website",
     stack: ["CRA", "Tailwind"],
     year: "2023",
@@ -166,7 +178,9 @@ const STATUS: Record<Kind, { label: string; tone: string }> = {
   case: { label: "Case Study", tone: "text-accent" },
   source: { label: "Source", tone: "text-smoke group-hover:text-ash" },
   live: { label: "Live", tone: "text-accent" },
-  archived: { label: "Archived", tone: "text-ash" },
+  internal: { label: "Internal", tone: "text-smoke group-hover:text-ash" },
+  prelaunch: { label: "Pre-Launch", tone: "text-smoke group-hover:text-ash" },
+  archived: { label: "Discontinued", tone: "text-ash" },
 };
 
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -220,7 +234,7 @@ function Row({ no, e, last }: { no: string; e: Work; last?: boolean }) {
             it reads as a real column instead of ragging off the year */}
         <div className="col-span-3 flex justify-end items-baseline gap-x-4 md:gap-x-6 mono-label text-smoke transition-colors duration-500 group-hover:text-ash">
           <span
-            className={`hidden md:inline md:w-[7rem] transition-colors duration-500 ${status.tone}`}
+            className={`hidden md:inline md:w-[7rem] whitespace-nowrap transition-colors duration-500 ${status.tone}`}
           >
             {status.label}
           </span>
@@ -269,21 +283,22 @@ export default function Projects() {
         </div>
       );
 
-    if (e.kind === "source")
+    // anything external with a URL — repo or production site — opens in a tab
+    if (e.href)
       return (
         <Link
           key={e.title}
-          href={e.href!}
+          href={e.href}
           target="_blank"
           rel="noopener noreferrer"
-          data-cursor="Source"
+          data-cursor={e.kind === "source" ? "Source" : "Visit"}
           className="block"
         >
           {row}
         </Link>
       );
 
-    // client rows have no public destination — the verb is the whole signal
+    // no public destination — the verb is the whole signal
     return (
       <div key={e.title} data-cursor={STATUS[e.kind].label}>
         {row}
@@ -311,9 +326,16 @@ export default function Projects() {
         <h2 className="display text-ink text-[clamp(3rem,9vw,8rem)]">
           <Chars text="INDEX" stagger={0.05} />
         </h2>
-        <span className="mono-label text-smoke pb-3">
-          Selected work — {WORK.length + CLIENTS.length} entries
-        </span>
+        {/* the count, plus the reading order — both registers run newest first,
+            so the year column never needs explaining */}
+        <div className="pb-3 flex flex-col items-start md:items-end gap-1.5">
+          <span className="mono-label text-smoke">
+            Selected work — {WORK.length + CLIENTS.length} entries
+          </span>
+          <span className="mono-label text-smoke/60">
+            Sorted latest → oldest
+          </span>
+        </div>
       </div>
 
       {/* two registers, one row treatment — the label is the only break */}
