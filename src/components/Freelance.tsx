@@ -34,8 +34,8 @@ type Client = {
 
 const CLIENTS: Client[] = [
   {
-    title: "The Forestine",
-    blurb: "Property marketing site for PT Ciputra Development Tbk",
+    title: "PT Ciputra Development Tbk - The Forestine",
+    blurb: "Property marketing site",
     stack: ["Next", "Tailwind"],
     year: "2026",
     kind: "live",
@@ -86,7 +86,7 @@ const CLIENTS: Client[] = [
     kind: "archived",
   },
   {
-    title: "PT Loyalty Development — LeSeen",
+    title: "PT Loyalty Development - LeSeen",
     blurb: "Company profile website",
     stack: ["CRA", "Tailwind"],
     year: "2023",

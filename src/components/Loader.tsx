@@ -14,15 +14,17 @@
 // the panel then lifts away on a clip-path wipe, uncovering a hero that has
 // been sitting there the whole time.
 //
-// It shows once per tab (sessionStorage), never on a route change, and never
-// when the visitor prefers reduced motion — a loading screen you cannot skip
-// is a tax on every visit after the first.
+// It runs on every full page load, by request. It does NOT run on client-side
+// navigation: this lives in ClientLayout, which persists across route changes,
+// so the effect only fires on mount — moving between sections or into a case
+// study never re-triggers it, which is the behaviour you want.
+//
+// Reduced-motion visitors still skip it entirely.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const KEY = "fh-intro-seen";
 const NAME = "Fernando Halim";
 
 export default function Loader() {
@@ -31,36 +33,57 @@ export default function Loader() {
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced || sessionStorage.getItem(KEY)) return;
+    if (reduced) return;
 
-    sessionStorage.setItem(KEY, "1");
     // deliberate: whether to show cannot be decided during render. It depends
-    // on sessionStorage and a media query, neither of which exists on the
-    // server — seeding this into useState would render `true` on the client
-    // and `false` on the server and fail hydration. Reading the external
-    // system after mount is the correct place for it.
+    // on a media query that does not exist on the server — seeding this into
+    // useState would render `true` on the client and `false` on the server and
+    // fail hydration. Reading the external system after mount is the correct
+    // place for it.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setShow(true);
-    document.body.style.overflow = "hidden";
 
     const started = performance.now();
     const DURATION = 1500;
     let raf: number;
+    let done: ReturnType<typeof setTimeout>;
 
     const tick = (now: number) => {
       // ease-out so the count decelerates into 100 instead of hitting a wall
       const t = Math.min(1, (now - started) / DURATION);
       setPct(Math.round((1 - Math.pow(1 - t, 2)) * 100));
       if (t < 1) raf = requestAnimationFrame(tick);
-      else setTimeout(() => setShow(false), 260);
+      else done = setTimeout(() => setShow(false), 260);
     };
     raf = requestAnimationFrame(tick);
 
-    return () => cancelAnimationFrame(raf);
+    // Safety net. requestAnimationFrame does not run in a background tab, so a
+    // link opened with cmd-click would leave the panel up and the page locked
+    // until that tab is focused. setTimeout still fires (throttled) when
+    // hidden, so this guarantees the loader can never strand the page.
+    const bail = setTimeout(() => setShow(false), DURATION + 3000);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(done);
+      clearTimeout(bail);
+    };
   }, []);
 
+  // Lock scroll for exactly as long as the panel is up.
+  //
+  // This used to set `overflow: hidden` in the effect above and clear it in a
+  // separate effect guarded by `if (!show)`. On mount both effects run in the
+  // same commit, and the second one still sees `show === false` from that
+  // render — so it cleared the lock immediately and the page was scrollable
+  // behind the loader the whole time. Keying the lock to `show` and undoing it
+  // in cleanup removes the ordering dependency entirely.
   useEffect(() => {
-    if (!show) document.body.style.overflow = "";
+    if (!show) return;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [show]);
 
   return (
