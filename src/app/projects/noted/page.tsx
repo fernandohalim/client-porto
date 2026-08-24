@@ -1,8 +1,15 @@
 "use client";
 
 import { motion, Variants, useScroll, useSpring } from "framer-motion";
-import Link from "next/link";
 import { useEffect, useState } from "react";
+import {
+  CaseStudyBack,
+  CaseStudyNext,
+  type CaseTheme,
+} from "@/components/CaseStudyChrome";
+
+// shell chrome only — the interior palette below is untouched
+const CASE_THEME: CaseTheme = { fg: "#e5e5e5", muted: "#888888", border: "#262626", surface: "#141414", accent: "#d97757" };
 
 // ─────────────────────────────────────────────────────────────────────────────
 // noted. — case study page
@@ -67,6 +74,7 @@ export default function NotedCaseStudy() {
         <TechStackSection fadeUp={fadeUp} />
         <FinalCTA />
       </div>
+      <CaseStudyNext theme={CASE_THEME} />
     </main>
   );
 }
@@ -88,15 +96,7 @@ function ScrollProgress() {
 
 function BackLink() {
   return (
-    <Link
-      href="/"
-      className="inline-flex items-center gap-1.5 text-xs text-[#888] hover:text-[#d97757] mb-12 md:mb-16 transition-colors group border border-[#262626] hover:border-[#d97757]/40 px-3 py-1.5 rounded"
-    >
-      <span className="group-hover:-translate-x-0.5 transition-transform">
-        ←
-      </span>
-      back to portfolio
-    </Link>
+    <CaseStudyBack theme={CASE_THEME} />
   );
 }
 

@@ -1,9 +1,16 @@
 "use client";
 
 import { motion, Variants, useScroll, useSpring } from "framer-motion";
-import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import {
+  CaseStudyBack,
+  CaseStudyNext,
+  type CaseTheme,
+} from "@/components/CaseStudyChrome";
+
+// shell chrome only — the interior palette below is untouched
+const CASE_THEME: CaseTheme = { fg: "#292524", muted: "#a8a29e", border: "#e7e5e4", surface: "#ffffff", accent: "#059669" };
 
 // ─────────────────────────────────────────────────────────────────────────────
 // nest. — case study page
@@ -93,21 +100,7 @@ export default function NestCaseStudy() {
 
       <div className="max-w-6xl mx-auto px-6 pt-12 md:pt-24 relative z-10 [perspective:1000px]">
         {/* ─── escape hatch back to terminal ──────────────────────────── */}
-        <motion.div
-          initial={{ opacity: 0, x: -40, rotateY: 10 }}
-          animate={{ opacity: 1, x: 0, rotateY: 0 }}
-          transition={{ type: "spring", delay: 0.2, stiffness: 200 }}
-        >
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-xs font-bold text-stone-400 hover:text-emerald-600 mb-12 md:mb-16 transition-all group px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-stone-200 shadow-sm hover:shadow-md hover:-translate-y-0.5"
-          >
-            <span className="text-stone-300 group-hover:-translate-x-1 transition-transform">
-              ←
-            </span>
-            back to portfolio
-          </Link>
-        </motion.div>
+        <CaseStudyBack theme={CASE_THEME} />
 
         {/* ─── hero ─────────────────────────────────────────────────────── */}
         <Hero fadeUp={fadeUp} />
@@ -139,6 +132,10 @@ export default function NestCaseStudy() {
         {/* ─── ship it / cta ────────────────────────────────────────────── */}
         <FinalCTA fadeUp={fadeUp} />
       </div>
+      <CaseStudyNext
+        theme={CASE_THEME}
+        next={{ name: "Tempo", href: "/projects/tempo" }}
+      />
     </main>
   );
 }

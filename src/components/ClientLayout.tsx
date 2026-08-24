@@ -1,11 +1,13 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import Navbar from "./NavBar";
+import MenuPanel from "./MenuPanel";
+import Loader from "./Loader";
 import CommandPalette from "./CommandPalette";
 import Footer from "./Footer";
 import PageTransition from "@/utilities/PageTransition";
-import { motion, AnimatePresence } from "framer-motion";
 import ScrollProgress from "@/utilities/ScrollProgress";
 import Cursor from "@/utilities/Cursor";
 import SmoothScroll from "@/utilities/SmoothScroll";
@@ -24,6 +26,17 @@ export default function ClientLayout({
   const isCaseStudy =
     isNestPage || isNotedPage || isPiggyPage || isLumePage || isTempoPage;
 
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // a route change must never strand the menu open. Adjusting during render is
+  // the documented way to reset state on a changing input — an effect for this
+  // would paint the stale open state for one frame first.
+  const [lastPath, setLastPath] = useState(pathname);
+  if (pathname !== lastPath) {
+    setLastPath(pathname);
+    if (menuOpen) setMenuOpen(false);
+  }
+
   const globalStyles = isNestPage
     ? "bg-[#fdfbf7] text-stone-800 selection:bg-emerald-200 selection:text-emerald-900"
     : isNotedPage
@@ -34,59 +47,36 @@ export default function ClientLayout({
           ? "bg-[#0b0b0f] text-[#f2f3f5] selection:bg-[#c8b6ff] selection:text-[#0b0b0f]"
           : isTempoPage
             ? "bg-[#f7f1e8] text-[#4a3f38] selection:bg-[#e6c2b0] selection:text-[#4a3f38]"
-            : "bg-bone text-ink selection:bg-ink selection:text-bone";
+            : "bg-white text-ink selection:bg-ink selection:text-white";
 
   return (
     <div
       id="global-layout"
-      className={`min-h-screen flex flex-col transition-colors duration-700 ${isCaseStudy ? "case-study" : ""} ${globalStyles}`}
+      className={`min-h-screen transition-colors duration-700 ${isCaseStudy ? "case-study" : ""} ${globalStyles}`}
     >
-      {/* case-study pages hand the cursor back to the OS — the custom one is
-          portfolio-chrome only. */}
-      {!isCaseStudy && <Cursor />}
+      {/* the cursor runs everywhere, case studies included — it composites with
+          mix-blend-difference, so it stays legible on every theme without any
+          per-route configuration, and it is the one piece of chrome that should
+          feel continuous when you cross into a case study. */}
+      <Cursor />
       <SmoothScroll />
-      {!isCaseStudy && <ScrollProgress />}
-      <AnimatePresence>
-        {!isCaseStudy && (
-          <motion.div
-            key="navbar"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0, transition: { duration: 0.4 } }}
-          >
-            <Navbar />
-          </motion.div>
-        )}
-      </AnimatePresence>
-      <AnimatePresence>
-        {!isCaseStudy && (
-          <motion.div
-            key="cmd"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0, transition: { duration: 0.4 } }}
-          >
-            <CommandPalette />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <Loader />
 
-      <div className="grow relative z-10">
-        <PageTransition>{children}</PageTransition>
+      {!isCaseStudy && (
+        <>
+          <ScrollProgress />
+          <Navbar open={menuOpen} setOpen={setMenuOpen} />
+          <MenuPanel open={menuOpen} onNavigate={() => setMenuOpen(false)} />
+          <CommandPalette />
+        </>
+      )}
+
+      <div className="flex min-h-screen flex-col">
+        <div className="relative z-10 grow">
+          <PageTransition>{children}</PageTransition>
+        </div>
+        {!isCaseStudy && <Footer />}
       </div>
-
-      <AnimatePresence>
-        {!isCaseStudy && (
-          <motion.div
-            key="footer"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0, transition: { duration: 0.4 } }}
-          >
-            <Footer />
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

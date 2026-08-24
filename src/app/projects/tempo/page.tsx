@@ -9,8 +9,15 @@ import {
   useSpring,
   Variants,
 } from "framer-motion";
-import Link from "next/link";
 import { SVGProps, useCallback, useEffect, useRef, useState } from "react";
+import {
+  CaseStudyBack,
+  CaseStudyNext,
+  type CaseTheme,
+} from "@/components/CaseStudyChrome";
+
+// shell chrome only — the interior palette below is untouched
+const CASE_THEME: CaseTheme = { fg: "#4a3f38", muted: "#8a7969", border: "#e2d5c3", surface: "#f7f1e8", accent: "#c8795a" };
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Tempo — case study. brand-matched to the real Electron widget: the "Warm
@@ -864,21 +871,7 @@ export default function TempoCaseStudy() {
       </div>
 
       <div className="max-w-6xl mx-auto px-6 pt-12 md:pt-20 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, x: -24 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.12, ease: EASE_CALM }}
-        >
-          <Link
-            href="/"
-            className="group inline-flex items-center gap-2 text-xs font-extrabold text-[#8a7969] hover:text-[#4a3f38] mb-12 md:mb-16 transition-colors px-4 py-2 bg-[#f7f1e8] rounded-full border border-[#e2d5c3] hover:border-[#c8795a]/50 shadow-[0_2px_8px_-4px_rgba(74,63,56,0.3)]"
-          >
-            <span className="text-[#c8795a] group-hover:-translate-x-1 transition-transform">
-              ←
-            </span>
-            back to portfolio
-          </Link>
-        </motion.div>
+        <CaseStudyBack theme={CASE_THEME} />
 
         <Hero />
         <StatsRibbon />
@@ -890,6 +883,10 @@ export default function TempoCaseStudy() {
         <StackSection />
         <FinalCTA />
       </div>
+      <CaseStudyNext
+        theme={CASE_THEME}
+        next={{ name: "Piggy Wallet", href: "/projects/piggy-wallet" }}
+      />
     </main>
   );
 }

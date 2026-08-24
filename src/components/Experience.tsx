@@ -1,7 +1,25 @@
 "use client";
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Experience — S.04, the coal slab.
+//
+// The first pass at this section only restyled the old markup: it kept the
+// twelve-column row grid, the "↳" bullet glyphs and the stacked mono meta from
+// the previous theme, which is why it still read as the old design wearing new
+// colours. This is the actual translation — the reference's card grid, which is
+// how that site presents any set of peer items (services, fleet, team).
+//
+// Everything stays visible at rest. The work cards earn their hover flood
+// because a screenshot can afford to be covered; a job description cannot, so
+// these cards only lift and warm their border.
+// ─────────────────────────────────────────────────────────────────────────────
+
+import Image from "next/image";
 import { motion } from "framer-motion";
-import { Chars } from "@/utilities/TextReveal";
+import SectionMark from "@/utilities/SectionMark";
+import ScrollFill from "@/utilities/ScrollFill";
+
+const EASE = [0.16, 1, 0.3, 1] as const;
 
 type Credit = {
   no: string;
@@ -9,7 +27,7 @@ type Credit = {
   company: string;
   date: string;
   type: string;
-  stack: string;
+  stack: string[];
   points: string[];
   active: boolean;
   linkedin: string;
@@ -17,12 +35,12 @@ type Credit = {
 
 const CREDITS: Credit[] = [
   {
-    no: "A",
-    role: "JAVA APPLICATION DEVELOPER",
+    no: "01",
+    role: "Java Application Developer",
     company: "PT Rintis Sejahtera",
     date: "Oct 2024 — Now",
     type: "Full-time",
-    stack: "Java · Spring Boot · Redis · Oracle",
+    stack: ["Java", "Spring Boot", "Redis", "Oracle"],
     points: [
       "Real-time fraud detection microservices for interbank transaction networks.",
       "Complex database operations across massive volumes of financial records.",
@@ -31,12 +49,12 @@ const CREDITS: Credit[] = [
     linkedin: "https://www.linkedin.com/company/pt-rintis-sejahtera/",
   },
   {
-    no: "B",
-    role: "FULLSTACK DEVELOPER",
+    no: "02",
+    role: "Fullstack Developer",
     company: "WEBin",
     date: "Feb 2023 — Now",
     type: "Freelance studio",
-    stack: "Next.js · React · Node · Go",
+    stack: ["Next.js", "React", "Node", "Go"],
     points: [
       "End-to-end custom builds for B2B clients — system design through deployment.",
       "Clean, documented APIs and responsive product interfaces.",
@@ -45,12 +63,12 @@ const CREDITS: Credit[] = [
     linkedin: "https://www.linkedin.com/company/91073950",
   },
   {
-    no: "C",
-    role: "FRONTEND DEVELOPER",
+    no: "03",
+    role: "Frontend Developer",
     company: "PT Overo Digital Global",
     date: "Aug 2022 — Jan 2023",
     type: "Hybrid",
-    stack: "React · Tailwind · Flutter",
+    stack: ["React", "Tailwind", "Flutter"],
     points: [
       "Client-facing web and cross-platform mobile interfaces with the UI/UX team.",
     ],
@@ -59,109 +77,141 @@ const CREDITS: Credit[] = [
   },
 ];
 
+function Card({ c, i }: { c: Credit; i: number }) {
+  return (
+    <motion.a
+      href={c.linkedin}
+      target="_blank"
+      rel="noreferrer"
+      data-cursor="View LinkedIn"
+      data-cursor-snap
+      initial={{ opacity: 0, y: 26 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "0px 0px -70px 0px" }}
+      transition={{ duration: 0.75, delay: i * 0.09, ease: EASE }}
+      className="group flex flex-col rounded-card border border-line-dark bg-coal-2 p-6 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:border-accent/45"
+    >
+      {/* ── head ── */}
+      <div className="flex items-start justify-between gap-3">
+        <span className="chip text-ash-2 transition-colors duration-400 group-hover:text-accent-soft">
+          {c.no}
+        </span>
+        <span className="grid h-[22px] w-[22px] shrink-0 place-items-center rounded-[3px] border border-line-dark text-ash-2 transition-all duration-400 group-hover:border-accent group-hover:bg-accent group-hover:text-coal">
+          <svg width="9" height="9" viewBox="0 0 12 12" fill="none" aria-hidden>
+            <path
+              d="M2.5 9.5 9.5 2.5M4 2.5h5.5V8"
+              stroke="currentColor"
+              strokeWidth="1.4"
+              strokeLinecap="square"
+            />
+          </svg>
+        </span>
+      </div>
+
+      {/* ── role ── */}
+      <h3 className="display mt-7 text-[clamp(1.3rem,2.1vw,1.65rem)] text-bone-2">
+        {c.role}
+      </h3>
+
+      <p className="mono-label mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-ash-2">
+        <span className="text-bone-2/85">{c.company}</span>
+        {c.active && (
+          <span className="flex items-center gap-1.5 text-accent-soft">
+            <span className="h-1 w-1 animate-pulse rounded-full bg-accent-soft" />
+            Active
+          </span>
+        )}
+      </p>
+
+      {/* ── what the job actually was ── */}
+      <ul className="mt-6 grow space-y-3 border-t border-line-dark pt-5">
+        {c.points.map((p) => (
+          <li key={p} className="text-[13px] leading-relaxed text-ash-2">
+            {p}
+          </li>
+        ))}
+      </ul>
+
+      {/* ── foot: dates, then the stack as chips ── */}
+      <div className="mt-6 border-t border-line-dark pt-5">
+        <p className="mono-label flex flex-wrap items-center gap-x-3 gap-y-1 text-ash-2/80">
+          <span>{c.date}</span>
+          <span className="text-ash-2/40">·</span>
+          <span>{c.type}</span>
+        </p>
+        <div className="mt-3.5 flex flex-wrap gap-1.5">
+          {c.stack.map((s) => (
+            <span key={s} className="chip text-ash-2/70">
+              {s}
+            </span>
+          ))}
+        </div>
+      </div>
+    </motion.a>
+  );
+}
+
 export default function Experience() {
   return (
     <section
-      id="about"
-      className="bg-coal text-bone py-28 md:py-36 scroll-mt-24 relative"
+      id="experience"
+      data-ground="dark"
+      className="scroll-mt-20 bg-coal py-20 text-bone-2 md:py-28"
     >
       <div className="px-5 md:px-8">
-        <span className="mono-label text-smoke">About — In production</span>
-
-        <h2 className="display text-[clamp(2.2rem,6.5vw,5.5rem)] mt-8 max-w-[16ch]">
-          <span className="block">
-            <Chars text="I CARE ABOUT THE" stagger={0.02} />
-          </span>
-          <span className="block text-bone/40">
-            <Chars text="PARTS NOBODY" stagger={0.02} delay={0.2} />
-          </span>
-          <span className="block">
-            <Chars text="NOTICES" stagger={0.03} delay={0.4} />
-            <span className="text-accent">.</span>
-          </span>
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mt-12 mb-20">
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="md:col-start-7 md:col-span-6 text-ash leading-relaxed max-w-[52ch]"
-          >
-            Two productions running in parallel: by day, payment-scale fraud
-            systems where a missed millisecond is a missed transaction — by
-            night, self-directed products where I own everything from the data
-            model to the easing curve. The first taught me rigor. The second is
-            where the rigor gets a personality.
-          </motion.p>
+        <div className="flex gap-4 md:gap-7">
+          <SectionMark no="04" name="Experience" tone="bone" className="mt-2" />
+          <ScrollFill
+            tone="bone"
+            text="Three years across a payments processor, a freelance studio and an agency floor — the throughline is shipping things other people depend on."
+            className="max-w-[22ch] md:max-w-[26ch]"
+          />
         </div>
       </div>
 
-      {/* credit roll — full-bleed interactive rows */}
-      {CREDITS.map((c, i) => (
-        <a
-          key={c.no}
-          href={c.linkedin}
-          target="_blank"
-          rel="noreferrer"
-          data-cursor="View LinkedIn"
-          className={`group relative block overflow-hidden border-t border-[#302f2d] ${
-            i === CREDITS.length - 1 ? "border-b" : ""
-          }`}
+      {/* ── the cards ── */}
+      <div className="mt-14 grid grid-cols-1 gap-2.5 px-5 md:mt-20 md:grid-cols-3 md:px-8">
+        {CREDITS.map((c, i) => (
+          <Card key={c.no} c={c} i={i} />
+        ))}
+      </div>
+
+      {/* ── plate + note ── */}
+      <div className="mt-2.5 grid grid-cols-1 gap-2.5 px-5 md:grid-cols-3 md:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -70px 0px" }}
+          transition={{ duration: 0.9, ease: EASE }}
+          className="md:col-span-2"
         >
-          {/* bone flood — the inverse of the index hover */}
-          <span className="absolute inset-0 bg-bone translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)]" />
-          {/* snap row height to a multiple of 4 (whole device pixels at
-              1×/1.25×/1.5×/2× scaling) so every divider — including the last
-              border-b — lands on the same pixel phase and renders at a uniform
-              weight. taller value fits 2 bullet points, shorter fits 1. min-h
-              (not h) lets a wrapped bullet grow instead of clipping. */}
-          <div
-            className={`relative z-10 px-5 md:px-8 py-8 ${
-              c.points.length > 1 ? "md:min-h-[156px]" : "md:min-h-[124px]"
-            } grid grid-cols-12 gap-x-3 gap-y-4 transition-colors duration-500 group-hover:text-ink`}
-          >
-            <span className="col-span-1 font-mono text-xs text-smoke transition-colors duration-500 group-hover:text-accent">
-              {c.no}
-            </span>
-            <div className="col-span-11 md:col-span-5">
-              <h3 className="display font-semibold text-[clamp(1.2rem,2.6vw,1.9rem)] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-3">
-                {c.role}
-              </h3>
-              <p className="mono-label text-smoke mt-2 flex flex-wrap items-center gap-x-4 gap-y-1">
-                <span className="text-bone/70 transition-colors duration-500 group-hover:text-ink/70">
-                  {c.company}
-                </span>
-                <span>{c.date}</span>
-                <span>{c.type}</span>
-                {c.active && (
-                  <span className="flex items-center gap-1.5 text-accent">
-                    <span className="w-1 h-1 rounded-full bg-accent animate-pulse" />{" "}
-                    Active
-                  </span>
-                )}
-              </p>
-            </div>
-            <div className="col-span-12 md:col-span-6 md:col-start-7">
-              <ul className="space-y-2">
-                {c.points.map((p) => (
-                  <li
-                    key={p}
-                    className="flex gap-3 text-sm text-ash leading-relaxed transition-colors duration-500 group-hover:text-smoke"
-                  >
-                    <span className="text-accent shrink-0">↳</span>
-                    <span>{p}</span>
-                  </li>
-                ))}
-              </ul>
-              <p className="font-mono text-[11px] text-smoke mt-4 tracking-wide">
-                {c.stack}
-              </p>
-            </div>
+          <div className="relative aspect-[16/9] overflow-hidden rounded-card md:aspect-[21/9]">
+            <Image
+              src="/images/experience-slab.jpg"
+              alt="Workspace"
+              fill
+              sizes="(max-width: 768px) 100vw, 66vw"
+              className="object-cover"
+            />
           </div>
-        </a>
-      ))}
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -60px 0px" }}
+          transition={{ duration: 0.8, delay: 0.1, ease: EASE }}
+          className="flex flex-col justify-center rounded-card border border-line-dark bg-coal-2 p-6"
+        >
+          <span className="chip text-ash-2">Why it matters</span>
+          <p className="mt-5 text-sm leading-relaxed text-ash-2">
+            The day job runs at a scale I could never simulate alone — millions
+            of transactions, latency budgets in milliseconds, no forgiving path
+            for a bad query. Everything I know about writing software that holds
+            up came from there.
+          </p>
+        </motion.div>
+      </div>
     </section>
   );
 }

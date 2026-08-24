@@ -63,7 +63,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f2f0ea",
+  themeColor: "#151515",
 };
 
 export default function RootLayout({
@@ -76,7 +76,6 @@ export default function RootLayout({
       lang="en"
       className={`${archivo.variable} ${fraunces.variable} ${GeistMono.variable} scroll-smooth`}
     >
-      {" "}
       <body className="antialiased font-sans">
         <ClientLayout>{children}</ClientLayout>
       </body>

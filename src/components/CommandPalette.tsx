@@ -20,14 +20,14 @@ export default function CommandPalette() {
     },
     {
       id: "work",
-      name: "Index",
-      desc: "Selected work & case studies",
+      name: "Selected work",
+      desc: "Own products & case studies",
       action: () => router.push("/#work"),
     },
     {
       id: "about",
       name: "About",
-      desc: "In production — where I work",
+      desc: "The two scales I work at",
       action: () => router.push("/#about"),
     },
     {
@@ -35,6 +35,18 @@ export default function CommandPalette() {
       name: "Stack",
       desc: "What I build with",
       action: () => router.push("/#stack"),
+    },
+    {
+      id: "experience",
+      name: "Experience",
+      desc: "Where I've worked",
+      action: () => router.push("/#experience"),
+    },
+    {
+      id: "freelance",
+      name: "Freelance",
+      desc: "Commissioned client work",
+      action: () => router.push("/#freelance"),
     },
     {
       id: "uses",
@@ -133,14 +145,14 @@ export default function CommandPalette() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsOpen(false)}
-            className="absolute inset-0 bg-coal/40 backdrop-blur-sm"
+            className="absolute inset-0 bg-coal/50 backdrop-blur-sm"
           />
           <motion.div
             initial={{ opacity: 0, scale: 0.98, y: -8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.98, y: -8 }}
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full max-w-lg bg-bone border border-line-2 shadow-[0_40px_80px_-30px_rgba(14,13,12,0.5)] overflow-hidden"
+            className="relative w-full max-w-lg overflow-hidden rounded-card border border-line bg-white shadow-[0_40px_80px_-30px_rgba(21,21,21,0.45)]"
           >
             {/* input row */}
             <div className="flex items-center gap-3 px-5 py-4 border-b border-line">
@@ -153,12 +165,12 @@ export default function CommandPalette() {
                   setSelected(0);
                 }}
                 onKeyDown={onInputKey}
-                placeholder="SEARCH OR JUMP TO…"
+                placeholder="Search or jump to…"
                 spellCheck={false}
                 autoComplete="off"
-                className="w-full bg-transparent text-ink placeholder:text-ash outline-none font-mono text-[13px] uppercase tracking-[0.08em]"
+                className="w-full bg-transparent font-mono text-[13px] tracking-[0.04em] text-ink outline-none placeholder:text-faint-2"
               />
-              <kbd className="font-mono text-[10px] uppercase tracking-[0.18em] text-smoke border border-line px-1.5 py-0.5">
+              <kbd className="font-mono text-[10px] uppercase tracking-[0.18em] text-mute border border-line rounded-[3px] px-1.5 py-0.5">
                 esc
               </kbd>
             </div>
@@ -166,7 +178,7 @@ export default function CommandPalette() {
             {/* results */}
             <div className="max-h-[52vh] overflow-y-auto p-2">
               {filtered.length === 0 ? (
-                <p className="px-4 py-8 text-center font-mono text-[11px] uppercase tracking-[0.18em] text-smoke">
+                <p className="px-4 py-8 text-center font-mono text-[11px] uppercase tracking-[0.18em] text-mute">
                   No matches.
                 </p>
               ) : (
@@ -176,33 +188,33 @@ export default function CommandPalette() {
                     onClick={() => run(i)}
                     onMouseEnter={() => setSelected(i)}
                     data-cursor="Go"
-                    className={`w-full flex items-center justify-between px-4 py-3 text-left transition-colors ${
+                    className={`flex w-full items-center justify-between rounded-[5px] px-4 py-3 text-left transition-colors ${
                       selected === i
-                        ? "bg-ink text-bone"
-                        : "text-ink hover:bg-ink/5"
+                        ? "bg-coal text-white"
+                        : "text-ink hover:bg-ink/[0.045]"
                     }`}
                   >
                     <span className="flex items-baseline gap-3 min-w-0">
                       <span
                         className={`font-mono text-[10px] shrink-0 ${
-                          selected === i ? "text-accent" : "text-ash"
+                          selected === i ? "text-accent-soft" : "text-faint-2"
                         }`}
                       >
                         {String(i + 1).padStart(2, "0")}
                       </span>
-                      <span className="text-[15px] font-semibold uppercase tracking-tight">
+                      <span className="text-[15px] font-bold tracking-tight">
                         {c.name}
                       </span>
                       <span
                         className={`font-mono text-[11px] truncate ${
-                          selected === i ? "text-ash" : "text-smoke"
+                          selected === i ? "text-white/55" : "text-mute"
                         }`}
                       >
                         {c.desc}
                       </span>
                     </span>
                     {selected === i && (
-                      <span className="font-mono text-xs text-accent shrink-0 ml-3">
+                      <span className="ml-3 shrink-0 font-mono text-xs text-accent-soft">
                         ↵
                       </span>
                     )}
@@ -212,7 +224,7 @@ export default function CommandPalette() {
             </div>
 
             {/* footer hints */}
-            <div className="flex items-center gap-5 px-5 py-3 border-t border-line font-mono text-[10px] uppercase tracking-[0.18em] text-smoke">
+            <div className="flex items-center gap-5 px-5 py-3 border-t border-line font-mono text-[10px] uppercase tracking-[0.18em] text-mute">
               <span>↑↓ Navigate</span>
               <span>↵ Select</span>
               <span>esc Close</span>

@@ -1,8 +1,15 @@
 "use client";
 
 import { motion, Variants, useScroll, useSpring } from "framer-motion";
-import Link from "next/link";
 import { SVGProps, useEffect, useId, useRef, useState } from "react";
+import {
+  CaseStudyBack,
+  CaseStudyNext,
+  type CaseTheme,
+} from "@/components/CaseStudyChrome";
+
+// shell chrome only — the interior palette below is untouched
+const CASE_THEME: CaseTheme = { fg: "#f2f3f5", muted: "#9a9ca5", border: "rgba(255,255,255,0.12)", surface: "rgba(255,255,255,0.05)", accent: "#c8b6ff" };
 
 // ─────────────────────────────────────────────────────────────────────────────
 // lūme — case study. brand-matched to the real Tauri app:
@@ -307,21 +314,7 @@ export default function LumeCaseStudy() {
       </div>
 
       <div className="max-w-6xl mx-auto px-6 pt-12 md:pt-20 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ type: "spring", delay: 0.15, stiffness: 200 }}
-        >
-          <Link
-            href="/"
-            className="group inline-flex items-center gap-2 text-xs font-semibold text-[#9a9ca5] hover:text-[#f2f3f5] mb-12 md:mb-16 transition-colors px-4 py-2 bg-white/[0.045] backdrop-blur-md rounded-full border border-white/[0.08] hover:border-white/20"
-          >
-            <span className="text-[#62646d] group-hover:-translate-x-1 group-hover:text-[var(--lume-accent)] transition-transform">
-              ←
-            </span>
-            back to portfolio
-          </Link>
-        </motion.div>
+        <CaseStudyBack theme={CASE_THEME} />
 
         <Hero fadeUp={fadeUp} track={track} />
         <StatsRibbon />
@@ -337,6 +330,10 @@ export default function LumeCaseStudy() {
         <TechStackSection fadeUp={fadeUp} />
         <FinalCTA fadeUp={fadeUp} />
       </div>
+      <CaseStudyNext
+        theme={CASE_THEME}
+        next={{ name: "nest.", href: "/projects/nest" }}
+      />
     </main>
   );
 }

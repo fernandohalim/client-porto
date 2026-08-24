@@ -1,19 +1,54 @@
 @import "tailwindcss";
 
 @theme {
+  /* ───────────────────────────────────────────────────────────────────────
+     GROUND — the redesign runs on slabs, not one continuous surface.
+     Sections alternate white → slab → coal, and the seam between them is
+     the section break. No gradients anywhere.
+     ─────────────────────────────────────────────────────────────────────── */
+  --color-white: #ffffff;
+  --color-slab: #ebf0ed; /* cool off-white, the second ground */
+  --color-coal: #151515; /* the dark slab */
+  --color-coal-2: #1d1d1d; /* raised surface on coal (cards) */
+
+  /* ───────────────────────────────────────────────────────────────────────
+     TEXT — neutral greys. The old set was warm (paper world); these are
+     hue-free so they sit correctly on both white and slab.
+     ─────────────────────────────────────────────────────────────────────── */
+  --color-ink: #151515; /* primary text on light */
+  --color-mute: #6b6b6b; /* secondary text on light — 5.74 on white */
+  --color-faint-2: #a3a3a3; /* tertiary / inactive list items */
+  --color-bone-2: #f5f5f5; /* primary text on coal */
+  --color-ash-2: #9a9a9a; /* secondary text on coal — 5.98 on coal */
+
+  /* hairlines, pre-blended opaque (translucent 1px lines anti-alias
+     inconsistently across rows under Lenis transforms) */
+  --color-line: #e2e2e2; /* on white */
+  --color-line-slab: #d6ddd9; /* on slab */
+  --color-line-dark: #2e2e2e; /* on coal */
+
+  /* ───────────────────────────────────────────────────────────────────────
+     ACCENT — vermilion. Three roles, each contrast-checked:
+       accent      flood surfaces + large marks   coal text on it  4.75  AA
+       accent-deep small accent text on light     5.92 / 5.14      AA
+       accent-soft accent text on coal            6.23             AA
+     ─────────────────────────────────────────────────────────────────────── */
+  --color-accent: #e4501b;
+  --color-accent-deep: #b23c10;
+  --color-accent-soft: #f0714a;
+
+  --radius-card: 8px;
+  --radius-chip: 3px;
+
+  /* ───────────────────────────────────────────────────────────────────────
+     LEGACY — the five case-study interiors still paint with these warm
+     tokens. Left deliberately untouched so restyling the shell does not
+     bleed into each project's bespoke theme.
+     ─────────────────────────────────────────────────────────────────────── */
   --color-bone: #f2f0ea;
-  --color-coal: #0e0d0c;
-  --color-ink: #141312;
   --color-smoke: #6e6a61;
   --color-ash: #b9b4a9;
-  /* opaque hairlines — pre-blended over --color-bone. translucent 1px lines
-     anti-alias inconsistently across rows at fractional pixel offsets (fluid
-     row heights + Lenis transforms); solid colors stay crisp and even. */
-  --color-line: #d7d5d0; /* was rgba(20, 19, 18, 0.12) over bone */
-  --color-line-2: #afaea9; /* was rgba(20, 19, 18, 0.3) over bone */
-  --color-accent: #c84f2c;
-
-  /* legacy aliases so /uses, not-found, palette keep working during migration */
+  --color-line-2: #afaea9;
   --color-paper: #f2f0ea;
   --color-surface: #f7f5f0;
   --color-background: #f2f0ea;
@@ -23,7 +58,6 @@
 
   --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
-  /* keep serif mapped so the nest case study's font-serif still resolves */
   --font-serif: var(--font-fraunces), Georgia, serif;
 
   --animate-marquee: marquee 28s linear infinite;
@@ -36,91 +70,108 @@
       transform: translateX(var(--marquee-shift, -50%));
     }
   }
-  --animate-grain: grain 0.6s steps(3) infinite;
-
-  @keyframes grain {
-    0%,
-    100% {
-      transform: translate(0, 0);
-    }
-    25% {
-      transform: translate(-5%, 4%);
-    }
-    50% {
-      transform: translate(4%, -3%);
-    }
-    75% {
-      transform: translate(-3%, -5%);
-    }
-  }
 }
 
 body {
-  background-color: var(--color-bone);
+  background-color: var(--color-white);
   color: var(--color-ink);
 }
 
 ::selection {
-  background: #141312;
-  color: #f2f0ea;
+  background: #151515;
+  color: #ffffff;
 }
 
 html {
   scrollbar-width: thin;
-  scrollbar-color: #c9c4b9 #f2f0ea;
+  scrollbar-color: #c9c9c9 #ffffff;
+  /* Keep the scrollbar track present at all times, so short routes (/uses,
+     404) are the same width as long ones and navigating between them does not
+     shift the layout sideways. */
+  overflow-y: scroll;
 }
 ::-webkit-scrollbar {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #f2f0ea;
+  background: #ffffff;
 }
 ::-webkit-scrollbar-thumb {
-  background: #c9c4b9;
+  background: #c9c9c9;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #c84f2c;
+  background: var(--color-accent);
 }
 
-/* the studio voice: expanded, heavy, tight */
+/* ─────────────────────────────────────────────────────────────────────────
+   THE VOICE — sentence case, tight, heavy. Loud through SIZE, never
+   through width or caps. This is the single biggest departure from the
+   previous theme, which shouted in expanded uppercase.
+   ───────────────────────────────────────────────────────────────────────── */
 .display {
   font-family: var(--font-sans);
-  font-weight: 800;
-  font-stretch: 125%;
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
-  line-height: 0.84;
+  font-weight: 700;
+  font-stretch: 100%;
+  letter-spacing: -0.03em;
+  line-height: 0.98;
+  text-transform: none;
+}
+
+/* the huge statement paragraphs that carry each section opening */
+.statement {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-stretch: 100%;
+  letter-spacing: -0.032em;
+  line-height: 1.06;
+  text-transform: none;
+  font-size: clamp(1.75rem, 4.4vw, 3.6rem);
 }
 
 .mono-label {
   font-family: var(--font-mono);
   font-size: 11px;
+  font-weight: 300;
   text-transform: uppercase;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
 }
 
-/* hand pointer duty to the custom cursor on precise-pointer devices */
+/* boxed mono chip — the section marker. Stacks as S.0N over the name. */
+.chip {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 5px;
+  border: 1px solid currentColor;
+  border-radius: var(--radius-chip);
+  white-space: nowrap;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   CURSOR — the custom cursor is now site-wide (case studies included), so
+   the native pointer is suppressed everywhere on precise-pointer devices.
+   Cursor.tsx re-exposes the native one automatically if it fails to mount.
+   ───────────────────────────────────────────────────────────────────────── */
 @media (hover: hover) and (pointer: fine) {
-  body,
-  a,
-  button,
-  [data-cursor] {
+  html[data-cursor-active="true"] body,
+  html[data-cursor-active="true"] a,
+  html[data-cursor-active="true"] button,
+  html[data-cursor-active="true"] [role="button"],
+  html[data-cursor-active="true"] [data-cursor] {
     cursor: none;
   }
+}
 
-  /* …except on case-study pages, which use the native cursor */
-  .case-study,
-  .case-study a,
-  .case-study button,
-  .case-study [data-cursor] {
-    cursor: auto;
-  }
-  .case-study a,
-  .case-study button,
-  .case-study [role="button"],
-  .case-study [data-cursor] {
-    cursor: pointer;
-  }
+/* text inputs always keep a real caret, cursor or not */
+input,
+textarea,
+[contenteditable="true"] {
+  cursor: text !important;
 }
 
 /* lenis smooth scroll */
@@ -131,6 +182,18 @@ html.lenis body {
 .lenis.lenis-smooth {
   scroll-behavior: auto !important;
 }
+/* Lenis ships this as `overflow: hidden`. That removes the scrollbar the
+   instant the menu stops it, which changes the page width and jolts every
+   fixed element — the navbar and the sheet itself — sideways mid-animation.
+   Keeping the y-track means one width in both states. The menu blocks wheel
+   and touch itself, so nothing is lost by not hiding overflow here. */
 .lenis.lenis-stopped {
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none !important;
+  }
 }

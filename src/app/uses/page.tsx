@@ -1,8 +1,25 @@
 "use client";
 
-import Link from "next/link";
+// ─────────────────────────────────────────────────────────────────────────────
+// Uses — the colophon page, rebuilt in the slab language.
+//
+// This page was left behind by the redesign: it was still painting with the
+// warm legacy tokens (bone / smoke / ash), still shouting "USES" at 11vw in
+// expanded caps, and still listing gear as twelve-column hairline rows. It now
+// follows the same rules as every other section — a chip-marked opening, a
+// scroll-filled statement, and card grids on the slab ground.
+//
+// Equipment names are sentence case here too. The old set was typed in caps as
+// a styling device, which stops being necessary once the display face carries
+// the emphasis on its own.
+// ─────────────────────────────────────────────────────────────────────────────
+
 import { motion } from "framer-motion";
-import { Chars } from "@/utilities/TextReveal";
+import SectionMark from "@/utilities/SectionMark";
+import ScrollFill from "@/utilities/ScrollFill";
+import PillButton from "@/utilities/PillButton";
+
+const EASE = [0.16, 1, 0.3, 1] as const;
 
 type Gear = { name: string; meta: string; desc: string };
 
@@ -11,9 +28,9 @@ const SECTIONS: { label: string; items: Gear[] }[] = [
     label: "Workstation",
     items: [
       {
-        name: "MACBOOK AIR M2",
-        meta: "Apple Silicon · Unix",
-        desc: "Spring Boot microservices, Node environments, and dockerized tests in total silence — with battery to spare.",
+        name: "MacBook Air M2",
+        meta: "Apple Silicon",
+        desc: "Spring Boot microservices, Node environments and dockerised tests in total silence — with battery to spare.",
       },
     ],
   },
@@ -21,17 +38,17 @@ const SECTIONS: { label: string; items: Gear[] }[] = [
     label: "Desk",
     items: [
       {
-        name: "LOFREE FLOW2",
+        name: "Lofree Flow2",
         meta: "84-key · low profile",
         desc: "The main board.",
       },
       {
-        name: "ROYAL KLUDGE RK65",
+        name: "Royal Kludge RK65",
         meta: "65% · mechanical",
         desc: "Compact secondary.",
       },
       {
-        name: "RAZER BASILISK",
+        name: "Razer Basilisk",
         meta: "Mouse",
         desc: "Alongside dual 27″ 2K monitors.",
       },
@@ -41,15 +58,15 @@ const SECTIONS: { label: string; items: Gear[] }[] = [
     label: "Editors",
     items: [
       {
-        name: "INTELLIJ IDEA",
+        name: "IntelliJ IDEA",
         meta: "Java",
         desc: "Does the heavy lifting for Spring Boot.",
       },
-      { name: "VS CODE", meta: "Web", desc: "React and Next.js work." },
+      { name: "VS Code", meta: "Web", desc: "React and Next.js work." },
       {
-        name: "ITERM2",
+        name: "iTerm2",
         meta: "Terminal",
-        desc: "Where system ops live, with the macOS terminal.",
+        desc: "Where system ops live, alongside the macOS terminal.",
       },
     ],
   },
@@ -57,96 +74,106 @@ const SECTIONS: { label: string; items: Gear[] }[] = [
     label: "Database",
     items: [
       {
-        name: "DATAGRIP",
+        name: "DataGrip",
         meta: "Primary GUI",
-        desc: "Schemas, complex queries, and inspecting large datasets efficiently.",
+        desc: "Schemas, complex queries and inspecting large datasets efficiently.",
       },
       {
-        name: "PL/SQL DEVELOPER",
+        name: "PL/SQL Developer",
         meta: "Oracle specialist",
-        desc: "Triggers, packages, and massive transaction batches.",
+        desc: "Triggers, packages and massive transaction batches.",
       },
     ],
   },
 ];
 
+const TOTAL = SECTIONS.reduce((n, s) => n + s.items.length, 0);
+const pad = (n: number) => String(n).padStart(2, "0");
+
 export default function Uses() {
-  let counter = 0;
+  // running index across every section, precomputed — mutating a counter during
+  // render breaks under concurrent rendering, which can run the same component
+  // twice and double-count
+  const offsets: number[] = [];
+  SECTIONS.reduce((n, sec, i) => {
+    offsets[i] = n;
+    return n + sec.items.length;
+  }, 0);
 
   return (
-    <main className="min-h-screen pt-32 pb-28">
-      <div className="px-5 md:px-8">
-        <Link
-          href="/"
-          data-cursor="Back"
-          className="group inline-flex items-center gap-2 mono-label text-smoke hover:text-ink transition-colors mb-14"
-        >
-          <span className="transition-transform group-hover:-translate-x-1">
-            ←
-          </span>
-          Back home
-        </Link>
+    <main className="bg-white">
+      {/* ── opening ── */}
+      <section className="px-5 pb-16 pt-28 md:px-8 md:pb-20 md:pt-36">
+        <div className="mb-14">
+          <PillButton label="Back home" href="/" tone="dark" cursor="Home" />
+        </div>
 
-        <span className="block mono-label text-smoke">
-          Colophon — Equipment
-        </span>
-        <h1 className="display text-ink text-[clamp(3rem,11vw,9rem)] mt-6">
-          <Chars text="USES" stagger={0.05} />
-          <span className="text-accent">.</span>
-        </h1>
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="text-smoke max-w-[52ch] leading-relaxed mt-8 mb-20"
-        >
-          The daily drivers — from Apple silicon to the tooling behind
-          high-volume database work. Updated when something earns its place.
-        </motion.p>
-      </div>
+        <div className="flex gap-4 md:gap-7">
+          <SectionMark no="01" name="Colophon" className="mt-2" />
+          <ScrollFill
+            text={`${TOTAL} pieces of hardware and software I actually reach for every day — updated only when something earns its place.`}
+            className="max-w-[22ch] md:max-w-[26ch]"
+          />
+        </div>
+      </section>
 
-      {SECTIONS.map((section) => (
-        <div key={section.label} className="mb-16">
-          <p className="mono-label text-smoke px-5 md:px-8 mb-2">
-            {section.label}
-          </p>
-          {section.items.map((item, i) => {
-            counter += 1;
-            const no = String(counter).padStart(2, "0");
-            return (
-              <motion.div
-                key={item.name}
-                initial={{ opacity: 0, y: 14 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{
-                  duration: 0.5,
-                  delay: i * 0.05,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                className={`group border-t border-line ${
-                  i === section.items.length - 1 ? "border-b" : ""
-                }`}
-              >
-                <div className="px-5 md:px-8 py-5 grid grid-cols-12 items-baseline gap-x-3 gap-y-1">
-                  <span className="col-span-2 md:col-span-1 font-mono text-xs text-ash transition-colors duration-300 group-hover:text-accent">
-                    {no}
-                  </span>
-                  <h3 className="col-span-10 md:col-span-4 display font-semibold text-[clamp(1.2rem,2.8vw,1.8rem)] text-ink/80 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-3 group-hover:text-ink">
+      {/* ── the gear ── */}
+      <section className="bg-slab px-5 py-16 md:px-8 md:py-24">
+        {SECTIONS.map((section, si) => (
+          <div key={section.label} className="mb-14 last:mb-0">
+            <div className="mb-6 flex items-baseline justify-between gap-4">
+              <span className="chip text-ink/55">{section.label}</span>
+              <span className="mono-label text-mute">
+                {pad(section.items.length)}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
+              {section.items.map((item, i) => (
+                <motion.div
+                  key={item.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "0px 0px -60px 0px" }}
+                  transition={{
+                    duration: 0.65,
+                    delay: (i % 3) * 0.07,
+                    ease: EASE,
+                  }}
+                  className="group flex flex-col rounded-card border border-line-slab bg-white p-6 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:border-accent/50"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <span className="mono-label text-faint-2 transition-colors duration-400 group-hover:text-accent-deep">
+                      {pad(offsets[si] + i + 1)}
+                    </span>
+                    <span className="chip text-ink/45">{item.meta}</span>
+                  </div>
+
+                  <h3 className="display mt-8 text-[clamp(1.15rem,2vw,1.45rem)]">
                     {item.name}
                   </h3>
-                  <p className="col-span-10 col-start-3 md:col-span-4 md:col-start-auto text-sm text-smoke leading-relaxed">
+                  <p className="mt-3 grow text-[13px] leading-relaxed text-mute">
                     {item.desc}
                   </p>
-                  <span className="col-span-10 col-start-3 md:col-span-3 md:col-start-auto md:text-right mono-label text-smoke">
-                    {item.meta}
-                  </span>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-      ))}
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </section>
+
+      {/* ── back out ── */}
+      <section className="flex flex-wrap items-center justify-between gap-4 px-5 py-16 md:px-8 md:py-20">
+        <span className="mono-label text-mute">
+          {TOTAL} entries across {SECTIONS.length} categories
+        </span>
+        <PillButton
+          label="See the work"
+          href="/#work"
+          tone="dark"
+          cursor="Selected work"
+        />
+      </section>
     </main>
   );
 }
