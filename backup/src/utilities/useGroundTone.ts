@@ -23,7 +23,7 @@ const BAND_Y = 28; // the navbar's centre line within a 56px bar
  * @param initialDark what to assume before the observer's first callback — and
  *   what to keep on a route with no dark sections at all, where the observer
  *   never fires. Getting this wrong paints white text on a white page, which is
- *   exactly what /uses did when it defaulted to dark.
+ *   exactly what a light-only route did when it defaulted to dark.
  */
 export default function useGroundTone(active = true, initialDark = false) {
   const [dark, setDark] = useState(initialDark);

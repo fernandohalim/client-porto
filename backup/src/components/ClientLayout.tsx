@@ -5,7 +5,6 @@ import { useState } from "react";
 import Navbar from "./NavBar";
 import MenuPanel from "./MenuPanel";
 import Loader from "./Loader";
-import CommandPalette from "./CommandPalette";
 import Footer from "./Footer";
 import PageTransition from "@/utilities/PageTransition";
 import ScrollProgress from "@/utilities/ScrollProgress";
@@ -67,7 +66,6 @@ export default function ClientLayout({
           <ScrollProgress />
           <Navbar open={menuOpen} setOpen={setMenuOpen} />
           <MenuPanel open={menuOpen} onNavigate={() => setMenuOpen(false)} />
-          <CommandPalette />
         </>
       )}
 

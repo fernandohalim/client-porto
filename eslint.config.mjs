@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // the pre-redesign site, kept for reference only
+    "backup/**",
   ]),
 ]);
 

@@ -1,22 +1,5 @@
-import type { Metadata, Viewport } from "next";
+import type { Metadata } from "next";
 import "./globals.css";
-import ClientLayout from "@/components/ClientLayout";
-import { Archivo, Fraunces } from "next/font/google";
-import { GeistMono } from "geist/font/mono";
-
-const archivo = Archivo({
-  subsets: ["latin"],
-  variable: "--font-archivo",
-  display: "swap",
-  axes: ["wdth"],
-});
-
-const fraunces = Fraunces({
-  subsets: ["latin"],
-  variable: "--font-fraunces",
-  display: "swap",
-  style: ["normal", "italic"],
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://fernando-halim.vercel.app/"),
@@ -62,23 +45,14 @@ export const metadata: Metadata = {
   },
 };
 
-export const viewport: Viewport = {
-  themeColor: "#151515",
-};
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${archivo.variable} ${fraunces.variable} ${GeistMono.variable} scroll-smooth`}
-    >
-      <body className="antialiased font-sans">
-        <ClientLayout>{children}</ClientLayout>
-      </body>
+    <html lang="en">
+      <body>{children}</body>
     </html>
   );
 }

@@ -6,22 +6,34 @@
 // The first version split the bar into a blended layer (wordmark, links) and an
 // unblended one (the vermilion toggle, which mix-blend-difference would have
 // inverted to teal). Two separately positioned fixed layers cannot share a flex
-// row, so the reserved gap between "Search" and "Menu" was a guess — and it was
-// wrong, which is exactly why those labels collided.
+// row, so the reserved gap between the labels and the toggle was a guess — and
+// it was wrong, which is exactly why those labels collided.
 //
 // Now everything sits in a single row and useGroundTone reports whether a dark
 // slab is under the bar, so the row simply picks its own colours. Nothing
 // overlaps because nothing is positioned independently any more.
+//
+// The row also gets out of the way: scrolling down slides it off the top edge,
+// scrolling up brings it straight back. Sliding rather than fading keeps the
+// ground-tone read honest — a half-faded bar over a passing slab edge reads as
+// a colour bug, whereas a bar that is simply gone has no colour to be wrong.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import JakartaTime from "@/utilities/JakartaTime";
 import useGroundTone from "@/utilities/useGroundTone";
 
 const EASE = [0.76, 0, 0.24, 1] as const;
+
+// the bar stays put through the top of the page — hiding it while the hero is
+// still on screen reads as a flicker, not as a deliberate retreat
+const HIDE_AFTER = 140;
+// ignore sub-threshold movement: trackpad jitter and iOS rubber-banding both
+// emit tiny alternating deltas that would otherwise flip the bar every frame
+const DELTA = 8;
 
 const QUICK = [
   { name: "Selected work", href: "/#work" },
@@ -43,6 +55,42 @@ export default function Navbar({
   // the menu panel is coal, so an open menu is always a dark ground
   const dark = open || overDark;
 
+  const { scrollY } = useScroll();
+  const [hidden, setHidden] = useState(false);
+  const lastY = useRef(0);
+
+  useMotionValueEvent(scrollY, "change", (y) => {
+    const prev = lastY.current;
+    if (Math.abs(y - prev) < DELTA) return;
+    lastY.current = y;
+    if (y < HIDE_AFTER) {
+      setHidden(false);
+      return;
+    }
+    setHidden(y > prev);
+  });
+
+  // A route change restores the bar. Landing deep in a new page — an anchor, a
+  // restored scroll position — can move scrollY without ever firing a
+  // "scrolled up" event, which would strand the bar offscreen with no gesture
+  // able to recover it.
+  //
+  // Adjusted during render rather than in an effect, matching ClientLayout's
+  // menu reset: an effect would paint one frame of the stale hidden state first.
+  const [lastPath, setLastPath] = useState(pathname);
+  if (pathname !== lastPath) {
+    setLastPath(pathname);
+    if (hidden) setHidden(false);
+  }
+
+  // The baseline has to be re-anchored too, or the first scroll on the new page
+  // is measured against the old page's offset and reads as a huge downward
+  // move. Refs cannot be written during render, so this half lands in an
+  // effect — it touches no state, so there is no stale frame to paint.
+  useEffect(() => {
+    lastY.current = window.scrollY;
+  }, [pathname]);
+
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
@@ -57,8 +105,15 @@ export default function Navbar({
     ? "text-white/55 hover:text-white"
     : "text-ink/50 hover:text-ink";
 
+  // an open menu pins the bar down: its toggle is the only way back out of the
+  // sheet, so it must never be the thing that scrolls away
+  const away = hidden && !open;
+
   return (
-    <header
+    <motion.header
+      initial={false}
+      animate={{ y: away ? "-100%" : "0%", opacity: away ? 0 : 1 }}
+      transition={{ duration: 0.42, ease: EASE }}
       className={`fixed inset-x-0 top-0 z-[95] h-14 transition-colors duration-300 ${fg}`}
     >
       {/* Three tracks, not justify-between: the wordmark and the right cluster
@@ -100,16 +155,6 @@ export default function Navbar({
           </span>
 
           <button
-            onClick={() =>
-              window.dispatchEvent(new CustomEvent("open-command-palette"))
-            }
-            data-cursor="⌘K"
-            className={`mono-label hidden transition-colors md:block ${dim}`}
-          >
-            Search
-          </button>
-
-          <button
             onClick={() => setOpen(!open)}
             data-cursor={open ? "Close" : "Open menu"}
             aria-label={open ? "Close menu" : "Open menu"}
@@ -137,6 +182,6 @@ export default function Navbar({
           </button>
         </div>
       </div>
-    </header>
+    </motion.header>
   );
 }
