@@ -3,13 +3,16 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // The landing route, in three beats:
 //
-//   loading  the name drops in over a progress bar while the world boots
-//            behind it; the camera holds a wide establishing shot
-//   intro    the loader lifts, the camera eases in, and a light welcome
-//            layer sits over the live world: name, keycap prompt, way out
-//   playing  the first drive key clears the welcome layer; what remains is a
-//            minimap and two buttons (sound, menu). M opens the paper map,
-//            Esc the tabbed menu.
+//   loading    a fuel gauge fills while the world boots behind it
+//   intro      the title screen: the loader lifts, the camera pushes in low
+//              behind the parked truck, and the name stands over it as the
+//              game's logo, with "Press W to start"
+//   launching  a drive key cranes the camera up and back into the driving
+//              view; the controls stay locked until it lands
+//   playing    what remains is a minimap and three buttons (sound, map,
+//              menu). M opens the paper map, Esc the tabbed menu. Pulling up
+//              at a section's landmark swoops the camera into its shot and
+//              opens its card; Esc or a fresh drive key hands the wheel back.
 //
 // The world is desktop-only. Anything without a fine pointer, a wide screen
 // and WebGL2 gets the loader and then a card pointing to /site, and the 3D
@@ -21,11 +24,13 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import * as audio from "./audio";
 import { DRIVE_KEYS } from "./config";
-import { emitWorld, onWorld, view } from "./events";
-import Intro from "./ui/Intro";
+import { CRANE_MS, emitWorld, onWorld, view } from "./events";
+import Title from "./ui/Title";
 import Loader from "./ui/Loader";
 import SpeedLines from "./ui/SpeedLines";
 import StuckHint from "./ui/StuckHint";
+import SectionCard from "./ui/SectionCard";
+import { SPOTS, type Spot } from "./map/sections/frame";
 import { Hud, Menu } from "./ui/Menu";
 import { nunito } from "./ui/font";
 import BigMap from "./ui/map/BigMap";
@@ -58,17 +63,12 @@ const getCapable = () => window.matchMedia(DESKTOP).matches && hasWebGL();
 // unknown during SSR — the loader covers everything until hydrated anyway
 const getServerCapable = () => null;
 
-type Phase = "loading" | "intro" | "playing";
+type Phase = "loading" | "intro" | "launching" | "playing";
 
-// progress milestones, and something to read while each one happens
-const STAGES = [
-  { at: 12, label: "Pouring the sand…" },
-  { at: 55, label: "Waking up the desert…" },
-  { at: 88, label: "Fuelling the truck…" },
-  { at: 100, label: "Here we go!" },
-];
+// progress milestones: code loaded, the canvas up, physics ready, first frames
+const STAGES = [12, 55, 88, 100];
 
-const MIN_LOADER_MS = 1900; // long enough for the name to land and be read
+const MIN_LOADER_MS = 1900; // long enough for the needle to sweep up
 const LEAVE_MS = 700;
 
 export default function Experience() {
@@ -81,6 +81,8 @@ export default function Experience() {
   const [leaving, setLeaving] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [mapOpen, setMapOpen] = useState(false);
+  const [arrival, setArrival] = useState<Spot | null>(null);
+  const arrivedAt = useRef(0);
   const [toast, setToast] = useState<{ text: string; key: number } | null>(null);
   const [stunt, setStunt] = useState<{ title: string; detail: string; key: number } | null>(null);
   const [resetKey, setResetKey] = useState(0);
@@ -114,12 +116,41 @@ export default function Experience() {
     };
   }, [stage, phase]);
 
-  // framing follows the phase: wide, then closer, then in on the truck
+  // framing follows the phase: the title shot (pushed back while loading,
+  // in tight once the title shows), then the crane up into the driving view
   useEffect(() => {
     const paused = menuOpen || mapOpen;
-    view.target = phase === "loading" ? 2.4 : phase === "intro" || paused ? 1.4 : 1;
+    view.titleTarget = phase === "loading" || phase === "intro" ? 1 : 0;
+    view.dollyTarget = phase === "loading" ? 1 : 0;
+    view.target = paused ? 1.4 : 1;
     view.playing = phase === "playing" && !paused;
   }, [phase, menuOpen, mapOpen]);
+
+  // pulling up at a section: swoop into its shot, open its card
+  useEffect(
+    () =>
+      onWorld("arrive", (id) => {
+        const spot = SPOTS.find((s) => s.id === id);
+        if (!spot) return;
+        view.shotPos.copy(spot.cam);
+        view.shotLook.copy(spot.look);
+        arrivedAt.current = performance.now();
+        setArrival(spot);
+        audio.chime();
+      }),
+    [],
+  );
+  useEffect(() => {
+    view.shotTarget = arrival ? 1 : 0;
+  }, [arrival]);
+  const leaveSection = useCallback(() => setArrival(null), []);
+
+  // the crane takes the controls with it; they unlock when it lands
+  useEffect(() => {
+    if (phase !== "launching") return;
+    const t = window.setTimeout(() => setPhase("playing"), CRANE_MS);
+    return () => window.clearTimeout(t);
+  }, [phase]);
 
   // a section or landmark found for the first time: say so, with confetti
   const onDiscover = useCallback((ids: string[]) => {
@@ -164,7 +195,17 @@ export default function Experience() {
       if (e.code === "KeyN") toggleSound();
       if (phase === "intro" && capable) {
         setPressed((p) => new Set(p).add(e.code));
-        if (DRIVE_KEYS.has(e.code)) setPhase("playing");
+        if (DRIVE_KEYS.has(e.code)) {
+          setPhase("launching");
+          audio.whoosh();
+        }
+      }
+      if (phase === "playing" && arrival) {
+        // a fresh press only: a drive key still held from pulling up repeats,
+        // and the swoop gets a moment before anything can close it
+        const settled = performance.now() - arrivedAt.current > 700;
+        if (e.code === "Escape" || (settled && !e.repeat && DRIVE_KEYS.has(e.code))) setArrival(null);
+        return;
       }
       if (phase === "playing") {
         if (e.code === "KeyM" && !menuOpen) setMapOpen((o) => !o);
@@ -191,25 +232,27 @@ export default function Experience() {
       window.removeEventListener("keyup", onUp);
       window.removeEventListener("pointerdown", unlock);
     };
-  }, [phase, capable, toggleSound, menuOpen, mapOpen]);
+  }, [phase, capable, toggleSound, menuOpen, mapOpen, arrival]);
 
   const paused = phase === "playing" && (menuOpen || mapOpen);
-  const driving = capable === true && phase === "playing" && !paused;
-  const current = STAGES[stage];
+  const driving = capable === true && phase === "playing" && !paused && !arrival;
+  // the in-game interface steps aside for the menu, the map, or a section
+  const hudVisible = phase === "playing" && !menuOpen && !mapOpen && !arrival;
 
   return (
     <main className={`${nunito.className} fixed inset-0 overflow-hidden bg-sand text-ink select-none`}>
       {capable && (
-        <World driving={driving} paused={paused} resetKey={resetKey} onMount={onMount} onReady={onReady} />
+        <World driving={driving} paused={paused} arrivals={driving} resetKey={resetKey} onMount={onMount} onReady={onReady} />
       )}
 
       {capable && (
         <>
           <SpeedLines />
           <StuckHint visible={driving} />
-          <Intro visible={phase === "intro"} pressed={pressed} />
+          <SectionCard card={arrival?.card ?? null} onClose={leaveSection} />
+          <Title visible={phase === "intro"} pressed={pressed} />
           <Minimap
-            visible={phase === "playing" && !menuOpen && !mapOpen}
+            visible={hudVisible}
             active={driving}
             found={found}
             onOpen={() => setMapOpen(true)}
@@ -254,7 +297,7 @@ export default function Experience() {
             )}
           </div>
           <Hud
-            visible={phase === "playing" && !menuOpen && !mapOpen}
+            visible={hudVisible}
             muted={muted}
             onToggleSound={toggleSound}
             onOpenMenu={() => setMenuOpen(true)}
@@ -296,7 +339,7 @@ export default function Experience() {
       )}
 
       {phase === "loading" && (
-        <Loader progress={current.at} label={current.label} leaving={leaving} />
+        <Loader progress={STAGES[stage]} leaving={leaving} />
       )}
     </main>
   );

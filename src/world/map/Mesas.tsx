@@ -3,7 +3,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // Red-rock mesas: a ring around the edge of the world, so it ends in cliffs
 // rather than at an invisible wall, plus two rows facing each other to form
-// the canyon running out of the About zone into the far corner.
+// the canyon running from beside the About road into the far corner.
 //
 // Each mesa is a stack of tiers that narrow toward a flat top, banded in
 // alternating rock colours for the strata. All of them are merged into ONE

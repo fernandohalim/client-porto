@@ -51,6 +51,9 @@ export const PALETTE = {
   steel: "#8d97a3",
   steelDark: "#5f6873",
   oil: "#8a6a52",
+  // two more section colours
+  sky: "#4aa8e0",
+  pink: "#ff7aa8",
 };
 
 export const CONTROLS = [
@@ -168,15 +171,25 @@ export const CAMERA = {
 export const HALF = 72;
 
 /**
- * Where each portfolio section will live. Only markers for now; the engine
- * reads carState.position against these once sections are built.
+ * Where each portfolio section will live, spread out across the desert so
+ * finding them is a drive: About is the nearest, up the screen from the start;
+ * the rest sit out toward the edges. Spots were picked by a clearance search
+ * against everything else on the map (the canyon, the junkyard, every jump's
+ * run, the set pieces), so each has 10 m of open ground around it.
+ *
+ * Each section is a themed landmark (map/sections), facing the end of its
+ * road. `clear` is how far scattered props keep away from its centre.
  */
 export const ZONES = [
-  { id: "about", position: [16, 0, -16], color: PALETTE.coral },
-  { id: "work", position: [32, 0, 8], color: PALETTE.teal },
-  { id: "experience", position: [-8, 0, -32], color: PALETTE.yellow },
-  { id: "contact", position: [-26, 0, 12], color: PALETTE.violet },
+  { id: "about", position: [6, 0, -38], color: PALETTE.coral, clear: 8 },
+  { id: "work", position: [28, 0, 56], color: PALETTE.teal, clear: 10 },
+  { id: "experience", position: [-32, 0, -54], color: PALETTE.yellow, clear: 9 },
+  { id: "stack", position: [-34, 0, 6], color: PALETTE.sky, clear: 8 },
+  { id: "freelance", position: [2, 0, 32], color: PALETTE.pink, clear: 8 },
+  { id: "contact", position: [-52, 0, 40], color: PALETTE.violet, clear: 8 },
 ] as const;
+
+export type ZoneId = (typeof ZONES)[number]["id"];
 
 type XZ = [number, number];
 
@@ -186,15 +199,23 @@ type XZ = [number, number];
  * they all fan out of one place. `fence` marks which stretch (0–1 along the
  * road) is lined with breakable fencing.
  */
+//
+// Each section road keeps its first stretch out of the plaza exactly where it
+// always was — the pit stop's props are placed in the gaps between them — and
+// only bends away toward its zone after that.
 export const ROADS: { to: string; points: XZ[]; fence?: [number, number] }[] = [
-  { to: "about", points: [[0, 0], [2.5, -2.5], [7, -10], [14, -14]], fence: [0.35, 0.88] },
-  { to: "work", points: [[0, 0], [3.5, 1.2], [14, 6], [24, 4], [29, 7]], fence: [0.3, 0.78] },
-  { to: "experience", points: [[0, 0], [-2.5, -2.5], [-4, -14], [-10, -22], [-8, -29]] },
-  { to: "contact", points: [[0, 0], [-2.5, 2.5], [-12, 4], [-18, 12], [-23, 12]], fence: [0.28, 0.72] },
-  // out of the About zone and up through the canyon
-  { to: "canyon", points: [[19, -19], [26, -26], [34, -33], [48, -48], [62, -62]] },
-  // on past the Work zone, out to the junkyard gate
-  { to: "junkyard", points: [[36, 11], [40, 20], [43, 29], [45.5, 35.5]], fence: [0.2, 0.7] },
+  { to: "about", points: [[0, 0], [2.5, -2.5], [7, -10], [12, -15], [11, -25], [7.5, -31.5]], fence: [0.2, 0.55] },
+  { to: "work", points: [[0, 0], [3.5, 1.2], [14, 6], [24, 14], [30, 30], [30, 44], [28.5, 49.5]], fence: [0.15, 0.4] },
+  { to: "experience", points: [[0, 0], [-2.5, -2.5], [-4, -14], [-10, -22], [-21, -31], [-26, -45], [-29, -49]] },
+  { to: "contact", points: [[0, 0], [-2.5, 2.5], [-12, 4], [-18, 12], [-30, 18], [-40, 28], [-46.5, 35]], fence: [0.2, 0.5] },
+  // the two newer sections branch off the Contact and Work roads, so the
+  // plaza keeps its four exits
+  { to: "stack", points: [[-12, 4], [-19, 3], [-25, 4.5], [-28, 5.5]] },
+  { to: "freelance", points: [[14, 6], [10, 14], [5.5, 21], [3.5, 26]] },
+  // branching off the About road and up through the canyon
+  { to: "canyon", points: [[12, -15], [19, -19], [26, -26], [34, -33], [48, -48], [62, -62]] },
+  // branching off the Work road, out to the junkyard gate
+  { to: "junkyard", points: [[24, 14], [33, 15], [40, 20], [43, 29], [45.5, 35.5]], fence: [0.3, 0.75] },
 ];
 
 export const LANDMARKS = {
@@ -205,9 +226,9 @@ export const LANDMARKS = {
   oasis: [-25, -11] as XZ,
   gasStation: [16, 21] as XZ,
   waterTower: [-11, 25] as XZ,
-  // the canyon runs along the diagonal from the About zone into the corner
+  // the canyon runs along the diagonal from near the About road into the corner
   canyon: { from: [22, -22] as XZ, to: [66, -66] as XZ, width: 8 },
-  // a fenced yard of wrecks out past the Work zone; the road meets its gate
+  // a fenced yard of wrecks off the Work road; its own road meets the gate
   junkyard: { at: [50, 46] as XZ, radius: 12 },
 };
 
@@ -238,7 +259,7 @@ export const PLAYGROUND = {
   // a fuse of explosive barrels, close enough to chain, ending in a stash
   fuse: [[2, -52], [10, -57], [18, -55], [26, -60], [33, -63]] as XZ[],
   // tall columns of crates
-  towers: [[-58, -28], [-42, 16], [22, 62]] as XZ[],
+  towers: [[-58, -28], [-42, 16], [-22, 62]] as XZ[],
 };
 
 /**

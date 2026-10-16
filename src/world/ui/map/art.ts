@@ -41,6 +41,8 @@ export const ZONE_NAMES: Record<string, string> = {
   about: "About me",
   work: "Selected work",
   experience: "Experience",
+  stack: "Stack",
+  freelance: "Freelance",
   contact: "Contact",
 };
 
@@ -540,7 +542,8 @@ function labels(ctx: CanvasRenderingContext2D, family: string) {
   const k = 0.3;
   label("The canyon", from[0] + (to[0] - from[0]) * k - 13, from[1] + (to[1] - from[1]) * k - 13, 0, 32);
   label("?", to[0] - 4, to[1] + 4, -24, 30);
-  label("Junkyard", LANDMARKS.junkyard.at[0], LANDMARKS.junkyard.at[1], LANDMARKS.junkyard.radius * SCALE + 22, 34);
+  // above the yard: below it is where the Work pin hangs its name
+  label("Junkyard", LANDMARKS.junkyard.at[0], LANDMARKS.junkyard.at[1], -(LANDMARKS.junkyard.radius * SCALE + 20), 34);
   const { to: lane } = PLAYGROUND.bowling;
   label("Cactus bowling", lane[0], lane[1], 34, 28);
   const fuseEnd = PLAYGROUND.fuse.at(-1)!;
@@ -572,26 +575,69 @@ function cartouche(ctx: CanvasRenderingContext2D, family: string) {
   ctx.fillText("Fernando's Desert", 0, 2);
   ctx.restore();
 
-  // compass rose, bottom right, its arrow pointing the way the truck drives off
+  // compass rose, bottom right, north pointing the way the truck drives off
   ctx.save();
   ctx.translate(MAP_SIZE - 110 * K, MAP_SIZE - 110 * K);
   ctx.scale(K, K);
   ctx.strokeStyle = INK;
+  ctx.lineJoin = "round";
+
+  // a double ring
+  ctx.fillStyle = "rgba(241, 225, 189, 0.85)";
   ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.arc(0, 0, 44, 0, Math.PI * 2);
+  ctx.arc(0, 0, 40, 0, Math.PI * 2);
+  ctx.fill();
   ctx.stroke();
-  for (let i = 0; i < 4; i++) {
-    ctx.rotate(Math.PI / 2);
-    ctx.beginPath();
-    ctx.moveTo(0, -56);
-    ctx.lineTo(9, 0);
-    ctx.lineTo(-9, 0);
-    ctx.closePath();
-    ctx.fillStyle = i === 3 ? PALETTE.coral : PALETTE.cream;
-    ctx.fill();
-    ctx.stroke();
-  }
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.arc(0, 0, 34, 0, Math.PI * 2);
+  ctx.stroke();
+
+  /**
+   * One point of the rose, from the hub out to `len` along `angle` (0 = up),
+   * `width` wide at the hub: split down its spine into a lit half and a
+   * shaded half, so it reads as bevelled. Points meet at the hub without
+   * overlapping each other.
+   */
+  const point = (angle: number, len: number, width: number, lit: string, shade: string) => {
+    const tip: [number, number] = [Math.sin(angle) * len, -Math.cos(angle) * len];
+    const side = (s: number): [number, number] => [
+      Math.sin(angle + (s * Math.PI) / 4) * width,
+      -Math.cos(angle + (s * Math.PI) / 4) * width,
+    ];
+    for (const [s, fill] of [[1, lit], [-1, shade]] as const) {
+      const [sx, sy] = side(s);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(...tip);
+      ctx.lineTo(sx, sy);
+      ctx.closePath();
+      ctx.fillStyle = fill;
+      ctx.fill();
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+  };
+  // the in-between points first, smaller, behind
+  for (let i = 0; i < 4; i++) point(Math.PI / 4 + (i * Math.PI) / 2, 30, 6, "#e3cfa6", "#b89b6e");
+  // then the four main ones: north in coral
+  point(0, 56, 10, PALETTE.coral, "#c93a28");
+  for (const a of [Math.PI / 2, Math.PI, (Math.PI * 3) / 2]) point(a, 50, 10, PALETTE.cream, "#c9ad80");
+  // the hub
+  ctx.fillStyle = INK;
+  ctx.beginPath();
+  ctx.arc(0, 0, 3.5, 0, Math.PI * 2);
+  ctx.fill();
+  // and an N over the north point
+  ctx.font = `700 26px ${family}`;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "alphabetic";
+  ctx.lineWidth = 5;
+  ctx.strokeStyle = PAPER;
+  ctx.strokeText("N", 0, -60);
+  ctx.fillStyle = INK;
+  ctx.fillText("N", 0, -60);
   ctx.restore();
 }
 

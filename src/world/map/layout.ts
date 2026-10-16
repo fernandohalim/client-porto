@@ -110,7 +110,7 @@ export function distanceToRoad(x: number, z: number) {
 export function isClear(x: number, z: number, margin = 1) {
   if (Math.hypot(x, z) < 7 + margin) return false;
   for (const zone of ZONES) {
-    if (Math.hypot(x - zone.position[0], z - zone.position[2]) < 7 + margin) return false;
+    if (Math.hypot(x - zone.position[0], z - zone.position[2]) < zone.clear + margin) return false;
   }
   for (const [[lx, lz], r] of LANDMARK_RADII) {
     if (Math.hypot(x - lx, z - lz) < r + margin) return false;

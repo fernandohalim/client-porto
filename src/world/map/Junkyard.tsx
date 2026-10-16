@@ -1,7 +1,7 @@
 "use client";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// The junkyard, out past the Work zone at the end of its own road: a ring of
+// The junkyard, off the Work road at the end of its own branch: a ring of
 // corrugated fence with a gate, wrecked cars to shove around (and, hit hard
 // enough, scatter), a three-high stack of them waiting to be toppled, a tyre
 // mountain, and a crusher with towers of crushed-car cubes beside it. A few

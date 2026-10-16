@@ -43,7 +43,8 @@ function open(x: number, z: number) {
   if (Math.hypot(x, z) < PLAZA_RADIUS + 0.6) return false;
   if (distanceToRoad(x, z) < ROAD_WIDTH / 2 + 0.25) return false;
   for (const zone of ZONES) {
-    if (Math.hypot(x - zone.position[0], z - zone.position[2]) < 5.4) return false;
+    // no grass poking up through a landmark's floor
+    if (Math.hypot(x - zone.position[0], z - zone.position[2]) < zone.clear - 1) return false;
   }
   if (Math.hypot(x - LANDMARKS.oasis[0], z - LANDMARKS.oasis[1]) < 5.8) return false;
   // dune caps rise out of the ground: anything here would be buried

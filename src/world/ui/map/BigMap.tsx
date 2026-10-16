@@ -128,8 +128,10 @@ export default function BigMap({
                 type="button"
                 onClick={() => onTravel(pin.drop)}
                 title={`Travel to ${pin.name}`}
-                className="group absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center"
-                style={{ left: pct(px), top: pct(py) }}
+                // the dot sits exactly on the spot (14px is half the dot), with
+                // the name hanging below it
+                className="group absolute flex -translate-x-1/2 flex-col items-center"
+                style={{ left: pct(px), top: `calc(${pct(py)} - 14px)` }}
               >
                 <span
                   className="block h-7 w-7 rounded-full border-[3px] border-ink shadow-[0_2px_0_var(--color-ink)] transition-transform group-hover:scale-125"

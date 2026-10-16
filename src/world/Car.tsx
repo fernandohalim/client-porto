@@ -242,10 +242,12 @@ export default function Car({ driving, paused }: { driving: boolean; paused: boo
     [subscribeKeys],
   );
 
-  // "Respawn" from the menu: back to the start, the right way up
-  useEffect(() => onWorld("respawn", () => recover(true)), []);
-  // "Travel" from the map: dropped at the chosen spot
-  useEffect(() => onWorld("travel", (at) => recover(false, at)), []);
+  // "Respawn" from the menu and "Travel" from the map. Both are clicked while
+  // the menu or map has the physics paused, and a body moved then doesn't
+  // stay moved — so they wait here and land on the first step after resuming.
+  const pendingMove = useRef<{ spawn: boolean; at?: [number, number] } | null>(null);
+  useEffect(() => onWorld("respawn", () => void (pendingMove.current = { spawn: true })), []);
+  useEffect(() => onWorld("travel", (at) => void (pendingMove.current = { spawn: false, at })), []);
   // something found: confetti out of the truck, and a double toot
   useEffect(
     () =>
@@ -273,6 +275,12 @@ export default function Car({ driving, paused }: { driving: boolean; paused: boo
   useBeforePhysicsStep((w) => {
     const c = controller.current;
     if (!c) return;
+
+    const move = pendingMove.current;
+    if (move) {
+      pendingMove.current = null;
+      recover(move.spawn, move.at);
+    }
 
     const k = drivingRef.current ? getKeys() : IDLE_KEYS;
 
@@ -320,7 +328,10 @@ export default function Car({ driving, paused }: { driving: boolean; paused: boo
       FRONT.forEach((i) => c.setWheelBrake(i, 0));
       REAR.forEach((i) => c.setWheelBrake(i, CAR.driftBrake));
     } else {
-      const brake = k.brake ? CAR.brakeForce : throttle === 0 ? CAR.idleBrake : 0;
+      // hands off the wheel (a section's card is open, say): brake properly,
+      // so pulling up at a section eases the truck to a stop
+      const coast = drivingRef.current ? CAR.idleBrake : CAR.brakeForce;
+      const brake = k.brake ? CAR.brakeForce : throttle === 0 ? coast : 0;
       for (let i = 0; i < 4; i++) c.setWheelBrake(i, brake);
     }
     const grip = drifting ? CAR.driftGrip : CAR.frictionSlip;

@@ -1,12 +1,15 @@
 import Link from "next/link";
+import { HERO, PERSON } from "@/content/portfolio";
 
 export default function Hero() {
   return (
     <section id="hero">
-      <p>Fernando Halim — Fullstack developer</p>
-      <h1>Real-time fraud systems by day. Products I own after hours.</h1>
-      <p>In production: 17 projects shipped</p>
-      <p>Available for work</p>
+      <p>
+        {PERSON.name} — {PERSON.role}
+      </p>
+      <h1>{HERO.headline}</h1>
+      <p>{HERO.shipped}</p>
+      <p>{HERO.availability}</p>
       <ul>
         <li>
           <Link href="/site#work">Selected work</Link>

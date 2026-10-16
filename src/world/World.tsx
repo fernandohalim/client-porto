@@ -35,7 +35,8 @@ import Roads from "./map/Roads";
 import Scatter from "./map/Scatter";
 import SetPieces from "./map/SetPieces";
 import Terrain from "./map/Terrain";
-import Zones from "./map/Zones";
+import Arrivals from "./map/sections/Arrivals";
+import SectionLandmarks from "./map/sections/Landmarks";
 import { CAMERA, CONTROLS, PALETTE, SPAWN } from "./config";
 
 /** mounts as soon as this chunk has loaded and the canvas exists */
@@ -68,6 +69,7 @@ function Reflections() {
 export default function World({
   driving,
   paused,
+  arrivals,
   resetKey,
   onMount,
   onReady,
@@ -75,6 +77,8 @@ export default function World({
   driving: boolean;
   /** menu or map open: the simulation holds still behind it */
   paused: boolean;
+  /** pulling up at a section opens its card — only while actually driving */
+  arrivals: boolean;
   /** bumped to rebuild every breakable and movable object */
   resetKey: number;
   onMount: () => void;
@@ -119,13 +123,14 @@ export default function World({
               <Junkyard />
               <Tumbleweeds />
             </Fragment>
-            <Zones />
+            <SectionLandmarks />
             <Explosions />
             <Car driving={driving} paused={paused} />
             <Ready onReady={onReady} />
           </Physics>
         </Suspense>
 
+        <Arrivals active={arrivals} />
         <Particles />
         <Dust />
         <Tracks />
