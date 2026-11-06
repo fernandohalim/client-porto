@@ -11,7 +11,7 @@ export default function Freelance() {
         <div className="reveal flex flex-col gap-3">
           <p className="lede">{FREELANCE.intro}</p>
           <p className="label">
-            {clients.length} commissions — {clients.filter((c) => c.href).length} still live
+            {clients.length} projects · {clients.filter((c) => c.href).length} live now
           </p>
         </div>
       </div>

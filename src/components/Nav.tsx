@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { type PointerEvent, useEffect, useRef, useState } from "react";
 import { CONTACT, PERSON } from "@/content/portfolio";
+import { glideTo } from "@/lib/glide";
 import { HORIZONTAL_QUERY } from "@/lib/layout";
 
 const LINKS = [
@@ -16,6 +17,10 @@ const LINKS = [
 
 const TICKS = Array.from({ length: 30 });
 
+// how tightly the page follows: the rail held, and the rail pressed (the wheel's pace)
+const DRAG_RATE = 0.009;
+const GLIDE_RATE = 0.0065;
+
 const CORNER_LINKS = [
   { name: "Email", href: `mailto:${PERSON.email}` },
   ...CONTACT.links.filter((l) => l.name === "LinkedIn" || l.name === "GitHub"),
@@ -24,6 +29,11 @@ const CORNER_LINKS = [
 export default function Nav() {
   const [active, setActive] = useState<string | null>(null);
   const marker = useRef<HTMLSpanElement>(null);
+  const rail = useRef<HTMLDivElement>(null);
+  // where on the marker it was picked up, so it doesn't jump under the pointer
+  const grip = useRef<number | null>(null);
+  // where the rail sent the page, and how long to wait for it to get there
+  const aim = useRef<{ x: number; until: number } | null>(null);
 
   useEffect(() => {
     const layout = window.matchMedia(HORIZONTAL_QUERY);
@@ -40,7 +50,15 @@ export default function Nav() {
       }
       setActive(current);
 
+      // While it's held, and while the page is still easing to where it was left, the
+      // marker stays where the pointer put it rather than sliding back to the page.
       const range = document.documentElement.scrollWidth - window.innerWidth;
+      if (grip.current !== null) return;
+      if (aim.current) {
+        const arrived = Math.abs(window.scrollX - aim.current.x) <= 1;
+        if (!arrived && performance.now() < aim.current.until) return;
+        aim.current = null;
+      }
       const progress = range > 0 ? window.scrollX / range : 0;
       marker.current?.style.setProperty("--progress", String(progress));
     };
@@ -49,15 +67,60 @@ export default function Nav() {
       if (!frame) frame = requestAnimationFrame(update);
     };
 
+    // the wheel takes over from the rail, so the marker goes back to tracking the page
+    const letGo = () => {
+      aim.current = null;
+    };
+
     schedule();
     window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", schedule);
+    window.addEventListener("wheel", letGo, { passive: true });
     return () => {
       cancelAnimationFrame(frame);
+      window.removeEventListener("wheel", letGo);
       window.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", schedule);
     };
   }, []);
+
+  // The marker follows the pointer exactly, and the page eases after it. Each pixel of
+  // rail is dozens of pixels of page, so moving the page directly would step in jumps.
+  const followPointer = (clientX: number, rate: number) => {
+    const box = rail.current?.getBoundingClientRect();
+    const thumb = marker.current?.offsetWidth ?? 0;
+    if (!box || grip.current === null) return;
+    const travel = box.width - thumb;
+    const progress = Math.max(0, Math.min(1, (clientX - box.left - grip.current) / travel));
+    marker.current?.style.setProperty("--progress", String(progress));
+    const range = document.documentElement.scrollWidth - window.innerWidth;
+    const x = Math.round(progress * range);
+    aim.current = { x, until: performance.now() + 1500 };
+    glideTo(x, rate);
+  };
+
+  const onRailDown = (e: PointerEvent<HTMLDivElement>) => {
+    if (e.button !== 0 || !marker.current) return;
+    e.preventDefault();
+    e.currentTarget.setPointerCapture(e.pointerId);
+    const thumb = marker.current.getBoundingClientRect();
+    const onThumb = e.clientX >= thumb.left && e.clientX <= thumb.right;
+    grip.current = onThumb ? e.clientX - thumb.left : thumb.width / 2;
+    // pressing the rail itself travels there at the page's usual pace; picking up the
+    // marker doesn't move anything yet
+    if (!onThumb) followPointer(e.clientX, GLIDE_RATE);
+  };
+
+  const onRailMove = (e: PointerEvent<HTMLDivElement>) => {
+    if (grip.current !== null) followPointer(e.clientX, DRAG_RATE);
+  };
+
+  const onRailUp = (e: PointerEvent<HTMLDivElement>) => {
+    grip.current = null;
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    }
+  };
 
   return (
     <>
@@ -66,15 +129,26 @@ export default function Nav() {
           {PERSON.name}
         </Link>
 
-        <div aria-hidden className="relative hidden h-4 gap-1.25 lg:flex">
-          {TICKS.map((_, i) => (
-            <span key={i} className="w-px bg-rule" />
-          ))}
-          <span
-            ref={marker}
-            className="absolute -inset-y-0.5 left-0 w-7 border border-fg bg-ground"
-            style={{ transform: "translateX(calc(var(--progress, 0) * 146px))" }}
-          />
+        {/* Drag the marker, or press anywhere on the rail to go there. Mouse and touch
+            only: keyboards and screen readers already have the page's own scrolling. */}
+        <div
+          aria-hidden
+          className="-my-2 hidden cursor-grab touch-none py-2 select-none active:cursor-grabbing lg:block"
+          onPointerDown={onRailDown}
+          onPointerMove={onRailMove}
+          onPointerUp={onRailUp}
+          onPointerCancel={onRailUp}
+        >
+          <div ref={rail} className="relative flex h-4 gap-1.25">
+            {TICKS.map((_, i) => (
+              <span key={i} className="w-px bg-rule" />
+            ))}
+            <span
+              ref={marker}
+              className="absolute -inset-y-0.5 left-0 w-7 border border-fg bg-ground"
+              style={{ transform: "translateX(calc(var(--progress, 0) * 146px))" }}
+            />
+          </div>
         </div>
 
         <nav aria-label="Sections">

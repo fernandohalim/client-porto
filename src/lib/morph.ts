@@ -8,9 +8,26 @@ export const MORPH_TIMING: KeyframeAnimationOptions = {
   fill: "both",
 };
 
+// On a phone the band's words leave first, so the click has already been answered and a
+// slow start would read as a stall; these get going at once and land without a crawl.
+export const COMPACT_OPEN: KeyframeAnimationOptions = {
+  duration: 800,
+  easing: "cubic-bezier(0.35, 0.05, 0.15, 1)",
+  fill: "both",
+};
+
+export const COMPACT_CLOSE: KeyframeAnimationOptions = {
+  duration: 560,
+  // even both ends: a long ease-out tail looked landed well before it finished, and
+  // the band's words waited on it
+  easing: "cubic-bezier(0.6, 0, 0.4, 1)",
+  fill: "both",
+};
+
 export function morphFrames(card: HTMLElement, picture: HTMLElement) {
   const plate = card.querySelector<HTMLElement>(".slat-plate")!;
   const img = plate.querySelector("img")!;
+  const filter = getComputedStyle(img).filter;
   const C = card.getBoundingClientRect();
   const P = plate.getBoundingClientRect();
   const T = picture.getBoundingClientRect();
@@ -46,7 +63,7 @@ export function morphFrames(card: HTMLElement, picture: HTMLElement) {
       {
         transform: `translate(${dx}px, ${dy}px) scale(${scale})`,
         clipPath: `inset(${crop})`,
-        filter: getComputedStyle(img).filter === "none" ? "brightness(1)" : getComputedStyle(img).filter,
+        filter: filter === "none" ? "brightness(1)" : filter,
       },
       {
         transform: "translate(0px, 0px) scale(1)",
@@ -58,17 +75,33 @@ export function morphFrames(card: HTMLElement, picture: HTMLElement) {
 }
 
 // Moving between projects: the picture wipes away and the next wipes in, in the
-// direction of travel.
-export const wipe = (forward: boolean) => ({
-  out: [
-    { clipPath: "inset(0% 0% 0% 0%)" },
-    { clipPath: forward ? "inset(0% 100% 0% 0%)" : "inset(0% 0% 0% 100%)" },
-  ],
-  in: [
-    { clipPath: forward ? "inset(0% 0% 0% 100%)" : "inset(0% 100% 0% 0%)" },
-    { clipPath: "inset(0% 0% 0% 0%)" },
-  ],
+// direction of travel. A clip-path wipe is drawn on the main thread and stalls whenever
+// anything else is busy, so it's a sliding window instead: the mask moves one way and
+// the picture inside moves back by the same amount, staying put on screen. Both are
+// transforms, which the compositor runs on its own.
+//
+// `mask` is where the window sits, as a fraction of its width: 0 is fully open, -1 and 1
+// are fully away to the left and right.
+export const windowAt = (mask: number) => ({
+  mask: { transform: `translateX(${mask * 100}%)` },
+  picture: { transform: `translateX(${-mask * 100}%)` },
 });
+
+// Forward, the picture leaves by its right edge closing in to the left, and the next
+// opens from the right; backward is the mirror image.
+export const WIPE_OUT = {
+  duration: 340,
+  // already moving on the first frame, so the click answers at once, then speeding up
+  // into the hand-off
+  easing: "cubic-bezier(0.45, 0.05, 0.85, 0.45)",
+  fill: "forwards" as const,
+};
+
+export const WIPE_IN = {
+  duration: 680,
+  // fast off the hand-off and settled with no long crawl at the end
+  easing: "cubic-bezier(0.25, 1, 0.5, 1)",
+};
 
 // Moving between projects, the words slide out past the edge of their own masks and
 // the next ones slide in from the other side, in the direction of travel. Only a

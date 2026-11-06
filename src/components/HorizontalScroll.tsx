@@ -1,7 +1,11 @@
 "use client";
 
 import { useEffect } from "react";
+import { registerGlide } from "@/lib/glide";
 import { HORIZONTAL_QUERY, prefersReducedMotion } from "@/lib/layout";
+
+// how quickly the page closes the gap to where it's headed, per millisecond
+const RATE = 0.0065;
 
 // The page is a real horizontal document, so tabbing, touch, arrow keys and
 // screen readers all work on their own. This adds the glide: the wheel, page
@@ -13,6 +17,7 @@ export default function HorizontalScroll() {
     let last = 0;
     let pos = window.scrollX;
     let target = pos;
+    let rate = RATE;
 
     const blocked = () => !layout.matches || !!document.querySelector("dialog[open]");
     const clamp = (x: number) =>
@@ -21,7 +26,7 @@ export default function HorizontalScroll() {
     const tick = (now: number) => {
       const dt = Math.min(now - last, 64) || 16;
       last = now;
-      pos += (target - pos) * (1 - Math.exp(-0.0065 * dt));
+      pos += (target - pos) * (1 - Math.exp(-rate * dt));
       if (Math.abs(target - pos) < 0.4) {
         pos = target;
         frame = 0;
@@ -31,8 +36,9 @@ export default function HorizontalScroll() {
       window.scrollTo({ left: pos, behavior: "instant" });
     };
 
-    const glideTo = (x: number) => {
+    const glideTo = (x: number, speed = RATE) => {
       target = clamp(x);
+      rate = speed;
       if (prefersReducedMotion()) {
         window.scrollTo({ left: target, behavior: "instant" });
         return;
@@ -87,10 +93,12 @@ export default function HorizontalScroll() {
       section.focus({ preventScroll: true });
     };
 
+    registerGlide(glideTo);
     window.addEventListener("wheel", onWheel, { passive: false });
     window.addEventListener("keydown", onKey);
     document.addEventListener("click", onClick);
     return () => {
+      registerGlide(null);
       cancelAnimationFrame(frame);
       window.removeEventListener("wheel", onWheel);
       window.removeEventListener("keydown", onKey);

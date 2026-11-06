@@ -11,8 +11,8 @@ export const PERSON = {
 };
 
 export const HERO = {
-  headline: "Real-time fraud systems by day. Products I own after hours.",
-  shipped: "In production: 17 projects shipped",
+  // no-break spaces keep "end to end" on one line
+  headline: "Careful software, end to end.",
   availability: "Available for work",
 };
 
@@ -20,16 +20,9 @@ export const HERO = {
 
 export const ABOUT = {
   lede:
-    "I build software at two very different scales — fraud detection for interbank payment networks, and products small enough that I own every decision in them.",
+    "I'm Fernando, a fullstack developer in West Jakarta. I've been building software for about four years: for a payments company, for clients, and for myself.",
   body:
-    "By day I write Java and Spring Boot services that score interbank transactions in real time, where a missed millisecond is a missed transaction. After hours I build and ship my own products end-to-end — data model through easing curve. The first taught me rigor; the second is where the rigor gets a personality.",
-  stats: [
-    { value: "17", label: "Projects shipped" },
-    { value: "8", label: "Clients served" },
-    { value: "4", label: "Years building" },
-    { value: "22", label: "Technologies in rotation" },
-    { value: "3", label: "Roles held" },
-  ],
+    "At work I write Java and Spring Boot services that check interbank transfers for fraud as they happen. They have to be fast, and they can't be wrong. Outside work I take on freelance projects and build my own apps, usually doing all of it myself, from the database to the small animations.",
 };
 
 /* ── selected work ──────────────────────────────────────────────────────── */
@@ -51,7 +44,7 @@ export const WORK = {
   projects: [
     {
       title: "lūme",
-      image: "/placeholders/lume.jpg",
+      image: "/placeholders/work-lume.jpg",
       slug: "lume",
       blurb: "Spotify miniplayer that samples cover art for its glow",
       stack: ["Tauri", "Rust"],
@@ -59,7 +52,7 @@ export const WORK = {
     },
     {
       title: "nest.",
-      image: "/placeholders/nest.jpg",
+      image: "/placeholders/work-nest.jpg",
       slug: "nest",
       blurb: "AI receipt scanning with a group settlement engine",
       stack: ["Next", "Gemini"],
@@ -67,7 +60,7 @@ export const WORK = {
     },
     {
       title: "Tempo",
-      image: "/placeholders/tempo.jpg",
+      image: "/placeholders/work-tempo.jpg",
       slug: "tempo",
       blurb: "Desktop clock widget — timer, alarm, stopwatch",
       stack: ["Electron", "React"],
@@ -75,7 +68,7 @@ export const WORK = {
     },
     {
       title: "Piggy Wallet",
-      image: "/placeholders/piggy-wallet.jpg",
+      image: "/placeholders/work-piggy-wallet.jpg",
       slug: "piggy-wallet",
       blurb: "Offline-first expense tracker with a budget system",
       stack: ["Next", "IDB"],
@@ -83,7 +76,7 @@ export const WORK = {
     },
     {
       title: "noted.",
-      image: "/placeholders/noted.jpg",
+      image: "/placeholders/work-noted.jpg",
       slug: "noted",
       blurb: "Offline-first markdown editor with 3-way merge",
       stack: ["Next", "IDB"],
@@ -104,7 +97,15 @@ export const STACK_GROUPS = [
   { name: "Services", items: ["Spring Boot", "Express", "Node"] },
   {
     name: "Interface",
-    items: ["Next.js", "Tailwind", "Framer Motion", "Electron", "Flutter", "React Native"],
+    items: [
+      "Next.js",
+      "Tailwind",
+      "Framer Motion",
+      "Electron",
+      "Tauri",
+      "Flutter",
+      "React Native",
+    ],
   },
   { name: "Data", items: ["Oracle SQL", "Redis", "MySQL", "Supabase", "Firebase"] },
   { name: "Workflow", items: ["Git", "Maven"] },
@@ -113,57 +114,95 @@ export const STACK_GROUPS = [
 export const STACK_TOTAL = STACK_GROUPS.reduce((n, g) => n + g.items.length, 0);
 
 export const STACK = {
-  intro: `${STACK_TOTAL} technologies in rotation, grouped by the job they do rather than by how well I know them.`,
+  intro: "The tools I use at work and on my own projects, grouped by the job they do.",
 };
 
 /* ── experience ─────────────────────────────────────────────────────────── */
 
 export const EXPERIENCE = {
   intro:
-    "Three years across a payments processor, a freelance studio and an agency floor — the throughline is shipping things other people depend on.",
+    "Four years across a startup, a three-person studio and a national payments network. The studio work carried on after I joined payments.",
+  // newest first
   roles: [
     {
-      role: "Java Application Developer",
+      short: "Rintis",
+      /** a stand-in behind the band, by choice not a photo of the place */
+      image: "/placeholders/xp-rintis.jpg",
+      role: "Fullstack Developer",
+      focus: "Fraud detection systems",
       company: "PT Rintis Sejahtera",
       date: "Oct 2024 — Now",
+      years: "2024 — Now",
       type: "Full-time",
-      stack: ["Java", "Spring Boot", "Redis", "Oracle"],
+      summary:
+        "Rintis runs a national payment network, and every transaction that passes through it has to be checked. I build the fraud detection systems that do the checking.",
       points: [
-        "Real-time fraud detection microservices for interbank transaction networks.",
-        "Complex database operations across massive volumes of financial records.",
+        "Built the aggregator and fetcher services that collect every transaction going through the network in real time: 400 to 1,000 a second on average, on services built to handle 30,000 to 70,000.",
+        "Rebuilt older services in modern Java and Spring Boot.",
+        "Worked out the logic for spotting and handling anomalous transaction data.",
+        "Helped bring in new engineering standards across the company, built on Spring and Redis.",
       ],
-      active: true,
+      stack: ["Java", "Spring Boot", "Redis", "Oracle"],
       linkedin: "https://www.linkedin.com/company/pt-rintis-sejahtera/",
     },
     {
+      short: "WEBin",
+      image: "/placeholders/xp-webin.jpg",
       role: "Fullstack Developer",
+      focus: "Client projects, end to end",
       company: "WEBin",
       date: "Feb 2023 — Now",
+      years: "2023 — Now",
       type: "Freelance studio",
-      stack: ["Next.js", "React", "Node", "Go"],
+      summary:
+        "A studio of three people, so everyone does a bit of everything. Alongside building, I take part in the decisions with clients and test what we ship.",
       points: [
-        "End-to-end custom builds for B2B clients — system design through deployment.",
-        "Clean, documented APIs and responsive product interfaces.",
+        "Work on every stage of a project: scoping with the client, system design, frontend, backend, testing and deployment.",
+        "Share the product and technical decisions, since there's no one else to hand them to.",
       ],
-      active: true,
+      /** titles from FREELANCE.clients that came through the studio */
+      projects: [
+        "Nenggala Academy",
+        "PT Maju Jaya Arkananta",
+        "Rawa Belong Florist Community",
+        "PT Loyalty Development - LeSeen",
+      ],
+      stack: ["Next.js", "React", "Node", "Go"],
       linkedin: "https://www.linkedin.com/company/91073950",
     },
     {
+      short: "Overo",
+      image: "/placeholders/xp-overo.jpg",
       role: "Frontend Developer",
+      focus: "Web and mobile interfaces",
       company: "PT Overo Digital Global",
       date: "Aug 2022 — Jan 2023",
+      years: "2022 — 2023",
       type: "Hybrid",
+      summary:
+        "My first developer job, on the frontend team of a young startup. We ran several projects at once with not much structure, and I started with no experience, so most of what I took away was skill.",
+      points: [
+        "Built interfaces for a payroll system and a banking system.",
+        "Worked across web in React and Tailwind, and mobile in Flutter, with the UI/UX team.",
+      ],
       stack: ["React", "Tailwind", "Flutter"],
-      points: ["Client-facing web and cross-platform mobile interfaces with the UI/UX team."],
-      active: false,
       linkedin: "https://www.linkedin.com/company/overo-global-technologies/",
     },
-  ],
-  why: {
-    title: "Why it matters",
-    body:
-      "The day job runs at a scale I could never simulate alone — millions of transactions, latency budgets in milliseconds, no forgiving path for a bad query. Everything I know about writing software that holds up came from there.",
-  },
+  ] as {
+    short: string;
+    image: string;
+    role: string;
+    focus: string;
+    company: string;
+    date: string;
+    years: string;
+    type: string;
+    summary: string;
+    points: string[];
+    projects?: string[];
+    stack: string[];
+    linkedin: string;
+  }[],
 };
 
 /* ── freelance ──────────────────────────────────────────────────────────── */
@@ -179,12 +218,12 @@ export const CLIENT_STATUS: Record<ClientKind, string> = {
 
 export const FREELANCE = {
   intro:
-    "Commissioned work for studios, developers and small businesses — delivered end to end, from system design through deployment.",
+    "Sites and systems I've built for clients, some through a small studio and some on my own. I usually handle all of it, from the database to the deploy.",
   clients: [
     {
       title: "PT Ciputra Development Tbk - The Forestine",
-      image: "/placeholders/the-forestine.jpg",
-      blurb: "Property marketing site",
+      image: "/placeholders/client-the-forestine.jpg",
+      blurb: "Marketing site for a Ciputra residential project",
       stack: ["Next", "Tailwind"],
       year: "2026",
       kind: "live",
@@ -192,8 +231,8 @@ export const FREELANCE = {
     },
     {
       title: "Handy and Sharon",
-      image: "/placeholders/handy-and-sharon.jpg",
-      blurb: "Wedding invitation site with RSVP handling",
+      image: "/placeholders/client-handy-and-sharon.jpg",
+      blurb: "Wedding invitation site where guests can RSVP",
       stack: ["Next", "Firestore"],
       year: "2026",
       kind: "live",
@@ -201,7 +240,7 @@ export const FREELANCE = {
     },
     {
       title: "Nenggala Academy",
-      image: "/placeholders/nenggala-academy.jpg",
+      image: "/placeholders/client-nenggala-academy.jpg",
       blurb: "Student portal and marketing site",
       stack: ["Next", "Express"],
       year: "2026",
@@ -209,8 +248,8 @@ export const FREELANCE = {
     },
     {
       title: "PT Maju Jaya Arkananta",
-      image: "/placeholders/maju-jaya.jpg",
-      blurb: "Company profile and catalogue website with CMS",
+      image: "/placeholders/client-maju-jaya.jpg",
+      blurb: "Company profile and product catalogue the client updates themselves",
       stack: ["CRA", "Go"],
       year: "2024",
       kind: "live",
@@ -218,32 +257,32 @@ export const FREELANCE = {
     },
     {
       title: "PT Jasplast Sukses Bersama",
-      image: "/placeholders/jasplast.jpg",
-      blurb: "Internal financial record system",
+      image: "/placeholders/client-jasplast.jpg",
+      blurb: "Internal system for the company's financial records",
       stack: ["CRA", "Express"],
       year: "2024",
       kind: "internal",
     },
     {
       title: "PT Argotehnik Kreasindo Abadi",
-      image: "/placeholders/argotehnik.jpg",
-      blurb: "Web-based operational ERP",
+      image: "/placeholders/client-argotehnik.jpg",
+      blurb: "ERP the team uses for day-to-day operations",
       stack: ["CRA", "Express"],
       year: "2024",
       kind: "internal",
     },
     {
       title: "Rawa Belong Florist Community",
-      image: "/placeholders/rawa-belong.jpg",
-      blurb: "Marketplace mobile application and website",
+      image: "/placeholders/client-rawa-belong.jpg",
+      blurb: "Marketplace app and website for a florist community",
       stack: ["Flutter", "Express"],
       year: "2023",
       kind: "archived",
     },
     {
       title: "PT Loyalty Development - LeSeen",
-      image: "/placeholders/leseen.jpg",
-      blurb: "Company profile website",
+      image: "/placeholders/client-leseen.jpg",
+      blurb: "Company profile site",
       stack: ["CRA", "Tailwind"],
       year: "2023",
       kind: "archived",
@@ -258,6 +297,19 @@ export const FREELANCE = {
     href?: string;
   }[],
 };
+
+/* ── about, in numbers ─────────────────────────────────────────────────── */
+
+// Counted from the lists above, so the numbers stay true as projects come and go.
+export const ABOUT_STATS = [
+  { value: String(FREELANCE.clients.length), label: "Freelance clients" },
+  { value: String(WORK.projects.length), label: "Products of my own" },
+  {
+    value: String(FREELANCE.clients.filter((c) => c.kind === "live").length),
+    label: "Client sites live now",
+  },
+  { value: "2022", label: "Building since" },
+];
 
 /* ── contact ────────────────────────────────────────────────────────────── */
 

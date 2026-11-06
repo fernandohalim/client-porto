@@ -224,6 +224,8 @@ html:has(dialog[open]) {
 /* heading letters rise from behind their own baseline, once */
 .rise-word {
   display: inline-block;
+  /* the letters are separate boxes, so without this a long word can break between them */
+  white-space: nowrap;
   overflow: clip;
   overflow-clip-margin: 0.04em;
 }
@@ -268,6 +270,8 @@ html:has(dialog[open]) {
   @variant h-scroll {
     flex: none;
     width: max(20rem, calc(var(--h) * 0.66));
+    /* never narrower than the title's longest word */
+    min-width: min-content;
     margin-bottom: 0;
   }
 }
@@ -286,10 +290,13 @@ html:has(dialog[open]) {
 
 /* ── strips: Work and Freelance ────────────────────────────────────────── */
 
+/* On a phone each slat is a thin band with its name inside, stacked like the
+   Experience bands; tapping one opens the same view. From h-scroll up they stand
+   side by side as tall slats. */
 .strip {
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 10px;
 
   @variant h-scroll {
     --thin: max(92px, calc(var(--h) * 0.14));
@@ -320,10 +327,12 @@ html:has(dialog[open]) {
 }
 
 .slat {
+  position: relative;
   display: flex;
-  flex-direction: column;
+  align-items: center;
   width: 100%;
-  gap: 10px;
+  min-height: 76px;
+  padding: 12px 16px;
   text-align: left;
   cursor: pointer;
 
@@ -332,19 +341,25 @@ html:has(dialog[open]) {
   }
 
   @variant h-scroll {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    min-height: 0;
     height: var(--h);
+    padding: 0;
   }
 }
 
 .slat-media {
-  position: relative;
+  position: absolute;
+  inset: 0;
   display: block;
-  width: 100%;
-  aspect-ratio: 4 / 5;
   overflow: hidden;
 
   @variant h-scroll {
-    aspect-ratio: auto;
+    position: relative;
+    inset: auto;
+    width: 100%;
     flex: 1;
     min-height: 0;
   }
@@ -369,6 +384,20 @@ html:has(dialog[open]) {
     filter: brightness(0.62);
     transition: filter 0.6s;
   }
+
+  /* closed, a blurred copy covers the picture, enlarged a touch so the blur doesn't
+     soften its edges; it fades away as the slat opens. Its own dimming never changes,
+     so nothing under the blur has to be drawn again. */
+  .slat-blur {
+    filter: brightness(0.4) blur(8px);
+    transform: scale(1.08);
+    transition: opacity 0.6s;
+  }
+}
+
+/* not quite 0, so the browser keeps it drawn and closing doesn't hitch */
+.strip li[data-open] .slat-blur {
+  opacity: 0.001;
 }
 
 /* the picture draws open from the bottom the first time it's seen */
@@ -387,14 +416,14 @@ html:has(dialog[open]) {
 }
 
 /* while one is open its neighbours sink back */
-.strip:has(li[data-open]) li:not([data-open]) img {
+.strip:has(li[data-open]) li:not([data-open]) img:not(.slat-blur) {
   filter: brightness(0.34);
 }
 
 /* The open slat lifts into full light and its name is underlined. Tied to the open
    state rather than :hover, so pictures don't light up as they scroll past a resting
    cursor. */
-li[data-open] img {
+.strip li[data-open] img:not(.slat-blur) {
   filter: none;
 }
 
@@ -404,17 +433,23 @@ li[data-open] .slat-name {
   text-underline-offset: 3px;
 }
 
+/* on a phone: the name large on the left, year and stack small on the right */
 .slat-meta {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  column-gap: 16px;
+  row-gap: 2px;
+  width: 100%;
 
   /* a fixed block whose column never changes width, so the text doesn't reflow
      while its slat opens */
   @variant h-scroll {
-    position: relative;
+    display: flex;
     flex: none;
     flex-direction: column;
+    align-items: stretch;
     justify-content: flex-start;
     gap: 2px;
     width: var(--thin);
@@ -422,11 +457,53 @@ li[data-open] .slat-name {
   }
 }
 
-.slat-more {
-  display: none;
+.slat-name {
+  grid-row: span 2;
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  line-height: 0.92;
+  letter-spacing: -0.005em;
+  text-wrap: balance;
 
   @variant h-scroll {
-    display: block;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+  }
+}
+
+/* on a phone each line has its own mask, so the words can rise away when the band
+   opens and rise back when it closes; padded so accents and descenders aren't cut */
+.slat-meta > * {
+  overflow: clip;
+  padding: 0.2em 0.02em;
+  margin: -0.2em -0.02em;
+
+  @variant h-scroll {
+    overflow: visible;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+.slat-line {
+  display: block;
+}
+
+.slat-meta > :not(.slat-name) {
+  text-align: right;
+
+  @variant h-scroll {
+    text-align: left;
+  }
+}
+
+.slat-more {
+  display: block;
+  opacity: 0.7;
+
+  @variant h-scroll {
     position: absolute;
     top: 0;
     left: calc(var(--thin) + 16px);
@@ -439,6 +516,107 @@ li[data-open] .slat-name {
 li[data-open] .slat-more {
   opacity: 1;
   transition: opacity 0.5s 0.2s;
+}
+
+/* ── stack: drifting rows ─────────────────────────────────────────────── */
+
+.stack-rows {
+  --name: 3.25rem;
+  display: flex;
+  flex-direction: column;
+
+  @variant h-scroll {
+    --name: calc(var(--h) / 7.2);
+    flex: none;
+    justify-content: flex-end;
+    width: max(40rem, calc(var(--h) * 1.3));
+  }
+}
+
+/* a ruled line per group: its name small on the left, the drifting names beside it */
+.stack-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+  padding: 10px 0 6px;
+  border-top: 1px solid var(--color-rule);
+
+  @variant h-scroll {
+    grid-template-columns: 7rem 1fr;
+    align-items: end;
+    gap: 16px;
+  }
+}
+
+.stack-label {
+  @variant h-scroll {
+    padding-bottom: 0.6em;
+  }
+}
+
+/* the names come and go softly at the edges rather than being cut */
+.stack-window {
+  /* otherwise the run's whole length would widen the grid column */
+  min-width: 0;
+  overflow: clip;
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.stack-track {
+  display: flex;
+  width: max-content;
+}
+
+.stack-run {
+  display: flex;
+  flex: none;
+  font-family: var(--font-display);
+  font-size: var(--name);
+  line-height: 0.95;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* a dot after every name, the last included, so the two runs join evenly */
+.stack-name {
+  transition: opacity 0.35s;
+
+  &::after {
+    content: "·";
+    margin: 0 0.35em;
+    opacity: 0.4;
+  }
+}
+
+/* pointing at a row holds it still and lifts the name under the cursor */
+.stack-row:hover .stack-name {
+  opacity: 0.3;
+}
+
+.stack-row .stack-name:hover {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .stack-track {
+    /* every row at the same slow pace, about one letter a second */
+    animation: stack-drift calc(var(--chars) * 1s) linear infinite;
+  }
+
+  .stack-track[data-dir="right"] {
+    animation-direction: reverse;
+  }
+
+  .stack:not([data-running]) .stack-track,
+  .stack-row:hover .stack-track {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes stack-drift {
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 /* ── the opened project ────────────────────────────────────────────────── */
@@ -473,6 +651,194 @@ li[data-open] .slat-more {
   img {
     object-fit: cover;
   }
+}
+
+/* ── experience: slim picture bands, one opened into a title over its details ── */
+.xp-bands {
+  --slim: 64px;
+  --tall: 112px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  @variant h-scroll {
+    --slim: max(64px, calc(var(--h) * 0.1));
+    --tall: max(140px, calc(var(--h) * 0.24));
+    flex: none;
+    width: max(36rem, var(--h));
+  }
+}
+
+.xp-band {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  height: var(--slim);
+  padding: 0 16px;
+  overflow: hidden;
+  /* the year is sized against the band, so it grows with it as the band opens */
+  container-type: size;
+  text-align: left;
+  cursor: pointer;
+
+  img {
+    object-fit: cover;
+    filter: brightness(0.3);
+    transition: filter 0.6s;
+  }
+
+  /* closed, a blurred copy covers the picture; it's enlarged a touch so the blur
+     doesn't soften its edges into the gap, and it fades away as the band opens */
+  .xp-blur {
+    filter: brightness(0.3) blur(8px);
+    transform: scale(1.08);
+    /* kept on its own layer so the blur is drawn once and the fade only composites */
+    will-change: opacity;
+    transition:
+      opacity 0.6s,
+      filter 0.6s;
+  }
+
+  &:focus-visible {
+    outline-offset: 4px;
+  }
+}
+
+.xp-item[data-open] .xp-band {
+  height: var(--tall);
+
+  img {
+    filter: brightness(0.5);
+  }
+
+  /* only fades: the blur and dimming stay as they were, so nothing repaints */
+  .xp-blur {
+    /* not quite 0, so the browser keeps it drawn and the first close doesn't hitch */
+    opacity: 0.001;
+    filter: brightness(0.3) blur(8px);
+  }
+}
+
+/* a closed band lifts a little when pointed at, like the slats */
+.xp-item:not([data-open]) .xp-band:hover img {
+  filter: brightness(0.42);
+}
+
+.xp-item:not([data-open]) .xp-band:hover .xp-blur {
+  filter: brightness(0.42) blur(8px);
+}
+
+.xp-year {
+  position: relative;
+  font-family: var(--font-display);
+  font-size: 84cqh;
+  line-height: 0.78;
+
+  @variant h-scroll {
+    font-size: 96cqh;
+  }
+  color: var(--fg);
+  opacity: 0.55;
+  transition: opacity 0.6s;
+}
+
+.xp-item[data-open] .xp-year,
+.xp-band:hover .xp-year {
+  opacity: 1;
+}
+
+.xp-band-meta {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  align-self: center;
+  text-align: right;
+}
+
+/* the details open underneath, from nothing to their own height */
+.xp-detail {
+  display: grid;
+  grid-template-rows: 0fr;
+}
+
+.xp-item[data-open] .xp-detail {
+  grid-template-rows: 1fr;
+}
+
+.xp-detail-clip {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.xp-detail-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 40rem;
+  padding: 18px 0 14px;
+}
+
+.xp-points {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  li > .xp-line {
+    position: relative;
+    padding-left: 1.4em;
+
+    &::before {
+      content: "—";
+      position: absolute;
+      left: 0;
+    }
+  }
+}
+
+.xp-line {
+  display: block;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .xp-band {
+    transition: height 0.7s var(--ease);
+  }
+
+  .xp-detail {
+    transition: grid-template-rows 0.7s var(--ease);
+  }
+
+  /* the lines of a role rise from behind their own edges as it opens */
+  .xp-item[data-open] .xp-line {
+    animation: xp-line 0.7s cubic-bezier(0.25, 1, 0.5, 1) backwards;
+    animation-delay: 0.18s;
+  }
+
+  .xp-item[data-open] p:nth-child(2) > .xp-line { animation-delay: 0.22s; }
+  .xp-item[data-open] li:nth-child(1) > .xp-line { animation-delay: 0.26s; }
+  .xp-item[data-open] li:nth-child(2) > .xp-line { animation-delay: 0.29s; }
+  .xp-item[data-open] li:nth-child(3) > .xp-line { animation-delay: 0.32s; }
+  .xp-item[data-open] li:nth-child(4) > .xp-line { animation-delay: 0.35s; }
+  .xp-item[data-open] p:nth-last-child(-n + 2) > .xp-line { animation-delay: 0.38s; }
+}
+
+@keyframes xp-line {
+  from {
+    transform: translateY(125%);
+  }
+}
+
+/* the sliding window and the picture inside it, for Previous and Next (lib/morph.ts);
+   each keeps its own layer so nothing re-renders when a wipe ends */
+.project-wipe {
+  position: absolute;
+  inset: 0;
+  overflow: clip;
+  will-change: transform;
 }
 
 /* Picture and words are centred as one group, so the column has to be exactly as wide

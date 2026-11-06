@@ -1,4 +1,4 @@
-import { ABOUT } from "@/content/portfolio";
+import { ABOUT, ABOUT_STATS } from "@/content/portfolio";
 import Rise from "./Rise";
 
 export default function About() {
@@ -10,13 +10,13 @@ export default function About() {
           <p className="lede">{ABOUT.lede}</p>
           <p>{ABOUT.body}</p>
           <a href="#experience" className="link label w-fit">
-            Read the experience
+            Where I&apos;ve worked
           </a>
         </div>
       </div>
 
       <dl className="reveal mt-10 flex flex-col justify-end h-scroll:mt-0 h-scroll:w-[max(18rem,calc(var(--h)*0.5))]">
-        {ABOUT.stats.map((s) => (
+        {ABOUT_STATS.map((s) => (
           <div
             key={s.label}
             className="flex items-baseline justify-between gap-6 border-t border-rule py-2"
