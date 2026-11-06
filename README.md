@@ -7,7 +7,6 @@ A personal portfolio website built to showcase projects, skills, and professiona
 - **Next.js 16**
 - **React 19**
 - **Tailwind CSS v4**
-- **Framer Motion**
 - **TypeScript**
 
 ## Local Development

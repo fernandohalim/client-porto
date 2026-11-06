@@ -1,36 +1,25 @@
 import { CLIENT_STATUS, FREELANCE } from "@/content/portfolio";
+import Strip from "./Strip";
+import Rise from "./Rise";
 
 export default function Freelance() {
   const clients = FREELANCE.clients;
   return (
-    <section id="freelance">
-      <h2>Freelance</h2>
-      <p>{FREELANCE.intro}</p>
+    <section id="freelance" className="panel">
+      <div className="head">
+        <h2 data-drift className="display reveal"><Rise text="Freelance" /></h2>
+        <div className="reveal flex flex-col gap-3">
+          <p className="lede">{FREELANCE.intro}</p>
+          <p className="label">
+            {clients.length} commissions — {clients.filter((c) => c.href).length} still live
+          </p>
+        </div>
+      </div>
 
-      <ul>
-        {clients.map((c) => (
-          <li key={c.title}>
-            <h3>
-              {c.href ? (
-                <a href={c.href} target="_blank" rel="noopener noreferrer">
-                  {c.title}
-                </a>
-              ) : (
-                c.title
-              )}
-            </h3>
-            <p>{c.blurb}</p>
-            <p>
-              {c.stack.join(" · ")} — {CLIENT_STATUS[c.kind]} — {c.year}
-            </p>
-          </li>
-        ))}
-      </ul>
-
-      <p>
-        {clients.length} commissions — {clients.filter((c) => c.href).length}{" "}
-        still live
-      </p>
+      <Strip
+        label="Freelance"
+        items={clients.map((c) => ({ ...c, status: CLIENT_STATUS[c.kind] }))}
+      />
     </section>
   );
 }

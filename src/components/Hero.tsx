@@ -1,23 +1,34 @@
-import Link from "next/link";
 import { HERO, PERSON } from "@/content/portfolio";
+import Rise from "./Rise";
 
 export default function Hero() {
   return (
-    <section id="hero">
-      <p>
-        {PERSON.name} — {PERSON.role}
-      </p>
-      <h1>{HERO.headline}</h1>
-      <p>{HERO.shipped}</p>
-      <p>{HERO.availability}</p>
-      <ul>
-        <li>
-          <Link href="/site#work">Selected work</Link>
-        </li>
-        <li>
-          <Link href="/site#contact">Get in touch</Link>
-        </li>
-      </ul>
+    <section
+      id="hero"
+      className="panel flex flex-col justify-between gap-8 h-scroll:w-screen h-scroll:flex-row h-scroll:items-end"
+    >
+      <h1 data-drift className="display reveal h-scroll:[--size:min(calc(var(--h)/5),9vw)] max-w-[15ch]">
+        <Rise text={HERO.headline} />
+      </h1>
+      <div className="reveal label flex w-56 flex-none flex-col gap-2 h-scroll:pb-1">
+        <p>
+          {PERSON.name} — {PERSON.role}
+        </p>
+        <p>{HERO.shipped}</p>
+        <p>{HERO.availability}</p>
+        <ul className="mt-3 flex flex-col gap-1">
+          <li>
+            <a href="#work" className="link">
+              Selected work
+            </a>
+          </li>
+          <li>
+            <a href="#contact" className="link">
+              Get in touch
+            </a>
+          </li>
+        </ul>
+      </div>
     </section>
   );
 }

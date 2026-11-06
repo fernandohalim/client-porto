@@ -1,7 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Every word and number the portfolio shows, in one place. The plain website
-// (/site) and the desert's section cards both read from here, so the two can
-// never say different things.
+// Every word and number the portfolio shows, in one place.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const PERSON = {
@@ -28,7 +26,6 @@ export const ABOUT = {
   stats: [
     { value: "17", label: "Projects shipped" },
     { value: "8", label: "Clients served" },
-    { value: "5", label: "Case studies written" },
     { value: "4", label: "Years building" },
     { value: "22", label: "Technologies in rotation" },
     { value: "3", label: "Roles held" },
@@ -41,6 +38,8 @@ export type Project = {
   title: string;
   /** where each case study will live again (/projects/<slug>) once rebuilt */
   slug: string;
+  /** swap for a real picture when there is one */
+  image: string;
   blurb: string;
   stack: string[];
   year: string;
@@ -48,10 +47,11 @@ export type Project = {
 
 export const WORK = {
   intro:
-    "Products I designed, built and shipped on my own — each one documented end to end as a case study.",
+    "Products I designed, built and shipped on my own.",
   projects: [
     {
       title: "lūme",
+      image: "/placeholders/lume.jpg",
       slug: "lume",
       blurb: "Spotify miniplayer that samples cover art for its glow",
       stack: ["Tauri", "Rust"],
@@ -59,6 +59,7 @@ export const WORK = {
     },
     {
       title: "nest.",
+      image: "/placeholders/nest.jpg",
       slug: "nest",
       blurb: "AI receipt scanning with a group settlement engine",
       stack: ["Next", "Gemini"],
@@ -66,6 +67,7 @@ export const WORK = {
     },
     {
       title: "Tempo",
+      image: "/placeholders/tempo.jpg",
       slug: "tempo",
       blurb: "Desktop clock widget — timer, alarm, stopwatch",
       stack: ["Electron", "React"],
@@ -73,6 +75,7 @@ export const WORK = {
     },
     {
       title: "Piggy Wallet",
+      image: "/placeholders/piggy-wallet.jpg",
       slug: "piggy-wallet",
       blurb: "Offline-first expense tracker with a budget system",
       stack: ["Next", "IDB"],
@@ -80,6 +83,7 @@ export const WORK = {
     },
     {
       title: "noted.",
+      image: "/placeholders/noted.jpg",
       slug: "noted",
       blurb: "Offline-first markdown editor with 3-way merge",
       stack: ["Next", "IDB"],
@@ -179,6 +183,7 @@ export const FREELANCE = {
   clients: [
     {
       title: "PT Ciputra Development Tbk - The Forestine",
+      image: "/placeholders/the-forestine.jpg",
       blurb: "Property marketing site",
       stack: ["Next", "Tailwind"],
       year: "2026",
@@ -187,6 +192,7 @@ export const FREELANCE = {
     },
     {
       title: "Handy and Sharon",
+      image: "/placeholders/handy-and-sharon.jpg",
       blurb: "Wedding invitation site with RSVP handling",
       stack: ["Next", "Firestore"],
       year: "2026",
@@ -195,6 +201,7 @@ export const FREELANCE = {
     },
     {
       title: "Nenggala Academy",
+      image: "/placeholders/nenggala-academy.jpg",
       blurb: "Student portal and marketing site",
       stack: ["Next", "Express"],
       year: "2026",
@@ -202,6 +209,7 @@ export const FREELANCE = {
     },
     {
       title: "PT Maju Jaya Arkananta",
+      image: "/placeholders/maju-jaya.jpg",
       blurb: "Company profile and catalogue website with CMS",
       stack: ["CRA", "Go"],
       year: "2024",
@@ -210,6 +218,7 @@ export const FREELANCE = {
     },
     {
       title: "PT Jasplast Sukses Bersama",
+      image: "/placeholders/jasplast.jpg",
       blurb: "Internal financial record system",
       stack: ["CRA", "Express"],
       year: "2024",
@@ -217,6 +226,7 @@ export const FREELANCE = {
     },
     {
       title: "PT Argotehnik Kreasindo Abadi",
+      image: "/placeholders/argotehnik.jpg",
       blurb: "Web-based operational ERP",
       stack: ["CRA", "Express"],
       year: "2024",
@@ -224,6 +234,7 @@ export const FREELANCE = {
     },
     {
       title: "Rawa Belong Florist Community",
+      image: "/placeholders/rawa-belong.jpg",
       blurb: "Marketplace mobile application and website",
       stack: ["Flutter", "Express"],
       year: "2023",
@@ -231,6 +242,7 @@ export const FREELANCE = {
     },
     {
       title: "PT Loyalty Development - LeSeen",
+      image: "/placeholders/leseen.jpg",
       blurb: "Company profile website",
       stack: ["CRA", "Tailwind"],
       year: "2023",
@@ -238,6 +250,7 @@ export const FREELANCE = {
     },
   ] as {
     title: string;
+    image: string;
     blurb: string;
     stack: string[];
     year: string;

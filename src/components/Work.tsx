@@ -1,33 +1,27 @@
 import { PERSON, WORK } from "@/content/portfolio";
+import Strip from "./Strip";
+import Rise from "./Rise";
 
-// each project's slug is where its case study will live again
-// (/projects/<slug>) once the pages are rebuilt — unlinked until then so
-// nothing points at a 404
 export default function Work() {
   return (
-    <section id="work">
-      <h2>Selected work</h2>
-      <p>{WORK.intro}</p>
+    <section id="work" className="panel">
+      <div className="head">
+        <h2 data-drift className="display reveal"><Rise text="Selected work" /></h2>
+        <p className="reveal lede">{WORK.intro}</p>
+      </div>
 
-      <ul>
-        {WORK.projects.map((w) => (
-          <li key={w.slug}>
-            <article>
-              <h3>{w.title}</h3>
-              <p>{w.blurb}</p>
-              <p>
-                {w.stack.join(" · ")} — {w.year}
-              </p>
-            </article>
-          </li>
-        ))}
-      </ul>
+      <Strip label="Selected work" items={WORK.projects} />
 
-      <article>
-        <h3>{WORK.openSource.title}</h3>
-        <p>{WORK.openSource.blurb}</p>
-        <a href={PERSON.github} target="_blank" rel="noopener noreferrer">
-          {WORK.openSource.cta}
+      <article className="reveal mt-8 flex flex-col justify-end gap-3 h-scroll:mt-0 h-scroll:w-72 h-scroll:flex-none">
+        <h3 className="label">{WORK.openSource.title}</h3>
+        <p className="lede">{WORK.openSource.blurb}</p>
+        <a
+          href={PERSON.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="link label w-fit"
+        >
+          {WORK.openSource.cta} <span aria-hidden>↗</span>
         </a>
       </article>
     </section>
