@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { type PointerEvent, useEffect, useRef, useState } from "react";
+import { type CSSProperties, type PointerEvent, useEffect, useRef, useState } from "react";
 import { CONTACT, PERSON } from "@/content/portfolio";
 import { glideTo } from "@/lib/glide";
 import { HORIZONTAL_QUERY } from "@/lib/layout";
@@ -34,6 +34,12 @@ export default function Nav() {
   const grip = useRef<number | null>(null);
   // where the rail sent the page, and how long to wait for it to get there
   const aim = useRef<{ x: number; until: number } | null>(null);
+  // on a phone: the bar steps up out of the way while reading down, and back on the way up
+  const [barHidden, setBarHidden] = useState(false);
+  const barHiddenNow = useRef(false);
+  const turnedAt = useRef(0);
+  const menu = useRef<HTMLDialogElement>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const layout = window.matchMedia(HORIZONTAL_QUERY);
@@ -49,6 +55,25 @@ export default function Nav() {
         if (box && (horizontal ? box.left : box.top) <= line) current = id;
       }
       setActive(current);
+
+      if (!horizontal) {
+        // Measured from the furthest point in the current direction, so a slow scroll
+        // counts as much as a fast one, and a little jitter doesn't flip it.
+        const y = window.scrollY;
+        const hide = (value: boolean) => {
+          barHiddenNow.current = value;
+          setBarHidden(value);
+          turnedAt.current = y;
+        };
+        if (y < 64) hide(false);
+        else if (barHiddenNow.current) {
+          if (y > turnedAt.current) turnedAt.current = y;
+          else if (turnedAt.current - y > 16) hide(false);
+        } else {
+          if (y < turnedAt.current) turnedAt.current = y;
+          else if (y - turnedAt.current > 16) hide(true);
+        }
+      }
 
       // While it's held, and while the page is still easing to where it was left, the
       // marker stays where the pointer put it rather than sliding back to the page.
@@ -122,9 +147,38 @@ export default function Nav() {
     }
   };
 
+  // The phone menu is a modal dialog: focus stays inside, Esc closes it, and focus goes
+  // back to the Menu button. It drops in from the top and lifts away again.
+  const openMenu = () => {
+    const view = menu.current;
+    if (!view || view.open) return;
+    view.showModal();
+    setMenuOpen(true);
+  };
+
+  const closeMenu = async () => {
+    const view = menu.current;
+    if (!view?.open) return;
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      await view
+        .animate([{ transform: "translateY(-100%)" }], {
+          duration: 420,
+          easing: "cubic-bezier(0.45, 0.05, 0.85, 0.45)",
+          fill: "forwards",
+        })
+        .finished.catch(() => {});
+      view.getAnimations().forEach((a) => a.cancel());
+    }
+    view.close();
+    setMenuOpen(false);
+  };
+
   return (
     <>
-      <header className="label flex flex-wrap items-start justify-between gap-x-8 gap-y-4 p-5 h-scroll:fixed h-scroll:inset-x-0 h-scroll:top-0 h-scroll:z-10 h-scroll:px-8 h-scroll:py-6">
+      <header
+        className="site-header label flex items-center justify-between gap-x-8 px-5 py-4"
+        data-hidden={(barHidden && !menuOpen) || undefined}
+      >
         <Link href="/" className="brand">
           {PERSON.name}
         </Link>
@@ -151,7 +205,7 @@ export default function Nav() {
           </div>
         </div>
 
-        <nav aria-label="Sections">
+        <nav aria-label="Sections" className="hidden h-scroll:block">
           <ul className="flex flex-wrap gap-x-5 gap-y-1">
             {LINKS.map((l) => (
               <li key={l.id}>
@@ -168,9 +222,74 @@ export default function Nav() {
             ))}
           </ul>
         </nav>
+
+        <button
+          type="button"
+          className="h-scroll:hidden"
+          aria-haspopup="dialog"
+          aria-expanded={menuOpen}
+          onClick={openMenu}
+        >
+          Menu
+        </button>
       </header>
 
-      <div className="label pointer-events-none fixed inset-x-0 bottom-0 z-10 hidden items-end justify-between px-8 py-5 h-scroll:flex">
+      <dialog
+        ref={menu}
+        aria-label="Menu"
+        className="menu"
+        onCancel={(e) => {
+          e.preventDefault();
+          closeMenu();
+        }}
+        onClose={() => setMenuOpen(false)}
+      >
+        <div className="label flex items-center justify-between px-5 py-4">
+          <span className="brand">{PERSON.name}</span>
+          <button type="button" onClick={closeMenu}>
+            Close
+          </button>
+        </div>
+
+        <nav aria-label="Sections" className="menu-sections">
+          <ol>
+            {LINKS.map((l, i) => (
+              <li key={l.id} className="swap-mask">
+                <a
+                  href={`/#${l.id}`}
+                  aria-current={active === l.id ? "location" : undefined}
+                  className="menu-link"
+                  style={{ "--i": i } as CSSProperties}
+                  // the page moves to the section behind the menu as it lifts away
+                  onClick={() => closeMenu()}
+                >
+                  <span className="label menu-number">{String(i + 1).padStart(2, "0")}</span>
+                  {l.name}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+
+        <ul className="menu-foot label">
+          {CORNER_LINKS.map((l) => (
+            <li key={l.name}>
+              <a href={l.href} className="link">
+                {l.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </dialog>
+
+      {/* stepped aside on Contact, which has the same links in full */}
+      <div
+        className={`label pointer-events-none fixed inset-x-0 bottom-0 z-10 hidden items-end justify-between px-8 py-5 transition-opacity duration-500 h-scroll:flex ${
+          active === "contact" ? "opacity-0" : ""
+        }`}
+        // hidden links can't be clicked or tabbed to either
+        inert={active === "contact"}
+      >
         <p>
           {PERSON.role}
           <br />

@@ -44,7 +44,7 @@ export const WORK = {
   projects: [
     {
       title: "lūme",
-      image: "/placeholders/work-lume.jpg",
+      image: "/abstract/work-lume.jpg",
       slug: "lume",
       blurb: "Spotify miniplayer that samples cover art for its glow",
       stack: ["Tauri", "Rust"],
@@ -52,7 +52,7 @@ export const WORK = {
     },
     {
       title: "nest.",
-      image: "/placeholders/work-nest.jpg",
+      image: "/abstract/work-nest.jpg",
       slug: "nest",
       blurb: "AI receipt scanning with a group settlement engine",
       stack: ["Next", "Gemini"],
@@ -60,7 +60,7 @@ export const WORK = {
     },
     {
       title: "Tempo",
-      image: "/placeholders/work-tempo.jpg",
+      image: "/abstract/work-tempo.jpg",
       slug: "tempo",
       blurb: "Desktop clock widget — timer, alarm, stopwatch",
       stack: ["Electron", "React"],
@@ -68,7 +68,7 @@ export const WORK = {
     },
     {
       title: "Piggy Wallet",
-      image: "/placeholders/work-piggy-wallet.jpg",
+      image: "/abstract/work-piggy-wallet.jpg",
       slug: "piggy-wallet",
       blurb: "Offline-first expense tracker with a budget system",
       stack: ["Next", "IDB"],
@@ -76,7 +76,7 @@ export const WORK = {
     },
     {
       title: "noted.",
-      image: "/placeholders/work-noted.jpg",
+      image: "/abstract/work-noted.jpg",
       slug: "noted",
       blurb: "Offline-first markdown editor with 3-way merge",
       stack: ["Next", "IDB"],
@@ -127,7 +127,7 @@ export const EXPERIENCE = {
     {
       short: "Rintis",
       /** a stand-in behind the band, by choice not a photo of the place */
-      image: "/placeholders/xp-rintis.jpg",
+      image: "/abstract/xp-rintis.jpg",
       role: "Fullstack Developer",
       focus: "Fraud detection systems",
       company: "PT Rintis Sejahtera",
@@ -147,7 +147,7 @@ export const EXPERIENCE = {
     },
     {
       short: "WEBin",
-      image: "/placeholders/xp-webin.jpg",
+      image: "/abstract/xp-webin.jpg",
       role: "Fullstack Developer",
       focus: "Client projects, end to end",
       company: "WEBin",
@@ -172,7 +172,7 @@ export const EXPERIENCE = {
     },
     {
       short: "Overo",
-      image: "/placeholders/xp-overo.jpg",
+      image: "/abstract/xp-overo.jpg",
       role: "Frontend Developer",
       focus: "Web and mobile interfaces",
       company: "PT Overo Digital Global",
@@ -222,7 +222,7 @@ export const FREELANCE = {
   clients: [
     {
       title: "PT Ciputra Development Tbk - The Forestine",
-      image: "/placeholders/client-the-forestine.jpg",
+      image: "/abstract/client-the-forestine.jpg",
       blurb: "Marketing site for a Ciputra residential project",
       stack: ["Next", "Tailwind"],
       year: "2026",
@@ -231,7 +231,7 @@ export const FREELANCE = {
     },
     {
       title: "Handy and Sharon",
-      image: "/placeholders/client-handy-and-sharon.jpg",
+      image: "/abstract/client-handy-and-sharon.jpg",
       blurb: "Wedding invitation site where guests can RSVP",
       stack: ["Next", "Firestore"],
       year: "2026",
@@ -240,7 +240,7 @@ export const FREELANCE = {
     },
     {
       title: "Nenggala Academy",
-      image: "/placeholders/client-nenggala-academy.jpg",
+      image: "/abstract/client-nenggala-academy.jpg",
       blurb: "Student portal and marketing site",
       stack: ["Next", "Express"],
       year: "2026",
@@ -248,7 +248,7 @@ export const FREELANCE = {
     },
     {
       title: "PT Maju Jaya Arkananta",
-      image: "/placeholders/client-maju-jaya.jpg",
+      image: "/abstract/client-maju-jaya.jpg",
       blurb: "Company profile and product catalogue the client updates themselves",
       stack: ["CRA", "Go"],
       year: "2024",
@@ -257,7 +257,7 @@ export const FREELANCE = {
     },
     {
       title: "PT Jasplast Sukses Bersama",
-      image: "/placeholders/client-jasplast.jpg",
+      image: "/abstract/client-jasplast.jpg",
       blurb: "Internal system for the company's financial records",
       stack: ["CRA", "Express"],
       year: "2024",
@@ -265,7 +265,7 @@ export const FREELANCE = {
     },
     {
       title: "PT Argotehnik Kreasindo Abadi",
-      image: "/placeholders/client-argotehnik.jpg",
+      image: "/abstract/client-argotehnik.jpg",
       blurb: "ERP the team uses for day-to-day operations",
       stack: ["CRA", "Express"],
       year: "2024",
@@ -273,7 +273,7 @@ export const FREELANCE = {
     },
     {
       title: "Rawa Belong Florist Community",
-      image: "/placeholders/client-rawa-belong.jpg",
+      image: "/abstract/client-rawa-belong.jpg",
       blurb: "Marketplace app and website for a florist community",
       stack: ["Flutter", "Express"],
       year: "2023",
@@ -281,7 +281,7 @@ export const FREELANCE = {
     },
     {
       title: "PT Loyalty Development - LeSeen",
-      image: "/placeholders/client-leseen.jpg",
+      image: "/abstract/client-leseen.jpg",
       blurb: "Company profile site",
       stack: ["CRA", "Tailwind"],
       year: "2023",
@@ -314,9 +314,9 @@ export const ABOUT_STATS = [
 /* ── contact ────────────────────────────────────────────────────────────── */
 
 export const CONTACT = {
-  heading: "Got something you want built properly?",
+  heading: "Have something in mind?",
   body:
-    "A project, a question about the work, or just a hello — the inbox is always open, and replies come on Jakarta hours.",
+    "Email me about a project, a role, or anything you saw here. I'm in Jakarta, so replies come during the day there.",
   links: [
     { name: "LinkedIn", href: "https://www.linkedin.com/in/fernando-halimm" },
     { name: "GitHub", href: "https://github.com/fernandohalim" },

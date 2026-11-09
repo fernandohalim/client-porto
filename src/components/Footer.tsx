@@ -1,12 +1,14 @@
+import { PERSON } from "@/content/portfolio";
+
+// Only on a phone-sized page: from h-scroll up, the Contact screen carries these lines
+// itself, so the page ends on it cleanly.
 export default function Footer() {
   return (
-    <footer className="label flex flex-col justify-end gap-3 p-5 h-scroll:h-full h-scroll:w-80 h-scroll:flex-none h-scroll:px-8 h-scroll:py-[var(--pad-y)]">
+    <footer className="label flex flex-col gap-1 p-5 pt-16 h-scroll:hidden">
       <p>
-        Fernando Halim — Fullstack developer producing considered software from
-        West Jakarta, Indonesia.
+        {PERSON.name}, {PERSON.role.toLowerCase()} in West Jakarta
       </p>
-      <p>Open to work — taking on freelance builds for 2026.</p>
-      <p>© {new Date().getFullYear()} — Designed and built by Fernando Halim</p>
+      <p>© {new Date().getFullYear()} · Designed and built by me</p>
     </footer>
   );
 }

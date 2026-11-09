@@ -195,6 +195,131 @@ html:has(dialog[open]) {
   }
 }
 
+/* ── header ────────────────────────────────────────────────────────────── */
+
+/* On a phone a slim bar stays at the top, stepping up out of the way while reading down
+   and back on the way up; its ground fades out below so nothing is cut by a hard edge.
+   From h-scroll up it's the fixed header over the sideways page. */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: linear-gradient(var(--ground) 60%, transparent);
+  transition: translate 0.45s var(--ease);
+
+  &[data-hidden] {
+    translate: 0 -100%;
+  }
+
+  @variant h-scroll {
+    position: fixed;
+    inset-inline: 0;
+    z-index: 10;
+    align-items: flex-start;
+    padding: 24px 32px;
+    background: none;
+    translate: none;
+  }
+}
+
+/* buttons reset these, so Menu and Close read like the labels around them */
+.site-header button,
+.menu button {
+  text-transform: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+}
+
+/* the phone menu: the whole screen, sections in large type */
+.menu[open] {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--ground);
+  color: var(--fg);
+}
+
+.menu::backdrop {
+  background: transparent;
+}
+
+.menu-sections {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 24px 20px;
+}
+
+.menu-link {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 15vw, 5rem);
+  line-height: 0.95;
+  text-transform: uppercase;
+  opacity: 0.5;
+
+  &[aria-current] {
+    opacity: 1;
+  }
+}
+
+.menu-number {
+  font-family: var(--font-text);
+  min-width: 1.5rem;
+}
+
+.menu-foot {
+  display: flex;
+  gap: 20px;
+  padding: 16px 20px 28px;
+  border-top: 1px solid var(--color-rule);
+  margin-inline: 20px;
+  padding-inline: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* it drops in from the top, then the sections rise one after another */
+  .menu[open] {
+    animation: menu-drop 0.6s var(--ease);
+  }
+
+  .menu[open] .menu-link {
+    animation: menu-line 0.75s cubic-bezier(0.25, 1, 0.5, 1) backwards;
+    animation-delay: calc(0.18s + var(--i) * 0.05s);
+  }
+}
+
+@keyframes menu-drop {
+  from {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes menu-line {
+  from {
+    transform: translateY(110%);
+  }
+}
+
+/* the last screen keeps the header's side margins, so their edges line up */
+.panel.contact {
+  @variant h-scroll {
+    padding-inline: 2rem;
+  }
+}
+
 .display {
   font-family: var(--font-display);
   font-weight: 400;
@@ -379,20 +504,31 @@ html:has(dialog[open]) {
     width: var(--plate);
   }
 
+  /* closed slats rest in grey; only the open one (hovered, tapped or focused) takes colour */
   img {
     object-fit: cover;
-    filter: brightness(0.62);
+    filter: brightness(0.62) grayscale(1);
     transition: filter 0.6s;
   }
 
-  /* closed, a blurred copy covers the picture, enlarged a touch so the blur doesn't
+  /* closed, a blurred copy covers the picture, overscanned so the blur doesn't
      soften its edges; it fades away as the slat opens. Its own dimming never changes,
      so nothing under the blur has to be drawn again. */
   .slat-blur {
-    filter: brightness(0.4) blur(8px);
-    transform: scale(1.08);
+    filter: brightness(0.4) grayscale(1) blur(8px);
     transition: opacity 0.6s;
   }
+}
+
+/* the blurred copies overscan by a fixed margin rather than a scale: a short band (a
+   slat or year band on a phone) grows only a few px under scale(1.08), less than the
+   blur's own fade, so its soft edge showed inside. !important beats next/image's inline fill */
+.slat-blur,
+.xp-blur {
+  inset: -24px !important;
+  width: calc(100% + 48px) !important;
+  height: calc(100% + 48px) !important;
+  max-width: none;
 }
 
 /* not quite 0, so the browser keeps it drawn and closing doesn't hitch */
@@ -417,7 +553,7 @@ html:has(dialog[open]) {
 
 /* while one is open its neighbours sink back */
 .strip:has(li[data-open]) li:not([data-open]) img:not(.slat-blur) {
-  filter: brightness(0.34);
+  filter: brightness(0.34) grayscale(1);
 }
 
 /* The open slat lifts into full light and its name is underlined. Tied to the open
@@ -686,15 +822,15 @@ li[data-open] .slat-more {
 
   img {
     object-fit: cover;
-    filter: brightness(0.3);
+    /* closed bands rest in grey; the open one takes colour */
+    filter: brightness(0.3) grayscale(1);
     transition: filter 0.6s;
   }
 
-  /* closed, a blurred copy covers the picture; it's enlarged a touch so the blur
+  /* closed, a blurred copy covers the picture; it's overscanned so the blur
      doesn't soften its edges into the gap, and it fades away as the band opens */
   .xp-blur {
-    filter: brightness(0.3) blur(8px);
-    transform: scale(1.08);
+    filter: brightness(0.3) grayscale(1) blur(8px);
     /* kept on its own layer so the blur is drawn once and the fade only composites */
     will-change: opacity;
     transition:
@@ -711,24 +847,24 @@ li[data-open] .slat-more {
   height: var(--tall);
 
   img {
-    filter: brightness(0.5);
+    filter: brightness(0.5) grayscale(0);
   }
 
   /* only fades: the blur and dimming stay as they were, so nothing repaints */
   .xp-blur {
     /* not quite 0, so the browser keeps it drawn and the first close doesn't hitch */
     opacity: 0.001;
-    filter: brightness(0.3) blur(8px);
+    filter: brightness(0.3) grayscale(1) blur(8px);
   }
 }
 
 /* a closed band lifts a little when pointed at, like the slats */
 .xp-item:not([data-open]) .xp-band:hover img {
-  filter: brightness(0.42);
+  filter: brightness(0.42) grayscale(1);
 }
 
 .xp-item:not([data-open]) .xp-band:hover .xp-blur {
-  filter: brightness(0.42) blur(8px);
+  filter: brightness(0.42) grayscale(1) blur(8px);
 }
 
 .xp-year {
