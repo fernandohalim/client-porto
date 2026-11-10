@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { type CSSProperties, type PointerEvent, useEffect, useRef, useState } from "react";
 import { CONTACT, PERSON } from "@/content/portfolio";
 import { glideTo } from "@/lib/glide";
@@ -14,6 +13,8 @@ const LINKS = [
   { name: "Freelance", id: "freelance" },
   { name: "Contact", id: "contact" },
 ];
+
+const HOME = "/#hero";
 
 const TICKS = Array.from({ length: 30 });
 
@@ -179,9 +180,11 @@ export default function Nav() {
         className="site-header label flex items-center justify-between gap-x-8 px-5 py-4"
         data-hidden={(barHidden && !menuOpen) || undefined}
       >
-        <Link href="/" className="brand">
+        {/* a plain anchor to the first section, so on the home page it glides back to
+            the start like every other section link */}
+        <a href={HOME} className="brand">
           {PERSON.name}
-        </Link>
+        </a>
 
         {/* Drag the marker, or press anywhere on the rail to go there. Mouse and touch
             only: keyboards and screen readers already have the page's own scrolling. */}
@@ -214,7 +217,8 @@ export default function Nav() {
                 <a
                   href={`/#${l.id}`}
                   aria-current={active === l.id ? "location" : undefined}
-                  className="underline-offset-4 hover:underline aria-[current]:underline"
+                  // padded so the small words are an easy target
+                  className="-my-2 inline-block py-2 underline-offset-4 hover:underline aria-[current]:underline"
                 >
                   {l.name}
                 </a>
@@ -225,7 +229,7 @@ export default function Nav() {
 
         <button
           type="button"
-          className="h-scroll:hidden"
+          className="-m-3 p-3 h-scroll:hidden"
           aria-haspopup="dialog"
           aria-expanded={menuOpen}
           onClick={openMenu}
@@ -246,7 +250,7 @@ export default function Nav() {
       >
         <div className="label flex items-center justify-between px-5 py-4">
           <span className="brand">{PERSON.name}</span>
-          <button type="button" onClick={closeMenu}>
+          <button type="button" onClick={closeMenu} className="-m-3 p-3">
             Close
           </button>
         </div>
@@ -274,7 +278,7 @@ export default function Nav() {
         <ul className="menu-foot label">
           {CORNER_LINKS.map((l) => (
             <li key={l.name}>
-              <a href={l.href} className="link">
+              <a href={l.href} className="link -my-2 inline-block py-2">
                 {l.name}
               </a>
             </li>

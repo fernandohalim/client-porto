@@ -11,6 +11,7 @@ import {
   useState,
 } from "react";
 import { flushSync } from "react-dom";
+import type { CaseStudy as Study } from "@/content/cases";
 import { HORIZONTAL_QUERY, prefersReducedMotion } from "@/lib/layout";
 import {
   COMPACT_CLOSE,
@@ -23,6 +24,7 @@ import {
   WIPE_OUT,
   windowAt,
 } from "@/lib/morph";
+import CaseStudy from "./CaseStudy";
 
 export type StripItem = {
   title: string;
@@ -32,12 +34,17 @@ export type StripItem = {
   year: string;
   status?: string;
   href?: string;
+  study?: Study;
 };
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
 // the same on the card and in the opened view, so both use one cached file
 const PICTURE_SIZES = "(min-width: 768px) 90vh, 100vw";
+
+// how quickly the opened view closes the gap to where it's headed, per millisecond;
+// the page's own pace (HorizontalScroll.tsx)
+const GLIDE_RATE = 0.0065;
 
 const nextFrames = () =>
   new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(done)));
@@ -71,8 +78,80 @@ export default function Strip({ items, label }: { items: StripItem[]; label: str
   const handedWords = useRef(true);
   const pendingBack = useRef<number | null>(null);
   const handing = useRef(false);
+  const study = useRef<HTMLDivElement>(null);
+  const touch = useRef<{ x: number; y: number; at: number } | null>(null);
+  const viewGlide = useRef<{ to: (y: number) => void; halt: () => void } | null>(null);
   const titleId = useId();
   const item = items[index];
+  const before = items[(index - 1 + items.length) % items.length];
+  const after = items[(index + 1) % items.length];
+
+  // The opened view scrolls the way the page does: the wheel sets where it's headed and
+  // the position eases there, rather than moving a notch at a time.
+  useEffect(() => {
+    const view = dialog.current;
+    if (!view) return;
+    let frame = 0;
+    let last = 0;
+    let pos = 0;
+    let target = 0;
+
+    const tick = (now: number) => {
+      const dt = Math.min(now - last, 64) || 16;
+      last = now;
+      pos += (target - pos) * (1 - Math.exp(-GLIDE_RATE * dt));
+      if (Math.abs(target - pos) < 0.4) {
+        pos = target;
+        frame = 0;
+      } else {
+        frame = requestAnimationFrame(tick);
+      }
+      view.scrollTop = pos;
+    };
+
+    const glide = (y: number) => {
+      target = Math.max(0, Math.min(y, view.scrollHeight - view.clientHeight));
+      if (prefersReducedMotion()) {
+        view.scrollTop = target;
+        return;
+      }
+      if (!frame) {
+        pos = view.scrollTop;
+        last = performance.now();
+        frame = requestAnimationFrame(tick);
+      }
+    };
+
+    const halt = () => {
+      cancelAnimationFrame(frame);
+      frame = 0;
+    };
+
+    const onWheel = (e: WheelEvent) => {
+      if (e.ctrlKey || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+      e.preventDefault();
+      const unit = e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? view.clientHeight : 1;
+      glide((frame ? target : view.scrollTop) + e.deltaY * unit);
+    };
+
+    viewGlide.current = { to: glide, halt };
+    view.addEventListener("wheel", onWheel, { passive: false });
+    // a finger, the scrollbar or the keyboard takes over from a glide in progress
+    view.addEventListener("pointerdown", halt);
+    view.addEventListener("keydown", halt);
+    return () => {
+      halt();
+      viewGlide.current = null;
+      view.removeEventListener("wheel", onWheel);
+      view.removeEventListener("pointerdown", halt);
+      view.removeEventListener("keydown", halt);
+    };
+  }, []);
+
+  const toTop = () => {
+    viewGlide.current?.halt();
+    if (dialog.current) dialog.current.scrollTop = 0;
+  };
 
   const cardPicture = (i: number) =>
     triggers.current[i]?.querySelector<HTMLElement>(".slat-media") ?? null;
@@ -188,7 +267,7 @@ export default function Strip({ items, label }: { items: StripItem[]; label: str
     openedAt.current = i;
     flushSync(() => setIndex(i));
     view.showModal();
-    view.scrollTop = 0;
+    toTop();
 
     // An open project is a step in history, so Back closes it instead of leaving the
     // site. Manual restoration stops the browser jumping the page to where it was
@@ -246,6 +325,8 @@ export default function Strip({ items, label }: { items: StripItem[]; label: str
     closing.current = true;
     stopSwap();
     stepping.current = false;
+    // the view shrinks back from its first screen, wherever the reading had got to
+    toTop();
 
     // Previous and Next leave the page alone, so it only moves now, to the card this
     // has to land on, and the parallax gets a moment to catch up before it's measured
@@ -344,13 +425,19 @@ export default function Strip({ items, label }: { items: StripItem[]; label: str
 
   const step = async (by: number) => {
     const pic = picture.current;
-    if (stepping.current || closing.current || !pic) return;
+    const view = dialog.current;
+    if (stepping.current || closing.current || !pic || !view) return;
     const next = (index + by + items.length) % items.length;
     const forward = by > 0;
     if (prefersReducedMotion()) {
       setIndex(next);
+      toTop();
       return;
     }
+
+    // Partway down a case study the picture is out of sight, so there's nothing to wipe
+    // away: the view returns to the top and the next project arrives there.
+    const below = view.scrollTop > 80;
 
     const mask = wipeMask.current;
     const inner = wipeInner.current;
@@ -363,27 +450,33 @@ export default function Strip({ items, label }: { items: StripItem[]; label: str
     const nowMask = { transform: getComputedStyle(mask).transform };
     const nowInner = { transform: getComputedStyle(inner).transform };
     const away = windowAt(forward ? -1 : 1);
+    const exit = below ? { duration: 0, fill: "forwards" as const } : WIPE_OUT;
     const leaving = [
-      mask.animate([nowMask, away.mask], WIPE_OUT),
-      inner.animate([nowInner, away.picture], WIPE_OUT),
+      mask.animate([nowMask, away.mask], exit),
+      inner.animate([nowInner, away.picture], exit),
     ];
-    const words = swapLines().map((el, n) =>
-      el.animate(lineOut(forward), {
-        duration: 280,
-        delay: Math.min(n * 10, 60),
-        easing: WIPE_OUT.easing,
-        fill: "forwards",
-      }),
-    );
+    const words = below
+      ? []
+      : swapLines().map((el, n) =>
+          el.animate(lineOut(forward), {
+            duration: 280,
+            delay: Math.min(n * 10, 60),
+            easing: WIPE_OUT.easing,
+            fill: "forwards",
+          }),
+        );
     const out = [...leaving, ...words];
     swap.current = [...swap.current, ...out];
-    const left = await Promise.all(out.map((a) => a.finished)).then(
-      () => true,
-      () => false,
-    );
-    if (!left) return; // closed in the meantime
+    if (!below) {
+      const left = await Promise.all(out.map((a) => a.finished)).then(
+        () => true,
+        () => false,
+      );
+      if (!left) return; // closed in the meantime
+    }
 
     flushSync(() => setIndex(next));
+    if (below) toTop();
     // Everything below up to the await happens before the browser paints, and the new
     // words wait out of sight until the new picture is ready to go with them.
     const lines = linesIn(forward);
@@ -418,7 +511,34 @@ export default function Strip({ items, label }: { items: StripItem[]; label: str
     if (slat) setActive(Number(slat.dataset.index));
   };
 
-  const control = "label cursor-pointer underline underline-offset-4";
+  const toStudy = () => {
+    const view = dialog.current;
+    if (!view || !study.current) return;
+    // clear of the bar that stays at the top
+    viewGlide.current?.to(study.current.offsetTop - 56);
+  };
+
+  // On a touch screen a sideways swipe moves between projects. Up and down is the
+  // view's own scrolling, so only a clearly sideways, fairly quick one counts.
+  const onTouchDown = (e: PointerEvent<HTMLDialogElement>) => {
+    if (e.pointerType !== "touch" || !e.isPrimary) return;
+    touch.current = { x: e.clientX, y: e.clientY, at: e.timeStamp };
+  };
+
+  const onTouchUp = (e: PointerEvent<HTMLDialogElement>) => {
+    const from = touch.current;
+    touch.current = null;
+    if (!from || e.pointerType !== "touch") return;
+    const dx = e.clientX - from.x;
+    const dy = e.clientY - from.y;
+    if (e.timeStamp - from.at > 700 || Math.abs(dx) < 56 || Math.abs(dx) < Math.abs(dy) * 2) return;
+    step(dx < 0 ? 1 : -1);
+  };
+
+  const studyFacts = [
+    { label: "Stack", value: item.stack.join(" · ") },
+    ...(item.status ? [{ label: "Status", value: item.status }] : []),
+  ];
 
   return (
     <>
@@ -482,6 +602,7 @@ export default function Strip({ items, label }: { items: StripItem[]; label: str
                   </span>
                   <span aria-hidden className="slat-more">
                     <span className="slat-line">{it.stack.join(" · ")}</span>
+                    <span className="slat-open">Open →</span>
                   </span>
                 </span>
               </button>
@@ -494,7 +615,7 @@ export default function Strip({ items, label }: { items: StripItem[]; label: str
       <dialog
         ref={dialog}
         aria-labelledby={titleId}
-        className="project p-5 h-scroll:px-8 h-scroll:py-6"
+        className="project"
         onClose={onClose}
         onCancel={(e) => {
           e.preventDefault();
@@ -504,8 +625,14 @@ export default function Strip({ items, label }: { items: StripItem[]; label: str
           if (e.key === "ArrowLeft") step(-1);
           if (e.key === "ArrowRight") step(1);
         }}
+        onPointerDown={onTouchDown}
+        onPointerUp={onTouchUp}
+        onPointerCancel={() => {
+          touch.current = null;
+        }}
       >
-        <div className="project-rise label flex items-start justify-between">
+        {/* stays at the top while the case study is read, so Close is always in reach */}
+        <div className="project-bar project-rise label">
           <p>
             {label} —{" "}
             <span className="swap-word">
@@ -513,70 +640,100 @@ export default function Strip({ items, label }: { items: StripItem[]; label: str
             </span>{" "}
             / {pad(items.length)}
           </p>
-          <button type="button" onClick={close} className={control}>
+          <button type="button" onClick={close} className="project-close">
             Close
           </button>
         </div>
 
-        <div className="flex w-full flex-col items-center gap-8 project-row:flex-row project-row:justify-center project-row:gap-14">
-          <div ref={picture} className="project-image flex-none">
-            <div ref={wipeMask} className="project-wipe">
-              <div ref={wipeInner} className="project-wipe">
-                {/* sync: an async decode can paint nothing for a frame when the layer changes */}
-                <Image
-                  src={item.image}
-                  alt=""
-                  fill
-                  sizes={PICTURE_SIZES}
-                  loading="eager"
-                  decoding="sync"
-                />
+        <div className="project-screen">
+          <div className="flex w-full flex-col items-center gap-8 project-row:flex-row project-row:justify-center project-row:gap-14">
+            <div ref={picture} className="project-image flex-none">
+              <div ref={wipeMask} className="project-wipe">
+                <div ref={wipeInner} className="project-wipe">
+                  {/* sync: an async decode can paint nothing for a frame when the layer changes */}
+                  <Image
+                    src={item.image}
+                    alt=""
+                    fill
+                    sizes={PICTURE_SIZES}
+                    loading="eager"
+                    decoding="sync"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="project-copy flex flex-col gap-4">
+              <h2 id={titleId} className="display">
+                {item.title.split(" ").map((word, i) => (
+                  <Fragment key={i}>
+                    {i > 0 && " "}
+                    <span className="swap-word">
+                      <span data-swap>{word}</span>
+                    </span>
+                  </Fragment>
+                ))}
+              </h2>
+              <p className="lede swap-mask">
+                <span data-swap>{item.blurb}</span>
+              </p>
+              <p className="label swap-mask">
+                <span data-swap>
+                  {item.stack.join(" · ")} — {item.status ? `${item.status} — ` : ""}
+                  {item.year}
+                </span>
+              </p>
+              <div className="project-links label">
+                {item.study && (
+                  <button type="button" onClick={toStudy} className="project-link swap-mask">
+                    <span data-swap className="underline underline-offset-4">
+                      {item.study.kind === "long" ? "Read the case study" : "About this project"}{" "}
+                      <span aria-hidden>↓</span>
+                    </span>
+                  </button>
+                )}
+                {item.href && (
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="project-link swap-mask"
+                  >
+                    <span data-swap className="underline underline-offset-4">
+                      Visit site <span aria-hidden>↗</span>
+                    </span>
+                  </a>
+                )}
               </div>
             </div>
           </div>
-          <div className="project-copy flex flex-col gap-4">
-            <h2 id={titleId} className="display">
-              {item.title.split(" ").map((word, i) => (
-                <Fragment key={i}>
-                  {i > 0 && " "}
-                  <span className="swap-word">
-                    <span data-swap>{word}</span>
-                  </span>
-                </Fragment>
-              ))}
-            </h2>
-            <p className="lede swap-mask">
-              <span data-swap>{item.blurb}</span>
-            </p>
-            <p className="label swap-mask">
-              <span data-swap>
-                {item.stack.join(" · ")} — {item.status ? `${item.status} — ` : ""}
-                {item.year}
-              </span>
-            </p>
-            {item.href && (
-              <a
-                href={item.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="label swap-mask w-fit"
-              >
-                <span data-swap className="underline underline-offset-4">
-                  Visit site <span aria-hidden>↗</span>
-                </span>
-              </a>
-            )}
-          </div>
         </div>
 
-        <div className="project-rise flex justify-between">
-          <button type="button" onClick={() => step(-1)} className={control}>
-            Previous
+        {item.study && (
+          <div ref={study}>
+            <CaseStudy study={item.study} title={item.title} facts={studyFacts} />
+          </div>
+        )}
+
+        {/* Each half of the bar is one button, and it stays at the bottom of the window
+            all the way down the page. Arrow keys and a sideways swipe do the same. */}
+        <nav aria-label={`Other ${label.toLowerCase()} projects`} className="project-nav project-rise">
+          <button type="button" onClick={() => step(-1)} className="project-step">
+            <span className="label">
+              <span aria-hidden>← </span>Previous
+            </span>
+            <span className="project-step-name swap-mask">
+              <span data-swap>{before.title}</span>
+            </span>
           </button>
-          <button type="button" onClick={() => step(1)} className={control}>
-            Next
+          <button type="button" onClick={() => step(1)} className="project-step">
+            <span className="label">
+              Next<span aria-hidden> →</span>
+            </span>
+            <span className="project-step-name swap-mask">
+              <span data-swap>{after.title}</span>
+            </span>
           </button>
-        </div>
+        </nav>
 
         {/* the page's grain can't reach above a modal, and without its own the
             picture would change brightness the moment the view closes */}

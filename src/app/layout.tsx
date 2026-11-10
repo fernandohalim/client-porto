@@ -6,6 +6,7 @@ import HorizontalScroll from "@/components/HorizontalScroll";
 import Effects from "@/components/Effects";
 import Parallax from "@/components/Parallax";
 import Atmosphere from "@/components/Atmosphere";
+import Loader from "@/components/Loader";
 import "./globals.css";
 
 const display = League_Gothic({
@@ -78,14 +79,25 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        {/* decided before first paint, so hidden letters never flash in */}
+        {/* Decided before first paint, so hidden letters never flash in. `lite` is the
+            lighter version for devices with little memory or few cores, or ones that
+            were measured to scroll slowly earlier in this visit (Effects.tsx). */}
         <script
           dangerouslySetInnerHTML={{
-            __html: "if(!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('fx')",
+            __html:
+              "(function(){var c=document.documentElement.classList,n=navigator;c.add('loading');" +
+              "if(!matchMedia('(prefers-reduced-motion: reduce)').matches)c.add('fx');" +
+              "try{if(n.deviceMemory<=4||n.hardwareConcurrency<=2||sessionStorage.getItem('lite'))c.add('lite')}catch(e){}" +
+              "})()",
           }}
         />
+        {/* without scripts nothing would ever lift the loading screen */}
+        <noscript>
+          <style>{".loader{display:none}"}</style>
+        </noscript>
       </head>
       <body>
+        <Loader />
         <a
           href="#hero"
           className="label sr-only z-20 bg-fg p-3 text-ground focus:not-sr-only focus:fixed focus:top-2 focus:left-2"

@@ -2,6 +2,8 @@
 // Every word and number the portfolio shows, in one place.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { briefCase, type CaseStudy, longCase } from "./cases";
+
 export const PERSON = {
   name: "Fernando Halim",
   role: "Fullstack developer",
@@ -29,13 +31,14 @@ export const ABOUT = {
 
 export type Project = {
   title: string;
-  /** where each case study will live again (/projects/<slug>) once rebuilt */
   slug: string;
   /** swap for a real picture when there is one */
   image: string;
   blurb: string;
   stack: string[];
   year: string;
+  /** shown under the opened project; placeholder text until written (content/cases.ts) */
+  study: CaseStudy;
 };
 
 export const WORK = {
@@ -49,6 +52,7 @@ export const WORK = {
       blurb: "Spotify miniplayer that samples cover art for its glow",
       stack: ["Tauri", "Rust"],
       year: "2026",
+      study: longCase(),
     },
     {
       title: "nest.",
@@ -57,6 +61,7 @@ export const WORK = {
       blurb: "AI receipt scanning with a group settlement engine",
       stack: ["Next", "Gemini"],
       year: "2026",
+      study: longCase(),
     },
     {
       title: "Tempo",
@@ -65,6 +70,7 @@ export const WORK = {
       blurb: "Desktop clock widget — timer, alarm, stopwatch",
       stack: ["Electron", "React"],
       year: "2026",
+      study: longCase(),
     },
     {
       title: "Piggy Wallet",
@@ -73,6 +79,7 @@ export const WORK = {
       blurb: "Offline-first expense tracker with a budget system",
       stack: ["Next", "IDB"],
       year: "2026",
+      study: longCase(),
     },
     {
       title: "noted.",
@@ -81,6 +88,7 @@ export const WORK = {
       blurb: "Offline-first markdown editor with 3-way merge",
       stack: ["Next", "IDB"],
       year: "2026",
+      study: longCase(),
     },
   ] as Project[],
   openSource: {
@@ -228,6 +236,7 @@ export const FREELANCE = {
       year: "2026",
       kind: "live",
       href: "https://forestine.id",
+      study: briefCase(),
     },
     {
       title: "Handy and Sharon",
@@ -237,6 +246,7 @@ export const FREELANCE = {
       year: "2026",
       kind: "live",
       href: "https://handpickedforshar.com",
+      study: briefCase(),
     },
     {
       title: "Nenggala Academy",
@@ -245,6 +255,7 @@ export const FREELANCE = {
       stack: ["Next", "Express"],
       year: "2026",
       kind: "prelaunch",
+      study: briefCase(),
     },
     {
       title: "PT Maju Jaya Arkananta",
@@ -254,6 +265,7 @@ export const FREELANCE = {
       year: "2024",
       kind: "live",
       href: "https://hydraulicpump.co.id",
+      study: briefCase(),
     },
     {
       title: "PT Jasplast Sukses Bersama",
@@ -262,6 +274,7 @@ export const FREELANCE = {
       stack: ["CRA", "Express"],
       year: "2024",
       kind: "internal",
+      study: briefCase(),
     },
     {
       title: "PT Argotehnik Kreasindo Abadi",
@@ -270,6 +283,7 @@ export const FREELANCE = {
       stack: ["CRA", "Express"],
       year: "2024",
       kind: "internal",
+      study: briefCase(),
     },
     {
       title: "Rawa Belong Florist Community",
@@ -278,6 +292,7 @@ export const FREELANCE = {
       stack: ["Flutter", "Express"],
       year: "2023",
       kind: "archived",
+      study: briefCase(),
     },
     {
       title: "PT Loyalty Development - LeSeen",
@@ -286,6 +301,7 @@ export const FREELANCE = {
       stack: ["CRA", "Tailwind"],
       year: "2023",
       kind: "archived",
+      study: briefCase(),
     },
   ] as {
     title: string;
@@ -295,6 +311,8 @@ export const FREELANCE = {
     year: string;
     kind: ClientKind;
     href?: string;
+    /** the short form every client shares; placeholder text until written */
+    study: CaseStudy;
   }[],
 };
 

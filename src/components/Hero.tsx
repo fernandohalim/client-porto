@@ -15,6 +15,10 @@ export default function Hero() {
           {PERSON.name} — {PERSON.role}
         </p>
         <p>{HERO.availability}</p>
+        {/* the page runs sideways here, which nothing else on the first screen says */}
+        <p aria-hidden className="hidden h-scroll:block">
+          Scroll <span className="scroll-cue">→</span>
+        </p>
         <ul className="mt-3 flex flex-col gap-1">
           <li>
             <a href="#work" className="link">

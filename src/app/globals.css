@@ -76,6 +76,111 @@ html:has(dialog[open]) {
   opacity: 0.09;
 }
 
+/* ── the loading screen ────────────────────────────────────────────────── */
+
+/* Seven slats side by side, one per section. Each fills from the floor in its turn as
+   the pictures load, under a counter, and at a hundred they lift away one after another
+   (Loader.tsx). Under the grain, over everything else. */
+html.loading {
+  overflow: hidden;
+}
+
+.loader {
+  --edge: 20px;
+  position: fixed;
+  inset: 0;
+  z-index: 25;
+  display: flex;
+  overflow: clip;
+  color: var(--fg);
+
+  @variant h-scroll {
+    --edge: 32px;
+  }
+}
+
+.loader-slat {
+  position: relative;
+  flex: 1;
+  /* a hair of overlap, so no seam of the page shows between two slats */
+  margin-right: -1px;
+  background: var(--ground);
+  will-change: transform;
+
+  & + & {
+    border-left: 1px solid color-mix(in srgb, var(--fg) 14%, transparent);
+  }
+}
+
+.loader-fill {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--fg) 9%, var(--ground));
+  transform: scaleY(0);
+  transform-origin: bottom;
+}
+
+/* a slat's number and name wake as its turn comes */
+.loader-tag {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 24px 10px;
+  opacity: 0.25;
+  transition: opacity 0.5s;
+
+  @variant h-scroll {
+    padding: 28px 14px;
+  }
+}
+
+.loader-slat[data-lit] .loader-tag {
+  opacity: 1;
+}
+
+/* on a phone the slats are too slim for names; the numbers carry it */
+.loader-name {
+  display: none;
+
+  @media (min-width: 900px) {
+    display: block;
+  }
+}
+
+.loader-count,
+.loader-note {
+  position: absolute;
+  z-index: 1;
+  /* each is a mask its words rise out of at the end */
+  overflow: clip;
+
+  > [data-leave] {
+    display: block;
+  }
+}
+
+.loader-count {
+  left: var(--edge);
+  bottom: 16px;
+  font-family: var(--font-display);
+  font-size: min(46vh, 40vw);
+  line-height: 0.86;
+}
+
+/* fixed boxes, so the number doesn't shiver as its digits change width */
+.loader-digit {
+  display: inline-block;
+  width: 0.35em;
+  text-align: center;
+}
+
+.loader-note {
+  right: var(--edge);
+  bottom: 24px;
+  text-align: right;
+}
+
 /* ── behind the content ────────────────────────────────────────────────── */
 
 /* The section colour eases here, on this one layer. Easing a variable that every
@@ -145,13 +250,41 @@ html:has(dialog[open]) {
   .grain {
     animation: grain 0.9s steps(1) infinite;
   }
+}
 
+/* The mist only drifts on the sideways page. An animation that never ends keeps the
+   browser drawing every frame, which a phone pays for in battery for something this faint. */
+@media (min-width: 768px) and (min-height: 600px) and (prefers-reduced-motion: no-preference) {
   .mist-a {
     animation: drift-a 110s linear infinite;
   }
 
   .mist-b {
     animation: drift-b 170s linear infinite;
+  }
+}
+
+/* ── the light version ─────────────────────────────────────────────────── */
+
+/* `lite` is set on <html> for devices with little memory or few cores (layout.tsx), and
+   by Effects.tsx when scrolling is measured to be slow. Everything that keeps drawing
+   while nothing happens is stopped, and the blurred copies of the pictures, the most
+   expensive thing to draw as they scroll in, are left out. The layout doesn't change. */
+.lite {
+  .grain,
+  .mist {
+    animation: none;
+  }
+
+  .far-name,
+  .slat-blur,
+  .xp-blur {
+    display: none;
+  }
+
+  /* dimmed a little further in place of the blur, so the words on top stay readable */
+  .slat-plate img {
+    filter: brightness(0.48) grayscale(1);
   }
 }
 
@@ -381,6 +514,23 @@ html:has(dialog[open]) {
 
   &:hover {
     text-underline-offset: 7px;
+  }
+}
+
+/* the arrow beside "Scroll" on the first screen nudges forward now and then */
+.scroll-cue {
+  display: inline-block;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.lite) .scroll-cue {
+    animation: scroll-cue 2.8s var(--ease) 1.5s 4;
+  }
+}
+
+@keyframes scroll-cue {
+  40% {
+    transform: translateX(8px);
   }
 }
 
@@ -654,6 +804,19 @@ li[data-open] .slat-more {
   transition: opacity 0.5s 0.2s;
 }
 
+/* says the slat can be opened; a phone band is plainly a button already */
+.slat-open {
+  display: none;
+
+  @variant h-scroll {
+    display: block;
+    margin-top: 2px;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+}
+
 /* ── stack: drifting rows ─────────────────────────────────────────────── */
 
 .stack-rows {
@@ -757,22 +920,260 @@ li[data-open] .slat-more {
 
 /* ── the opened project ────────────────────────────────────────────────── */
 
+/* One scrolling page: a bar that stays at the top, the first screen with the picture
+   and words, the case study under it, and the Previous / Next bar that stays at the
+   bottom. */
 .project {
+  --px: 20px;
+  --bar: 56px;
+  --steps: 88px;
+  --project-ground: #070807;
   width: 100vw;
   height: 100dvh;
   max-width: none;
   max-height: none;
   margin: 0;
-  background: #070807;
+  padding: 0;
+  background: var(--project-ground);
   color: var(--fg);
-  overflow: auto;
+  overflow: hidden auto;
+  overscroll-behavior: contain;
+  /* a slim, quiet scrollbar: it's the sign that there's more below */
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--fg) 30%, transparent) transparent;
+  /* sideways drags are left to the swipe between projects */
+  touch-action: pan-y pinch-zoom;
 
-  &[open] {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 24px;
+  @variant h-scroll {
+    --px: 32px;
   }
+
+  button {
+    cursor: pointer;
+  }
+}
+
+.project-bar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--bar);
+  padding: 0 var(--px);
+  background: linear-gradient(var(--project-ground) 72%, transparent);
+}
+
+/* the word is small; the area that takes the press is not */
+.project-close {
+  margin: -14px;
+  padding: 14px;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.project-screen {
+  display: flex;
+  align-items: center;
+  min-height: calc(100dvh - var(--bar) - var(--steps));
+  padding: 12px var(--px) 28px;
+}
+
+.project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 24px;
+  margin-top: 4px;
+}
+
+.project-link {
+  width: fit-content;
+  /* taller than the text, so it's an easy press */
+  padding-block: 10px;
+  margin-block: -10px;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  white-space: nowrap;
+}
+
+.project-nav {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: var(--steps);
+  /* solid behind the words, fading only above them */
+  background: linear-gradient(transparent, var(--project-ground) 22%);
+}
+
+.project-step {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 6px;
+  min-width: 0;
+  padding: 0 var(--px) 16px;
+  text-align: left;
+
+  &:last-child {
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  &:focus-visible {
+    outline-offset: -6px;
+  }
+}
+
+.project-step-name {
+  max-width: 100%;
+  font-family: var(--font-display);
+  font-size: 1.625rem;
+  line-height: 1;
+  text-transform: uppercase;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+
+  /* a long client name is cut short rather than wrapped */
+  > [data-swap] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.project-step:hover .project-step-name,
+.project-step:focus-visible .project-step-name {
+  opacity: 1;
+}
+
+/* ── the case study under an opened project ────────────────────────────── */
+
+.case {
+  --rail: 11rem;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 24px var(--px) 56px;
+
+  @media (min-width: 768px) {
+    gap: 64px;
+    padding-top: 40px;
+    padding-bottom: 80px;
+  }
+}
+
+.case-head,
+.case-section {
+  display: grid;
+  gap: 12px 24px;
+  padding-top: 14px;
+  border-top: 1px solid var(--color-rule);
+
+  @media (min-width: 768px) {
+    grid-template-columns: var(--rail) minmax(0, 1fr);
+  }
+}
+
+.case-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 24px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  dt {
+    margin-bottom: 4px;
+    opacity: 0.6;
+  }
+}
+
+.case-lede {
+  max-width: 34em;
+  font-size: clamp(1.375rem, 1.1rem + 1vw, 2rem);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  text-wrap: pretty;
+
+  @media (min-width: 768px) {
+    margin-left: calc(var(--rail) + 24px);
+  }
+}
+
+.case-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.case-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9em;
+  max-width: 40rem;
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+/* the brief: its three sections side by side, each under its own rule */
+.case[data-kind="brief"] {
+  @media (min-width: 768px) {
+    .case-sections {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 32px;
+    }
+
+    .case-section {
+      grid-template-columns: 1fr;
+      align-content: start;
+    }
+  }
+}
+
+.case-pair {
+  display: grid;
+  gap: 24px 12px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.case-frame {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--fg) 4%, transparent);
+
+  &[data-shape="detail"] {
+    aspect-ratio: 4 / 3;
+  }
+
+  /* no picture yet */
+  &[data-empty] {
+    display: grid;
+    place-items: center;
+    border: 1px dashed var(--color-rule);
+  }
+
+  img {
+    object-fit: cover;
+  }
+}
+
+.case-figure figcaption {
+  margin-top: 8px;
+  opacity: 0.6;
 }
 
 /* a single rendered layer from start to finish: if the browser re-renders the picture

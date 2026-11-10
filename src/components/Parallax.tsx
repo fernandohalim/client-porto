@@ -26,6 +26,7 @@ export default function Parallax() {
     const mists = [...document.querySelectorAll<HTMLElement>(".mist-track")];
     const far = document.querySelector<HTMLElement>(".far-name");
     let frame = 0;
+    let wasLite = false;
 
     const update = () => {
       frame = 0;
@@ -34,9 +35,18 @@ export default function Parallax() {
         return;
       }
 
+      // The light version keeps only the headings moving: the pictures and the mist are
+      // let go once, and after that they aren't measured or moved at all.
+      const lite = document.documentElement.classList.contains("lite");
+      if (lite && !wasLite) {
+        for (const el of [...plates, ...mists]) el.style.transform = "";
+      }
+      wasLite = lite;
+      const moving = lite ? [] : plates;
+
       const vw = window.innerWidth;
       // read everything first, then write, so a frame never forces a second layout
-      const pans = plates.map((plate) => {
+      const pans = moving.map((plate) => {
         const card = plate.parentElement!;
         const box = card.getBoundingClientRect();
         const from = (box.left + box.width / 2 - vw / 2) / (vw / 2);
@@ -51,13 +61,13 @@ export default function Parallax() {
       const scrolled = window.scrollX + window.scrollY;
       const range = document.documentElement.scrollWidth - vw;
       const farX = far ? -(scrolled / Math.max(range, 1)) * Math.max(far.offsetWidth - vw, 0) : 0;
-      if (far) far.style.transform = `translate3d(${farX.toFixed(1)}px, 0, 0)`;
-      for (const track of mists) {
+      if (far && !lite) far.style.transform = `translate3d(${farX.toFixed(1)}px, 0, 0)`;
+      for (const track of lite ? [] : mists) {
         const tile = Number(track.dataset.tile);
         track.style.transform = `translate3d(${(-(scrolled * MIST_DRIFT) % tile).toFixed(1)}px, 0, 0)`;
       }
 
-      plates.forEach((el, i) => {
+      moving.forEach((el, i) => {
         el.style.transform = `translate3d(${pans[i].toFixed(1)}px, 0, 0)`;
       });
       headings.forEach((el, i) => {
